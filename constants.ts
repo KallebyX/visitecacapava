@@ -121,6 +121,18 @@ export const USERS: User[] = [
         badges: [],
         routeProgress: [],
     },
+    {
+        id: 'user-hotel-2',
+        name: 'Pousada Charme',
+        email: 'pousada@email.com',
+        password: 'senha123',
+        role: 'hotel',
+        avatarUrl: 'https://picsum.photos/seed/pousada/200',
+        points: 0,
+        visited: [],
+        badges: [],
+        routeProgress: [],
+    },
     // Secretaria user
     {
         id: 'user-3',
@@ -174,6 +186,25 @@ export const HOTEL_CHECKINS: HotelCheckIn[] = [
         cityOpinion: 'Ótima',
         checkInDate: '2023-10-20T16:00:00Z',
         checkOutDate: '2023-10-24T12:00:00Z',
+    },
+    {
+        id: 'checkin-3',
+        hotelId: 'user-hotel-2',
+        touristName: 'Ana Exploradora',
+        phone: '11977777777',
+        profession: 'Jornalista',
+        nationality: 'Brasileira',
+        birthDate: '1988-11-30',
+        gender: 'Feminino',
+        idDocument: '555555555',
+        originCity: 'São Paulo/SP',
+        travelReason: 'Negócio',
+        transportMean: 'Outros',
+        discoveryChannel: 'Site',
+        poiOpinion: 'Ótima',
+        cityOpinion: 'Ótima',
+        checkInDate: '2023-11-01T18:00:00Z',
+        checkOutDate: '2023-11-05T10:00:00Z',
     }
 ];
 

@@ -321,6 +321,68 @@ export const backendService = {
     return { ...photo };
   },
 
+  // --- HOTEL DASHBOARD ---
+  async getHotelDashboardData(hotelId: string): Promise<any> {
+    await delay(300);
+    const hotelCheckIns = db.checkIns.filter(c => c.hotelId === hotelId);
+    if (hotelCheckIns.length === 0) {
+      return {
+        totalGuests: 0,
+        satisfaction: { city: {}, poi: {} },
+        demographics: { byOrigin: {} },
+        travelBehavior: { byReason: {} },
+        recentCheckIns: [],
+      };
+    }
+
+    const satisfaction = { city: {}, poi: {} };
+    const demographics = { byOrigin: {} };
+    const travelBehavior = { byReason: {} };
+
+    const count = (obj: any, key: string) => { obj[key] = (obj[key] || 0) + 1; };
+
+    hotelCheckIns.forEach(c => {
+      count(satisfaction.city, c.cityOpinion);
+      count(satisfaction.poi, c.poiOpinion);
+      count(demographics.byOrigin, c.originCity);
+      count(travelBehavior.byReason, c.travelReason);
+    });
+
+    return {
+      totalGuests: hotelCheckIns.length,
+      satisfaction,
+      demographics,
+      travelBehavior,
+      recentCheckIns: hotelCheckIns.slice(0, 5).sort((a, b) => new Date(b.checkInDate).getTime() - new Date(a.checkInDate).getTime()),
+    };
+  },
+
+  // --- ADMIN: HOTEL ANALYTICS ---
+  async getAllHotelsAnalytics(): Promise<any> {
+    await delay(400);
+    const hotels = db.users.filter(u => u.role === 'hotel');
+    const analyticsByHotel = hotels.map(hotel => {
+        const hotelCheckIns = db.checkIns.filter(c => c.hotelId === hotel.id);
+        const totalGuests = hotelCheckIns.length;
+        
+        const ratingMap: Record<OpinionScale, number> = { 'Péssimo': 1, 'Ruim': 2, 'Boa': 3, 'Muito boa': 4, 'Ótima': 5 };
+        const totalRating = hotelCheckIns.reduce((sum, c) => sum + (ratingMap[c.cityOpinion] || 3), 0);
+        const avgRating = totalGuests > 0 ? (totalRating / totalGuests).toFixed(1) : 'N/A';
+
+        return {
+            hotelId: hotel.id,
+            hotelName: hotel.name,
+            totalGuests,
+            avgRating,
+        };
+    });
+
+    return {
+        summary: analyticsByHotel,
+        allCheckIns: [...db.checkIns], // For detailed filtering on the frontend
+    };
+  },
+
   // --- HOTEL ---
   async getHotelCheckIns(hotelId: string): Promise<HotelCheckIn[]> {
     await delay(150);
