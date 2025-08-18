@@ -67,6 +67,10 @@ export interface HotelCheckIn {
   checkOutDate: string;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'model';
+  parts: { text: string }[];
+}
 
 declare global {
   const google: any;

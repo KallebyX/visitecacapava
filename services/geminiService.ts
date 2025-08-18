@@ -2,7 +2,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { backendService } from './backendService';
-import type { PointOfInterest } from '../types';
+import type { PointOfInterest, User, ChatMessage } from '../types';
 
 const API_KEY = process.env.API_KEY;
 
@@ -110,5 +110,58 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     } catch (error) {
         console.error("Error calling Gemini API for itinerary:", error);
         throw new Error("Ocorreu um erro ao contatar o guia de IA. Por favor, tente novamente mais tarde.");
+    }
+};
+
+
+export const getAIChatResponse = async (history: ChatMessage[], user: User): Promise<string> => {
+    if (!ai) {
+        return "Desculpe, meu cérebro de IA está offline. Não consigo conversar agora.";
+    }
+
+    const pointsOfInterest = await backendService.getPointsOfInterest();
+    const poiList = pointsOfInterest.map(poi => `- ${poi.name}: ${poi.description}`).join('\n');
+    
+    const visitedPoiObjects = await Promise.all(
+        user.visited.map(visit => backendService.getPointOfInterestById(visit.pointId))
+    );
+    const visitedPoisText = visitedPoiObjects
+        .filter(poi => poi !== null)
+        .map(poi => poi!.name)
+        .join(', ');
+
+    const systemInstruction = `
+        Você é 'Cacá', o assistente virtual amigável e especialista do aplicativo "Visite Caçapava do Sul".
+        Sua personalidade é calorosa, prestativa e um pouco divertida.
+        Seu objetivo é ajudar os turistas a aproveitarem ao máximo a cidade e o aplicativo.
+
+        **Seu Conhecimento:**
+        1.  **Sobre a Cidade:** Você conhece todos os pontos turísticos listados abaixo. Use essa lista como sua única fonte de verdade para locais. Não invente lugares.
+        2.  **Sobre o App:** Você entende o sistema de gamificação (pontos, badges, ranking). Check-in em um local dá pontos. Completar rotas e visitar locais específicos dá badges (conquistas).
+        3.  **Sobre o Usuário:** Você está conversando com ${user.name}. Ele(a) tem ${user.points} pontos e já visitou os seguintes locais: ${visitedPoisText || 'Nenhum'}. Use essa informação para personalizar suas respostas.
+
+        **Lista de Pontos Turísticos Disponíveis:**
+        ${poiList}
+
+        **Regras de Conversa:**
+        - Seja conciso e direto.
+        - Use emojis para deixar a conversa mais leve. 😉
+        - Se não souber a resposta, admita e sugira onde o usuário pode encontrar a informação.
+        - Sempre incentive o usuário a explorar a cidade.
+    `;
+    
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: history,
+            config: {
+                systemInstruction,
+            }
+        });
+
+        return response.text;
+    } catch (error) {
+        console.error("Error calling Gemini API for chat:", error);
+        return "Oops! Tive um pequeno curto-circuito. 😵 Poderia tentar perguntar de novo?";
     }
 };
