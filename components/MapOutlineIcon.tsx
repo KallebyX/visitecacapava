@@ -1,0 +1,21 @@
+
+import React from 'react';
+
+const MapOutlineIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M51.8743 14.8393L53.9161 11.25L59.7348 13.985L64.2123 10L68.3228 15.0185L70.9304 20.2161L75.4078 26.2917L72.2344 31.8477L73.9602 38.8188L71.3526 44.9965L73.9602 51.5326L69.2139 55.3379L70.9304 60.5355L66.5511 67.5066L61.8048 72.8833L54.673 80.2128L50.9975 88.75L45.5458 84.7656L39.3601 88.3916L32.2283 83.0149L29.6207 77.2798L25.1432 74.5447L26.502 68.367L24.4602 60.9939L29.2065 56.4424L26.869 49.7547L30.3776 43.2186L28.2588 34.6729L33.7104 29.3998L39.7271 31.1305L44.8285 24.5944L47.4361 19.3968L51.8743 14.8393Z"
+      stroke="currentColor"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export default MapOutlineIcon;
