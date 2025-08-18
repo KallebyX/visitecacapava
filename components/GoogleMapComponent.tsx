@@ -21,19 +21,25 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ center, zoom = 
     // Load Maps Script and Initialize Map
     useEffect(() => {
         loadGoogleMapsScript().then(() => {
-            if (mapRef.current && !map) {
-                const newMap = new window.google.maps.Map(mapRef.current, {
-                    center,
-                    zoom,
-                    styles: mapStyles,
-                    disableDefaultUI: true,
-                    zoomControl: true,
-                });
-                setMap(newMap);
+            try {
+                if (mapRef.current && !map) {
+                    const newMap = new window.google.maps.Map(mapRef.current, {
+                        center,
+                        zoom,
+                        styles: mapStyles,
+                        disableDefaultUI: true,
+                        zoomControl: true,
+                    });
+                    setMap(newMap);
+                    setMapError(null); // Explicitly clear error on success
+                }
+            } catch (e) {
+                console.error("Error initializing Google Map:", e);
+                setMapError("Ocorreu um erro ao inicializar o mapa. A chave de API pode ser inválida para este serviço.");
             }
         }).catch(error => {
             console.error("Failed to load Google Maps:", error);
-            setMapError("Não foi possível carregar o mapa. Verifique se a chave da API do Google Maps está configurada corretamente no ambiente.");
+            setMapError("Não foi possível carregar o mapa. Verifique sua conexão com a internet.");
         });
     }, []); // Runs only once to initialize map
 
@@ -82,20 +88,20 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ center, zoom = 
 
     if (mapError) {
         return (
-            <div className="w-full h-full bg-red-100 flex flex-col p-4 text-center">
+            <div className="w-full h-full bg-yellow-50 flex flex-col p-4 text-center">
                 <div className="flex-shrink-0">
-                    <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-2" />
-                    <h3 className="font-bold text-red-700">Erro ao Carregar Mapa</h3>
-                    <p className="text-xs text-red-600 mb-4">{mapError}</p>
+                    <AlertTriangle className="w-10 h-10 text-yellow-500 mx-auto mb-2" />
+                    <h3 className="font-bold text-yellow-800">Mapa Indisponível</h3>
+                    <p className="text-sm text-yellow-700 mb-4">{mapError}</p>
                 </div>
-                <div className="flex-grow overflow-y-auto w-full text-left">
-                    <h4 className="font-semibold text-gray-800 mb-2">Pontos de Interesse (visualização alternativa):</h4>
+                <div className="flex-grow overflow-y-auto w-full text-left pr-2">
+                    <h4 className="font-semibold text-gray-800 mb-2">Alternativamente, explore os pontos na lista:</h4>
                     <div className="space-y-2">
                         {pois.map(poi => (
                             <button
                                 key={poi.id}
                                 onClick={() => onMarkerClick(poi)}
-                                className="w-full flex items-center gap-4 p-2 bg-white/80 rounded-lg shadow-sm hover:bg-white transition-colors text-left"
+                                className="w-full flex items-center gap-4 p-2 bg-white/80 rounded-lg shadow-sm hover:bg-brand-light-green/20 transition-colors text-left"
                             >
                                 <img src={poi.imageUrl} alt={poi.name} className="w-12 h-12 object-cover rounded-md flex-shrink-0" />
                                 <div>
