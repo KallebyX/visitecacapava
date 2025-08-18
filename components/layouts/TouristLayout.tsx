@@ -5,6 +5,10 @@ import { Bot, X, Send, Sparkles } from 'lucide-react';
 import { useGamification } from '../../context/GamificationContext';
 import { getAIChatResponse } from '../../services/geminiService';
 import type { ChatMessage } from '../../types';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Home, Map, Trophy, Star, User, Image, BookHeart, Menu } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import MapOutlineIcon from '../MapOutlineIcon';
 
 // Defined the AI Chat component directly in the layout file for simplicity
 const GlobalAIChat: React.FC = () => {
@@ -140,17 +144,98 @@ const GlobalAIChat: React.FC = () => {
 };
 
 
+const NavLinks: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
+    const location = useLocation();
+    const getLinkClass = (path: string) => {
+        const isActive = location.pathname === path;
+        if (mobile) {
+            return `block px-4 py-3 text-lg rounded-md transition-colors ${
+                isActive ? 'bg-green-100 text-green-600 font-semibold' : 'text-slate-700 hover:bg-slate-100'
+            }`;
+        }
+        return `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+            isActive ? 'bg-green-100 text-green-600' : 'text-slate-600 hover:bg-slate-100'
+        }`;
+    };
+
+    return (
+        <>
+            <NavLink to="/" className={getLinkClass('/')} end>Início</NavLink>
+            <NavLink to="/routes" className={getLinkClass('/routes')}>Rotas</NavLink>
+            <NavLink to="/challenges" className={getLinkClass('/challenges')}>Desafios</NavLink>
+            <NavLink to="/gallery" className={getLinkClass('/gallery')}>Galeria</NavLink>
+            <NavLink to="/about" className={getLinkClass('/about')}>A Cidade</NavLink>
+            <NavLink to="/leaderboard" className={getLinkClass('/leaderboard')}>Ranking</NavLink>
+        </>
+    );
+};
+
+const TouristHeader: React.FC = () => {
+    const { user } = useAuth();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    return (
+        <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 border-b border-slate-200/80">
+            <div className="container mx-auto px-4">
+                <div className="flex justify-between items-center h-20">
+                    {/* Logo */}
+                    <NavLink to="/" className="flex items-center gap-2 text-brand-dark-green">
+                        <div className="w-10 h-10">
+                            <MapOutlineIcon />
+                        </div>
+                        <div>
+                            <div className="font-display tracking-wider text-xl leading-none">VISITE</div>
+                            <div className="font-black text-2xl leading-none -mt-1">CAÇAPAVA</div>
+                        </div>
+                    </NavLink>
+
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:flex items-center space-x-2">
+                        <NavLinks />
+                    </nav>
+
+                    {/* Profile & Hamburger Menu */}
+                    <div className="flex items-center space-x-4">
+                         <NavLink to="/profile" className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100">
+                            <img src={user?.avatarUrl} alt="Avatar" className="h-10 w-10 rounded-full border-2 border-green-500" />
+                            <div className="hidden sm:block text-right">
+                                <p className="font-semibold text-slate-800 text-sm">{user?.name}</p>
+                                <p className="text-xs text-amber-600 font-bold">{user?.points} Pontos</p>
+                            </div>
+                        </NavLink>
+
+                        <button 
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="lg:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100"
+                        >
+                            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+            {isMenuOpen && (
+                <div className="lg:hidden bg-white border-t border-slate-200">
+                    <nav className="flex flex-col space-y-2 p-4">
+                        <NavLinks mobile />
+                    </nav>
+                </div>
+            )}
+        </header>
+    );
+};
+
+
 const TouristLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <div className="bg-brand-beige min-h-screen flex flex-col font-sans text-brand-dark-green">
-      <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        {children}
-      </main>
-      <Footer />
-      <GlobalAIChat />
-    </div>
-  );
+    return (
+        <div className="bg-brand-beige min-h-screen">
+            <TouristHeader />
+            <main className="container mx-auto px-4 pt-28 pb-12">
+                {children}
+            </main>
+        </div>
+    );
 };
 
 export default TouristLayout;

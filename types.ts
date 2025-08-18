@@ -38,6 +38,28 @@ export interface User {
   routeProgress: { routeId: string; status: 'completed'; completedDate: string }[];
 }
 
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  points: number;
+  type: 'event' | 'challenge'; // Events can have a date, challenges are ongoing
+  startDate?: string;
+  endDate?: string;
+  relatedPoiIds?: string[]; // Link challenges to specific points of interest
+}
+
+export interface Photo {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatarUrl: string;
+  imageUrl: string;
+  caption: string;
+  poiId?: string; // Optional: link photo to a POI
+  timestamp: string;
+  likes: string[]; // Array of userIds who liked the photo
+}
 
 export type TravelReason = 'Turismo' | 'Negócio' | 'Convenção' | 'Férias' | 'Outros';
 export type TransportMean = 'Automóvel' | 'Ônibus' | 'Outros';

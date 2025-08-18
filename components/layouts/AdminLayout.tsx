@@ -1,12 +1,13 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Route, LogOut, BarChart3, MapPin, Map, Users, Trophy } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Route, LogOut, BarChart3, MapPin } from 'lucide-react';
 import MapOutlineIcon from '../MapOutlineIcon';
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         logout();
@@ -20,6 +21,16 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         : 'border-transparent hover:bg-slate-800'
     }`;
 
+    const getLinkClass = (path: string) => {
+        // Adjust for index route
+        const fullPath = path === '/' ? '/admin' : `/admin${path}`;
+        const isActive = location.pathname === fullPath || (path !== '/' && location.pathname.startsWith(fullPath));
+        return `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+            isActive 
+                ? 'bg-green-100 text-green-700' 
+                : 'text-slate-600 hover:bg-slate-100'
+        }`;
+    };
 
     return (
         <div className="min-h-screen flex bg-slate-100 text-slate-800">
@@ -45,6 +56,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <NavLink to="/admin/pois" className={navLinkClass}>
                         <MapPin size={20} />
                         <span>Gerenciar Pontos</span>
+                    </NavLink>
+                    <NavLink to="/admin/challenges" className={navLinkClass}>
+                        <Trophy size={20} />
+                        <span>Desafios</span>
+                    </NavLink>
+                    <NavLink to="/admin/tourists" className={navLinkClass}>
+                        <Users size={20} />
+                        <span>Turistas</span>
                     </NavLink>
                      <NavLink to="/admin/analytics" className={navLinkClass}>
                         <BarChart3 size={20} />

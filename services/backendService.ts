@@ -1,5 +1,5 @@
-import type { User, Route, PointOfInterest, Badge, HotelCheckIn, OpinionScale } from '../types';
-import { USERS, ROUTES, POINTS_OF_INTEREST, BADGES, HOTEL_CHECKINS } from '../constants';
+import type { User, Route, PointOfInterest, Badge, HotelCheckIn, OpinionScale, Challenge, Photo } from '../types';
+import { USERS, ROUTES, POINTS_OF_INTEREST, BADGES, HOTEL_CHECKINS, CHALLENGES, PHOTOS } from '../constants';
 
 // --- MOCK DATABASE with Session Storage Persistence ---
 // This creates a fully interactive mock backend that persists for the user's session.
@@ -35,6 +35,8 @@ class MockDB {
     pois: PointOfInterest[];
     badges: Badge[];
     checkIns: HotelCheckIn[];
+    challenges: Challenge[];
+    photos: Photo[];
 
     constructor() {
         this.users = getFromStorage('db_users', USERS);
@@ -42,6 +44,8 @@ class MockDB {
         this.pois = getFromStorage('db_pois', POINTS_OF_INTEREST);
         this.badges = getFromStorage('db_badges', BADGES);
         this.checkIns = getFromStorage('db_checkins', HOTEL_CHECKINS);
+        this.challenges = getFromStorage('db_challenges', CHALLENGES);
+        this.photos = getFromStorage('db_photos', PHOTOS);
     }
 
     save() {
@@ -50,6 +54,8 @@ class MockDB {
         saveToStorage('db_pois', this.pois);
         saveToStorage('db_badges', this.badges);
         saveToStorage('db_checkins', this.checkIns);
+        saveToStorage('db_challenges', this.challenges);
+        saveToStorage('db_photos', this.photos);
     }
 }
 
@@ -232,6 +238,89 @@ export const backendService = {
       return [...db.badges];
   },
 
+  // --- CHALLENGES & EVENTS ---
+  async getChallenges(): Promise<Challenge[]> {
+    await delay(100);
+    return [...db.challenges];
+  },
+
+  async createChallenge(challengeData: Omit<Challenge, 'id'>): Promise<Challenge> {
+    await delay(200);
+    const newChallenge: Challenge = { id: `challenge-${Date.now()}`, ...challengeData };
+    db.challenges.push(newChallenge);
+    db.save();
+    return newChallenge;
+  },
+
+  async updateChallenge(challengeId: string, challengeData: Partial<Challenge>): Promise<Challenge | null> {
+    await delay(200);
+    const index = db.challenges.findIndex(c => c.id === challengeId);
+    if (index > -1) {
+        db.challenges[index] = { ...db.challenges[index], ...challengeData };
+        db.save();
+        return { ...db.challenges[index] };
+    }
+    return null;
+  },
+
+  async deleteChallenge(challengeId: string): Promise<boolean> {
+    await delay(300);
+    db.challenges = db.challenges.filter(c => c.id !== challengeId);
+    db.save();
+    return true;
+  },
+
+  // --- PHOTO GALLERY ---
+  async getPhotos(): Promise<Photo[]> {
+    await delay(150);
+    return [...db.photos].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  },
+
+  async createPhoto(photoData: Omit<Photo, 'id' | 'timestamp' | 'likes' | 'userName' | 'userAvatarUrl'>): Promise<Photo> {
+    await delay(300);
+    const user = await this.getUserById(photoData.userId);
+    if (!user) throw new Error("User not found");
+
+    const newPhoto: Photo = {
+        id: `photo-${Date.now()}`,
+        ...photoData,
+        userName: user.name,
+        userAvatarUrl: user.avatarUrl,
+        timestamp: new Date().toISOString(),
+        likes: [],
+    };
+    db.photos.push(newPhoto);
+    
+    // Award points for posting a photo
+    await this.updateUser(photoData.userId, { points: user.points + 15 }); // +15 points for a new photo
+
+    db.save();
+    return newPhoto;
+  },
+
+  async likePhoto(photoId: string, likingUserId: string): Promise<Photo | null> {
+    await delay(100);
+    const photoIndex = db.photos.findIndex(p => p.id === photoId);
+    if (photoIndex === -1) return null;
+
+    const photo = db.photos[photoIndex];
+    const photoOwner = await this.getUserById(photo.userId);
+    if (!photoOwner) return null;
+
+    // Prevent liking own photo or liking twice
+    if (photo.userId === likingUserId || photo.likes.includes(likingUserId)) {
+        return photo;
+    }
+
+    photo.likes.push(likingUserId);
+    
+    // Award points to the photo owner for receiving a like
+    await this.updateUser(photo.userId, { points: photoOwner.points + 2 }); // +2 points per like
+
+    db.save();
+    return { ...photo };
+  },
+
   // --- HOTEL ---
   async getHotelCheckIns(hotelId: string): Promise<HotelCheckIn[]> {
     await delay(150);
@@ -339,6 +428,53 @@ export const backendService = {
     });
 
     return analytics;
+  },
+
+  async getFullAdminDashboardData(): Promise<any> {
+    await delay(450);
+    const stats = await this.getAdminStats();
+    const analytics = await this.getAnalyticsData();
+
+    // Add bot usage mock data
+    const botUsage = {
+        totalInteractions: 1245,
+        commonQuestions: [
+            { question: "Horários da Cascata", count: 230 },
+            { question: "Onde comer?", count: 180 },
+            { question: "Roteiro de 1 dia", count: 150 },
+        ],
+        satisfaction: "92%",
+    };
+    
+    const totalHotelCheckIns = db.checkIns.length;
+
+    return {
+        ...stats,
+        analytics,
+        totalHotelCheckIns,
+        botUsage,
+    };
+  },
+
+  // --- ADMIN: TOURIST MANAGEMENT ---
+  async getAllTouristsData(): Promise<any[]> {
+    await delay(200);
+    const tourists = db.users.filter(u => u.role === 'tourist');
+    const checkInsByTouristName = db.checkIns.reduce((acc, ci) => {
+        acc[ci.touristName.toLowerCase()] = ci;
+        return acc;
+    }, {} as Record<string, HotelCheckIn>);
+
+    return tourists.map(t => {
+        const checkInInfo = checkInsByTouristName[t.name.toLowerCase()];
+        return {
+            id: t.id,
+            name: t.name,
+            email: t.email,
+            points: t.points,
+            phone: checkInInfo ? checkInInfo.phone : 'N/A',
+        };
+    });
   }
 
 };

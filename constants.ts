@@ -1,4 +1,4 @@
-import type { Badge, PointOfInterest, Route, User, HotelCheckIn } from './types';
+import type { Badge, PointOfInterest, Route, User, HotelCheckIn, Challenge, Photo } from './types';
 
 export const POINTS_OF_INTEREST: PointOfInterest[] = [
     { id: 'poi-1', name: 'Pedra do Segredo', description: 'Formação rochosa icônica com vista panorâmica.', longDescription: 'A Pedra do Segredo é um dos mais belos e misteriosos pontos turísticos de Caçapava do Sul. A subida é recompensada com uma vista de 360 graus da região, perfeita para fotos e contemplação.', imageUrl: 'https://i.ytimg.com/vi/bYf2-T20W0g/maxresdefault.jpg', points: 25, lat: -30.5694, lng: -53.4913 },
@@ -174,5 +174,57 @@ export const HOTEL_CHECKINS: HotelCheckIn[] = [
         cityOpinion: 'Ótima',
         checkInDate: '2023-10-20T16:00:00Z',
         checkOutDate: '2023-10-24T12:00:00Z',
+    }
+];
+
+export const CHALLENGES: Challenge[] = [
+    {
+        id: 'challenge-1',
+        title: 'Maratona Fotográfica',
+        description: 'Tire uma foto em 3 pontos de interesse diferentes em um único dia.',
+        points: 50,
+        type: 'challenge',
+    },
+    {
+        id: 'challenge-2',
+        title: 'Festival de Inverno',
+        description: 'Participe do evento de abertura do Festival de Inverno na praça central.',
+        points: 30,
+        type: 'event',
+        startDate: '2025-07-20T18:00:00Z',
+        endDate: '2025-07-20T22:00:00Z',
+    },
+    {
+        id: 'challenge-3',
+        title: 'Caçador de Lendas',
+        description: 'Visite o Forte Dom Pedro II e a Pedra do Segredo para desvendar mistérios.',
+        points: 40,
+        type: 'challenge',
+        relatedPoiIds: ['poi-1', 'poi-4'],
+    }
+];
+
+export const PHOTOS: Photo[] = [
+    {
+        id: 'photo-1',
+        userId: 'user-1',
+        userName: 'Ana Exploradora',
+        userAvatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
+        imageUrl: 'https://www.aventurebox.com/wp-content/uploads/2021/10/trekking-nas-guaritas-3.jpg',
+        caption: 'Vista incrível da Pedra do Segredo! 🤩 #CaçapavaDoSul',
+        poiId: 'poi-1',
+        timestamp: '2025-08-17T16:30:00Z',
+        likes: ['user-4', 'user-5'],
+    },
+    {
+        id: 'photo-2',
+        userId: 'user-4',
+        userName: 'Carlos Viajante',
+        userAvatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
+        imageUrl: 'https://i0.wp.com/serrasdonovosul.com/wp-content/uploads/2022/01/forte-dom-pedro-II.jpg?fit=800%2C533&ssl=1',
+        caption: 'Conhecendo um pouco da história do Brasil no Forte Dom Pedro II.',
+        poiId: 'poi-4',
+        timestamp: '2025-08-16T11:00:00Z',
+        likes: ['user-1'],
     }
 ];
