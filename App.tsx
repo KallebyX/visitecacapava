@@ -28,9 +28,13 @@ import ManagePoisPage from './pages/admin/ManagePoisPage';
 import PoiEditor from './pages/admin/PoiEditor';
 import ManageTouristsPage from './pages/admin/ManageTouristsPage';
 import ManageChallengesPage from './pages/admin/ManageChallengesPage';
+import HotelAnalyticsPage from './pages/admin/HotelAnalyticsPage';
 
 import HotelDashboard from './pages/hotel/HotelDashboard';
 import HotelCheckInPage from './pages/hotel/HotelCheckInPage';
+
+// Layouts
+// import AdminLayout from './components/layouts/AdminLayout';
 
 const App: React.FC = () => {
   return (
@@ -43,7 +47,7 @@ const App: React.FC = () => {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute role="secretaria">
+              <ProtectedRoute roles={['secretaria']}>
                 <AdminLayout>
                   <Outlet />
                 </AdminLayout>
@@ -60,13 +64,14 @@ const App: React.FC = () => {
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="tourists" element={<ManageTouristsPage />} />
             <Route path="challenges" element={<ManageChallengesPage />} />
+            <Route path="hotel-analytics" element={<HotelAnalyticsPage />} />
           </Route>
 
           {/* Hotel Routes */}
           <Route
             path="/hotel"
             element={
-              <ProtectedRoute role="hotel">
+              <ProtectedRoute roles={['hotel']}>
                 <HotelLayout>
                   <Outlet />
                 </HotelLayout>
@@ -81,7 +86,7 @@ const App: React.FC = () => {
           <Route
             path="/"
             element={
-              <ProtectedRoute role="tourist">
+              <ProtectedRoute roles={['tourist']}>
                 <GamificationProvider>
                   <TouristLayout>
                     <Outlet />

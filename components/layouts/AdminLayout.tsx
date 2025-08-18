@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Route, LogOut, BarChart3, MapPin, Map, Users, Trophy } from 'lucide-react';
+import { LayoutDashboard, Route, LogOut, BarChart3, MapPin, Map, Users, Trophy, Home, BarChart2, Award, Hotel } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import MapOutlineIcon from '../MapOutlineIcon';
 
@@ -44,31 +44,14 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         <div className="font-display tracking-wider text-xl leading-none text-white">ADMIN</div>
                     </div>
                 </div>
-                <nav className="flex-grow px-2 py-4 space-y-2">
-                    <NavLink to="/admin" end className={navLinkClass}>
-                        <LayoutDashboard size={20} />
-                        <span>Dashboard</span>
-                    </NavLink>
-                    <NavLink to="/admin/routes" className={navLinkClass}>
-                        <Route size={20} />
-                        <span>Gerenciar Rotas</span>
-                    </NavLink>
-                    <NavLink to="/admin/pois" className={navLinkClass}>
-                        <MapPin size={20} />
-                        <span>Gerenciar Pontos</span>
-                    </NavLink>
-                    <NavLink to="/admin/challenges" className={navLinkClass}>
-                        <Trophy size={20} />
-                        <span>Desafios</span>
-                    </NavLink>
-                    <NavLink to="/admin/tourists" className={navLinkClass}>
-                        <Users size={20} />
-                        <span>Turistas</span>
-                    </NavLink>
-                     <NavLink to="/admin/analytics" className={navLinkClass}>
-                        <BarChart3 size={20} />
-                        <span>Analytics (BI)</span>
-                    </NavLink>
+                <nav className="mt-6">
+                    <NavLink to="/admin" icon={<Home size={20} />}>Dashboard</NavLink>
+                    <NavLink to="/admin/routes" icon={<Route size={20} />}>Rotas</NavLink>
+                    <NavLink to="/admin/pois" icon={<MapPin size={20} />}>Pontos de Interesse</NavLink>
+                    <NavLink to="/admin/challenges" icon={<Award size={20} />}>Desafios</NavLink>
+                    <NavLink to="/admin/tourists" icon={<Users size={20} />}>Turistas</NavLink>
+                    <NavLink to="/admin/hotel-analytics" icon={<Hotel size={20} />}>Hotéis</NavLink>
+                    <NavLink to="/admin/analytics" icon={<BarChart2 size={20} />}>Analytics</NavLink>
                 </nav>
                  <div className="mt-auto p-4 border-t border-slate-800">
                     <div className="p-2 mb-2">

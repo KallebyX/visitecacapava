@@ -1,57 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { backendService } from '../../services/backendService';
-import type { HotelCheckIn } from '../../types';
-import StatCard from '../../components/admin/StatCard';
-import { BedDouble, UserCheck, Calendar } from 'lucide-react';
-
-const HotelDashboard: React.FC = () => {
-    const { user } = useAuth();
-    const [checkIns, setCheckIns] = useState<HotelCheckIn[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (user) {
-            backendService.getHotelCheckIns(user.id).then(data => {
-                setCheckIns(data.sort((a,b) => new Date(b.checkInDate).getTime() - new Date(a.checkInDate).getTime()));
-                setLoading(false);
-            });
-        }
-    }, [user]);
-
-    if (loading) return <p>Carregando dashboard do hotel...</p>;
-    
-    const today = new Date().toISOString().split('T')[0];
-    const todaysCheckIns = checkIns.filter(c => c.checkInDate.startsWith(today)).length;
-
-
-    return (
-        import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { backendService } from '../../services/backendService';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { useAuth } from '../../context/AuthContext';
 import { HotelCheckIn } from '../../types';
 import { chartColors, transparentChartColors } from '../../utils/chartUtils';
+import { BedDouble, Users, MapPin } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 const StatCard: React.FC<{ title: string; value: string | number; icon: React.ReactNode }> = ({ title, value, icon }) => (
-    <div className="bg-white p-6 rounded-lg shadow-md flex items-center space-x-4">
-        <div className="bg-blue-100 text-blue-600 p-3 rounded-full">
+    <div className="bg-white p-6 rounded-2xl shadow-lg flex items-center space-x-4 border border-gray-200/80">
+        <div className="bg-brand-light-green/30 text-brand-green p-4 rounded-full">
             {icon}
         </div>
         <div>
-            <p className="text-sm text-gray-500">{title}</p>
-            <p className="text-2xl font-bold text-gray-800">{value}</p>
+            <p className="text-sm text-gray-500 font-medium">{title}</p>
+            <p className="text-3xl font-bold text-brand-dark-green">{value}</p>
         </div>
     </div>
 );
 
 const ChartCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">{title}</h3>
-        {children}
+    <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200/80">
+        <h3 className="text-xl font-bold text-brand-dark-green mb-4">{title}</h3>
+        <div className="h-64 flex items-center justify-center">
+            {children}
+        </div>
     </div>
 );
 
@@ -67,16 +42,19 @@ const HotelDashboard: React.FC = () => {
                     setDashboardData(data);
                     setLoading(false);
                 })
-                .catch(console.error);
+                .catch(error => {
+                    console.error("Failed to load hotel dashboard:", error);
+                    setLoading(false);
+                });
         }
     }, [user]);
 
     if (loading) {
-        return <div className="text-center py-10">Carregando dados do hotel...</div>;
+        return <div className="text-center py-20 font-medium text-gray-600">Carregando dashboard do hotel...</div>;
     }
 
     if (!dashboardData) {
-        return <div className="text-center py-10 text-red-500">Não foi possível carregar os dados.</div>;
+        return <div className="text-center py-20 font-bold text-red-600">Não foi possível carregar os dados do hotel.</div>;
     }
 
     const reasonData = {
@@ -85,58 +63,69 @@ const HotelDashboard: React.FC = () => {
             data: Object.values(dashboardData.travelBehavior.byReason),
             backgroundColor: transparentChartColors,
             borderColor: chartColors,
-            borderWidth: 1,
+            borderWidth: 2,
         }],
     };
 
     const originData = {
         labels: Object.keys(dashboardData.demographics.byOrigin),
         datasets: [{
-            label: 'Hóspedes por Origem',
+            label: 'Hóspedes',
             data: Object.values(dashboardData.demographics.byOrigin),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(108, 188, 58, 0.7)',
+            borderColor: 'rgba(108, 188, 58, 1)',
             borderWidth: 1,
         }],
+    };
+    
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
     };
 
     return (
         <div className="space-y-8">
-            <h1 className="text-3xl font-bold text-gray-800">Dashboard do Hotel</h1>
+            <h1 className="text-4xl font-bold text-brand-dark-green font-display tracking-wide">Dashboard do Hotel</h1>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard title="Total de Hóspedes" value={dashboardData.totalGuests} icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>} />
-                {/* Add more StatCards if needed, e.g., average stay duration */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <StatCard title="Total de Hóspedes" value={dashboardData.totalGuests} icon={<Users size={28} />} />
+                {/* Placeholder for other stats */}
+                <StatCard title="Check-ins Hoje" value={0} icon={<BedDouble size={28} />} />
+                <StatCard title="Principal Origem" value={Object.keys(dashboardData.demographics.byOrigin)[0] || 'N/A'} icon={<MapPin size={28} />} />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <ChartCard title="Motivo da Viagem">
-                    <Doughnut data={reasonData} />
-                </ChartCard>
-                <ChartCard title="Origem dos Hóspedes">
-                    <Bar data={originData} options={{ indexAxis: 'y' }} />
-                </ChartCard>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <div className="lg:col-span-2">
+                    <ChartCard title="Motivo da Viagem">
+                        <Doughnut data={reasonData} options={chartOptions} />
+                    </ChartCard>
+                </div>
+                <div className="lg:col-span-3">
+                    <ChartCard title="Origem dos Hóspedes">
+                        <Bar data={originData} options={{ ...chartOptions, indexAxis: 'y' }} />
+                    </ChartCard>
+                </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">Últimos Check-ins</h3>
+            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200/80">
+                <h3 className="text-xl font-bold text-brand-dark-green mb-4">Últimos Check-ins</h3>
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="py-2 px-4 border-b text-left">Nome do Turista</th>
-                                <th className="py-2 px-4 border-b text-left">Data do Check-in</th>
-                                <th className="py-2 px-4 border-b text-left">Origem</th>
-                                <th className="py-2 px-4 border-b text-left">Motivo</th>
+                                <th className="py-3 px-4 border-b text-left text-sm font-semibold text-gray-600 uppercase">Nome do Turista</th>
+                                <th className="py-3 px-4 border-b text-left text-sm font-semibold text-gray-600 uppercase">Data do Check-in</th>
+                                <th className="py-3 px-4 border-b text-left text-sm font-semibold text-gray-600 uppercase">Origem</th>
+                                <th className="py-3 px-4 border-b text-left text-sm font-semibold text-gray-600 uppercase">Motivo</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-200">
                             {dashboardData.recentCheckIns.map((checkin: HotelCheckIn) => (
-                                <tr key={checkin.id}>
-                                    <td className="py-2 px-4 border-b">{checkin.touristName}</td>
-                                    <td className="py-2 px-4 border-b">{new Date(checkin.checkInDate).toLocaleDateString()}</td>
-                                    <td className="py-2 px-4 border-b">{checkin.originCity}</td>
-                                    <td className="py-2 px-4 border-b">{checkin.travelReason}</td>
+                                <tr key={checkin.id} className="hover:bg-gray-50">
+                                    <td className="py-3 px-4">{checkin.touristName}</td>
+                                    <td className="py-3 px-4">{new Date(checkin.checkInDate).toLocaleDateString()}</td>
+                                    <td className="py-3 px-4">{checkin.originCity}</td>
+                                    <td className="py-3 px-4">{checkin.travelReason}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -144,10 +133,6 @@ const HotelDashboard: React.FC = () => {
                 </div>
             </div>
         </div>
-    );
-};
-
-export default HotelDashboard;
     );
 };
 
