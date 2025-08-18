@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { backendService } from '../services/backendService';
 import type { User } from '../types';
 
@@ -12,21 +12,40 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // In a real app, you'd initialize this from localStorage or a cookie
   const [user, setUser] = useState<User | null>(null);
 
-  const login = async (email: string, password: string) => {
-    const loggedInUser = await backendService.login(email, password);
-    if (loggedInUser) {
-      setUser(loggedInUser);
-      return { success: true, role: loggedInUser.role };
+  // On component mount, try to load user from sessionStorage
+  useEffect(() => {
+    try {
+      const storedUser = sessionStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error("Failed to parse user from sessionStorage", error);
+      setUser(null); // Clear state if storage is corrupt
     }
-    return { success: false };
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    try {
+      const loggedInUser = await backendService.login(email, password);
+      
+      if (loggedInUser) {
+        sessionStorage.setItem('user', JSON.stringify(loggedInUser));
+        setUser(loggedInUser);
+        return { success: true, role: loggedInUser.role };
+      }
+      return { success: false };
+    } catch (error) {
+      console.error('AuthContext: Erro durante o login:', error);
+      return { success: false };
+    }
   };
 
   const logout = () => {
+    sessionStorage.removeItem('user');
     setUser(null);
-    // In a real app, you'd clear the session from localStorage/cookies
   };
 
   const contextValue = useMemo(() => ({

@@ -22,39 +22,57 @@ const AdminDashboard: React.FC = () => {
     }, []);
 
     if (loading) return <p className="text-center text-slate-500 mt-10">Carregando dashboard aprimorado...</p>;
-    if (!data) return <p className="text-center text-red-500 mt-10">Falha ao carregar os dados do dashboard.</p>;
+    if (!data || !data.analytics) return <p className="text-center text-red-500 mt-10">Falha ao carregar os dados do dashboard.</p>;
 
     const { analytics, totalTourists, totalRoutes, totalCheckIns, totalHotelCheckIns, botUsage } = data;
 
+    // Verificações de segurança para evitar erros
+    const safeAnalytics = {
+        demographics: analytics?.demographics || { 
+            byGender: { Masculino: 0, Feminino: 0, Outro: 0 },
+            ageRanges: { '18-25': 0, '26-35': 0, '36-45': 0, '46-60': 0, '60+': 0 },
+            byNationality: { Brasil: 0, Argentina: 0, Uruguai: 0 }
+        },
+        travelBehavior: analytics?.travelBehavior || {
+            byReason: { Turismo: 0, Negócios: 0, Família: 0 }
+        }
+    };
+
+    const safeBotUsage = botUsage || {
+        totalInteractions: 0,
+        satisfaction: 0,
+        commonQuestions: []
+    };
+
     const genderData = {
-        labels: Object.keys(analytics.demographics.byGender),
+        labels: Object.keys(safeAnalytics.demographics.byGender),
         datasets: [{
-            data: Object.values(analytics.demographics.byGender),
+            data: Object.values(safeAnalytics.demographics.byGender),
             backgroundColor: [chartColors.blue, chartColors.pink, chartColors.gray],
         }],
     };
 
     const ageRangeData = {
-        labels: Object.keys(analytics.demographics.ageRanges),
+        labels: Object.keys(safeAnalytics.demographics.ageRanges),
         datasets: [{
-            data: Object.values(analytics.demographics.ageRanges),
+            data: Object.values(safeAnalytics.demographics.ageRanges),
             backgroundColor: [chartColors.teal, chartColors.green, chartColors.yellow, chartColors.orange, chartColors.red],
         }],
     };
     
     const originData = {
-        labels: Object.keys(analytics.demographics.byNationality),
+        labels: Object.keys(safeAnalytics.demographics.byNationality),
         datasets: [{
             label: 'Visitantes por Origem',
-            data: Object.values(analytics.demographics.byNationality),
+            data: Object.values(safeAnalytics.demographics.byNationality),
             backgroundColor: chartColors.purple,
         }],
     };
 
     const travelReasonData = {
-        labels: Object.keys(analytics.travelBehavior.byReason),
+        labels: Object.keys(safeAnalytics.travelBehavior.byReason),
         datasets: [{
-            data: Object.values(analytics.travelBehavior.byReason),
+            data: Object.values(safeAnalytics.travelBehavior.byReason),
             backgroundColor: [chartColors.indigo, chartColors.cyan, chartColors.lime],
         }],
     };
@@ -65,12 +83,12 @@ const AdminDashboard: React.FC = () => {
             
             {/* --- Métricas Principais --- */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-                <InfoCard icon={Users} title="Turistas (App)" value={totalTourists} color="#3b82f6" />
-                <InfoCard icon={Hotel} title="Check-ins (Hoteis)" value={totalHotelCheckIns} color="#10b981" />
-                <InfoCard icon={CheckCircle} title="Check-ins (POIs)" value={totalCheckIns} color="#f97316" />
-                <InfoCard icon={MapPin} title="Rotas Criadas" value={totalRoutes} color="#8b5cf6" />
-                <InfoCard icon={Bot} title="Interações (Bot)" value={botUsage.totalInteractions} color="#14b8a6" />
-                <InfoCard icon={BarChart2} title="Satisfação (Bot)" value={botUsage.satisfaction} color="#6366f1" />
+                <InfoCard icon={Users} title="Turistas (App)" value={totalTourists || 0} color="#3b82f6" />
+                <InfoCard icon={Hotel} title="Check-ins (Hoteis)" value={totalHotelCheckIns || 0} color="#10b981" />
+                <InfoCard icon={CheckCircle} title="Check-ins (POIs)" value={totalCheckIns || 0} color="#f97316" />
+                <InfoCard icon={MapPin} title="Rotas Criadas" value={totalRoutes || 0} color="#8b5cf6" />
+                <InfoCard icon={Bot} title="Interações (Bot)" value={safeBotUsage.totalInteractions} color="#14b8a6" />
+                <InfoCard icon={BarChart2} title="Satisfação (Bot)" value={safeBotUsage.satisfaction} color="#6366f1" />
             </div>
 
             {/* --- Demografia --- */}
@@ -91,12 +109,15 @@ const AdminDashboard: React.FC = () => {
                 <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
                     <h3 className="text-lg font-semibold text-slate-700 mb-4">Perguntas Frequentes (Bot)</h3>
                     <ul className="space-y-3 text-slate-600">
-                        {botUsage.commonQuestions.map((q: any) => (
-                            <li key={q.question} className="flex justify-between items-center text-sm">
-                                <span>{q.question}</span>
-                                <span className="font-bold text-slate-800 bg-slate-100 px-2 py-1 rounded-md">{q.count}</span>
+                        {safeBotUsage.commonQuestions.map((q: any, index: number) => (
+                            <li key={q.question || index} className="flex justify-between items-center text-sm">
+                                <span>{q.question || 'Pergunta não disponível'}</span>
+                                <span className="font-bold text-slate-800 bg-slate-100 px-2 py-1 rounded-md">{q.count || 0}</span>
                             </li>
                         ))}
+                        {safeBotUsage.commonQuestions.length === 0 && (
+                            <li className="text-center text-slate-400 py-4">Nenhuma pergunta registrada</li>
+                        )}
                     </ul>
                 </div>
             </div>

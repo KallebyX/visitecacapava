@@ -17,20 +17,9 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
     `flex items-center gap-4 px-4 py-3 rounded-r-lg text-base transition-colors duration-200 border-l-4 ${
       isActive
-        ? 'bg-brand-green/10 text-white font-semibold border-brand-green'
-        : 'border-transparent hover:bg-slate-800'
+        ? 'bg-brand-light-green/20 text-brand-light-green font-semibold border-brand-light-green'
+        : 'border-transparent hover:bg-slate-800 text-slate-400 hover:text-slate-300'
     }`;
-
-    const getLinkClass = (path: string) => {
-        // Adjust for index route
-        const fullPath = path === '/' ? '/admin' : `/admin${path}`;
-        const isActive = location.pathname === fullPath || (path !== '/' && location.pathname.startsWith(fullPath));
-        return `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-            isActive 
-                ? 'bg-green-100 text-green-700' 
-                : 'text-slate-600 hover:bg-slate-100'
-        }`;
-    };
 
     return (
         <div className="min-h-screen flex bg-slate-100 text-slate-800">
@@ -44,14 +33,35 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         <div className="font-display tracking-wider text-xl leading-none text-white">ADMIN</div>
                     </div>
                 </div>
-                <nav className="mt-6">
-                    <NavLink to="/admin" icon={<Home size={20} />}>Dashboard</NavLink>
-                    <NavLink to="/admin/routes" icon={<Route size={20} />}>Rotas</NavLink>
-                    <NavLink to="/admin/pois" icon={<MapPin size={20} />}>Pontos de Interesse</NavLink>
-                    <NavLink to="/admin/challenges" icon={<Award size={20} />}>Desafios</NavLink>
-                    <NavLink to="/admin/tourists" icon={<Users size={20} />}>Turistas</NavLink>
-                    <NavLink to="/admin/hotel-analytics" icon={<Hotel size={20} />}>Hotéis</NavLink>
-                    <NavLink to="/admin/analytics" icon={<BarChart2 size={20} />}>Analytics</NavLink>
+                <nav className="mt-6 space-y-1 px-4">
+                    <NavLink to="/admin" className={navLinkClass} end>
+                        <Home size={20} />
+                        <span>Dashboard</span>
+                    </NavLink>
+                    <NavLink to="/admin/routes" className={navLinkClass}>
+                        <Route size={20} />
+                        <span>Rotas</span>
+                    </NavLink>
+                    <NavLink to="/admin/pois" className={navLinkClass}>
+                        <MapPin size={20} />
+                        <span>Pontos de Interesse</span>
+                    </NavLink>
+                    <NavLink to="/admin/challenges" className={navLinkClass}>
+                        <Award size={20} />
+                        <span>Desafios</span>
+                    </NavLink>
+                    <NavLink to="/admin/tourists" className={navLinkClass}>
+                        <Users size={20} />
+                        <span>Turistas</span>
+                    </NavLink>
+                    <NavLink to="/admin/hotel-analytics" className={navLinkClass}>
+                        <Hotel size={20} />
+                        <span>Hotéis</span>
+                    </NavLink>
+                    <NavLink to="/admin/analytics" className={navLinkClass}>
+                        <BarChart2 size={20} />
+                        <span>Analytics</span>
+                    </NavLink>
                 </nav>
                  <div className="mt-auto p-4 border-t border-slate-800">
                     <div className="p-2 mb-2">

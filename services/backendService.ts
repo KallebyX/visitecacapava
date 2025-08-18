@@ -70,6 +70,7 @@ export const backendService = {
   async login(email: string, password: string): Promise<User | null> {
     await delay(300);
     const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    
     if (user && user.password === password) {
         const { password, ...userWithoutPassword } = user;
         return userWithoutPassword;
