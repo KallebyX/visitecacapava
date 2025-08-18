@@ -3,9 +3,7 @@ import { backendService } from '../../services/backendService';
 import StatCard from '../../components/admin/StatCard';
 import { Users, Map, CheckSquare, Star } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import '../../services/chartjs-config';
 
 const AdminDashboard: React.FC = () => {
     const [stats, setStats] = useState<any>(null);

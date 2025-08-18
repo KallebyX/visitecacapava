@@ -1,19 +1,24 @@
 
+
 import { GoogleGenAI } from "@google/genai";
-import { POINTS_OF_INTEREST } from '../constants';
+import { backendService } from './backendService';
 import type { PointOfInterest } from '../types';
 
 const API_KEY = process.env.API_KEY;
 
-if (!API_KEY) {
-  console.warn("API_KEY environment variable not set. Gemini API calls will fail.");
+// A more robust check for a valid key. A typical Google API key is ~39 characters.
+const isApiKeyValid = API_KEY && API_KEY.length > 30;
+
+if (!isApiKeyValid) {
+  console.warn("API_KEY environment variable not set or is invalid. Gemini API calls will be simulated.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
+const ai = isApiKeyValid ? new GoogleGenAI({ apiKey: API_KEY! }) : null;
+
 
 export const askAIGuideStream = async (locationName: string, question: string) => {
-  if (!API_KEY) {
-    // Simulate a response if API key is not available
+  if (!ai) {
+    // Simulate a response if API key is not available or invalid
     const simulatedResponse = `Desculpe, meu cérebro de IA está offline no momento. Mas tenho certeza que ${locationName} é incrível! Tente perguntar a um guia local.`;
     
     async function* streamGenerator() {
@@ -50,7 +55,7 @@ interface ItineraryPreferences {
 }
 
 export const generateItinerary = async (preferences: ItineraryPreferences): Promise<string> => {
-    if (!API_KEY) {
+    if (!ai) {
         return Promise.resolve("Modo de demonstração: A API do Gemini não está configurada. Aqui está um exemplo de roteiro:\n\n### Dia 1: Aventura e Natureza\n\n**Manhã:**\n- **Pedra do Segredo:** Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\n**Tarde:**\n- **Guaritas:** Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\n**Noite:**\n- **Churrascaria Rodeio:** Termine o dia com um autêntico churrasco gaúcho.");
     }
 
@@ -63,8 +68,11 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         if (name.includes('churrascaria') || name.includes('doçaria')) return 'Gastronomia';
         return 'Geral';
     }
+    
+    // Fetch POIs from the backend instead of using static constants
+    const pointsOfInterest = await backendService.getPointsOfInterest();
 
-    const poiList = POINTS_OF_INTEREST.map(poi => 
+    const poiList = pointsOfInterest.map(poi => 
         `- ${poi.name}: ${poi.description} (Tipo: ${getPoiType(poi)})`
     ).join('\n');
 

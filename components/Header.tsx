@@ -4,6 +4,42 @@ import MapOutlineIcon from './MapOutlineIcon';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, Menu, X, Bot } from 'lucide-react';
 
+const mobileNavLinkClass = ({ isActive }: { isActive: boolean }): string =>
+  `block px-4 py-3 rounded-md text-lg font-medium transition-colors duration-300 ${
+    isActive
+      ? 'bg-brand-light-green text-white'
+      : 'text-brand-beige hover:bg-brand-light-green/20'
+  }`;
+
+interface MobileMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onLogout: () => void;
+}
+
+const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout }) => (
+  <div className={`fixed inset-0 z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className="absolute inset-0 bg-black/50" onClick={onClose}></div>
+      <div className="relative w-72 h-full bg-brand-dark-green ml-auto p-6 flex flex-col">
+          <button onClick={onClose} className="self-end mb-8 text-brand-beige">
+              <X size={30}/>
+          </button>
+          <nav className="flex flex-col space-y-4">
+              <NavLink to="/" className={mobileNavLinkClass}>Início</NavLink>
+              <NavLink to="/routes" className={mobileNavLinkClass}>Rotas</NavLink>
+              <NavLink to="/itinerary" className={mobileNavLinkClass}>Roteiro IA</NavLink>
+              <NavLink to="/map" className={mobileNavLinkClass}>Mapa</NavLink>
+              <NavLink to="/leaderboard" className={mobileNavLinkClass}>Ranking</NavLink>
+              <NavLink to="/profile" className={mobileNavLinkClass}>Meu Perfil</NavLink>
+          </nav>
+          <button onClick={onLogout} className="mt-auto flex items-center gap-2 px-4 py-3 rounded-md text-lg font-medium text-brand-red hover:bg-brand-red/10 transition-colors">
+              <LogOut size={22} />
+              Sair
+          </button>
+      </div>
+  </div>
+);
+
 const Header: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -26,36 +62,6 @@ const Header: React.FC = () => {
         ? 'bg-brand-light-green text-white'
         : 'text-brand-dark-green hover:bg-brand-light-green/20'
     }`;
-    
-   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }): string =>
-    `block px-4 py-3 rounded-md text-lg font-medium transition-colors duration-300 ${
-      isActive
-        ? 'bg-brand-light-green text-white'
-        : 'text-brand-beige hover:bg-brand-light-green/20'
-    }`;
-
-  const MobileMenu = () => (
-    <div className={`fixed inset-0 z-50 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="absolute inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className="relative w-72 h-full bg-brand-dark-green ml-auto p-6 flex flex-col">
-            <button onClick={() => setIsMobileMenuOpen(false)} className="self-end mb-8 text-brand-beige">
-                <X size={30}/>
-            </button>
-            <nav className="flex flex-col space-y-4">
-                <NavLink to="/" className={mobileNavLinkClass}>Início</NavLink>
-                <NavLink to="/routes" className={mobileNavLinkClass}>Rotas</NavLink>
-                <NavLink to="/itinerary" className={mobileNavLinkClass}>Roteiro IA</NavLink>
-                <NavLink to="/map" className={mobileNavLinkClass}>Mapa</NavLink>
-                <NavLink to="/leaderboard" className={mobileNavLinkClass}>Ranking</NavLink>
-                <NavLink to="/profile" className={mobileNavLinkClass}>Meu Perfil</NavLink>
-            </nav>
-            <button onClick={handleLogout} className="mt-auto flex items-center gap-2 px-4 py-3 rounded-md text-lg font-medium text-brand-red hover:bg-brand-red/10 transition-colors">
-                <LogOut size={22} />
-                Sair
-            </button>
-        </div>
-    </div>
-  );
 
   return (
     <>
@@ -97,7 +103,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
-      <MobileMenu />
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} onLogout={handleLogout} />
     </>
   );
 };

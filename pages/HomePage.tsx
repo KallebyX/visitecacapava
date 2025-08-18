@@ -1,14 +1,27 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, Trophy, Users } from 'lucide-react';
 import MapOutlineIcon from '../components/MapOutlineIcon';
 import { useGamification } from '../context/GamificationContext';
-import { ROUTES } from '../constants';
 import RouteCard from '../components/RouteCard';
+import type { Route } from '../types';
+import { backendService } from '../services/backendService';
 
 const HomePage: React.FC = () => {
     const { currentUser } = useGamification();
+    const [featuredRoutes, setFeaturedRoutes] = useState<Route[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        backendService.getRoutes().then(data => {
+            setFeaturedRoutes(data.slice(0, 2));
+            setLoading(false);
+        }).catch(err => {
+            console.error("Failed to fetch featured routes:", err);
+            setLoading(false);
+        });
+    }, []);
 
     return (
         <div className="space-y-16">
@@ -54,11 +67,15 @@ const HomePage: React.FC = () => {
             {/* Featured Routes Section */}
             <section>
                 <h2 className="text-3xl font-bold text-center mb-8">Rotas em Destaque</h2>
-                <div className="grid md:grid-cols-2 gap-8">
-                    {ROUTES.slice(0, 2).map(route => (
-                        <RouteCard key={route.id} route={route} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="text-center text-gray-600">Carregando rotas...</div>
+                ) : (
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {featuredRoutes.map(route => (
+                            <RouteCard key={route.id} route={route} />
+                        ))}
+                    </div>
+                )}
             </section>
         </div>
     );

@@ -22,7 +22,7 @@ export interface Badge {
   name: string;
   description: string;
   icon: string;
-  criteria: (visitedIds: Set<string>) => boolean;
+  criteria: (visitedIds: Set<string>, allPoiIds?: Set<string>) => boolean;
 }
 
 export interface User {

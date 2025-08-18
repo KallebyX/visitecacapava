@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { backendService } from '../../services/backendService';
 import { Bar, Doughnut, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import '../../services/chartjs-config';
 import { Users, Plane, Heart, Route as RouteIcon, MapPin, Trophy } from 'lucide-react';
 import StatCard from '../../components/admin/StatCard';
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const chartColors = ['#02a343', '#6cbc3a', '#f2e9c6', '#063f1f', '#d82b2b', '#ffe815'];
 
