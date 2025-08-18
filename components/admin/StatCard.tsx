@@ -9,14 +9,14 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value, isText = false }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-      <div className="bg-brand-light-green/20 p-4 rounded-full text-brand-green">
-        <Icon size={32} />
+    <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200/80">
+      <div className="flex items-center justify-between">
+         <p className="text-slate-500 text-sm font-medium">{title}</p>
+         <div className="text-brand-green">
+            <Icon size={24} />
+         </div>
       </div>
-      <div>
-        <p className="text-gray-500 text-sm font-medium">{title}</p>
-        <p className={`font-bold ${isText ? 'text-lg' : 'text-3xl'} text-brand-dark-green`}>{value}</p>
-      </div>
+      <p className={`mt-2 font-bold ${isText ? 'text-xl' : 'text-4xl'} text-slate-800`}>{value}</p>
     </div>
   );
 };

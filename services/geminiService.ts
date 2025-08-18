@@ -1,35 +1,14 @@
-
-
 import { GoogleGenAI } from "@google/genai";
 import { backendService } from './backendService';
 import type { PointOfInterest, User, ChatMessage } from '../types';
 
 const API_KEY = process.env.API_KEY;
 
-// A more robust check for a valid key. A typical Google API key is ~39 characters.
-const isApiKeyValid = API_KEY && API_KEY.length > 30;
-
-if (!isApiKeyValid) {
-  console.warn("API_KEY environment variable not set or is invalid. Gemini API calls will be simulated.");
-}
-
-const ai = isApiKeyValid ? new GoogleGenAI({ apiKey: API_KEY! }) : null;
-
+// Always initialize the client. If API_KEY is undefined, pass an empty string.
+// The API calls will then fail gracefully and be caught by the try/catch blocks below.
+const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
 export const askAIGuideStream = async (locationName: string, question: string) => {
-  if (!ai) {
-    // Simulate a response if API key is not available or invalid
-    const simulatedResponse = `Desculpe, meu cérebro de IA está offline no momento. Mas tenho certeza que ${locationName} é incrível! Tente perguntar a um guia local.`;
-    
-    async function* streamGenerator() {
-        for (const word of simulatedResponse.split(' ')) {
-            await new Promise(res => setTimeout(res, 50));
-            yield { text: word + ' ' };
-        }
-    }
-    return streamGenerator();
-  }
-
   const prompt = `Você é um guia turístico amigável e experiente de Caçapava do Sul, Brasil. Um turista está visitando "${locationName}" e tem uma pergunta. Responda de forma concisa, útil e calorosa. Pergunta: "${question}"`;
 
   try {
@@ -39,9 +18,16 @@ export const askAIGuideStream = async (locationName: string, question: string) =
     });
     return response;
   } catch (error) {
-    console.error("Error calling Gemini API:", error);
+    console.error("Error calling Gemini API (askAIGuideStream):", error);
+    
+    // Fallback to a simulated stream on any API error.
+    const simulatedResponse = `Desculpe, meu cérebro de IA está offline no momento. Mas tenho certeza que ${locationName} é incrível! Tente perguntar a um guia local.`;
+    
     async function* errorStreamGenerator() {
-      yield { text: "Ocorreu um erro ao contatar o guia de IA. Por favor, tente novamente mais tarde." };
+        for (const word of simulatedResponse.split(' ')) {
+            await new Promise(res => setTimeout(res, 50));
+            yield { text: word + ' ' };
+        }
     }
     return errorStreamGenerator();
   }
@@ -55,10 +41,6 @@ interface ItineraryPreferences {
 }
 
 export const generateItinerary = async (preferences: ItineraryPreferences): Promise<string> => {
-    if (!ai) {
-        return Promise.resolve("Modo de demonstração: A API do Gemini não está configurada. Aqui está um exemplo de roteiro:\n\n### Dia 1: Aventura e Natureza\n\n**Manhã:**\n- **Pedra do Segredo:** Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\n**Tarde:**\n- **Guaritas:** Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\n**Noite:**\n- **Churrascaria Rodeio:** Termine o dia com um autêntico churrasco gaúcho.");
-    }
-
     // Helper to categorize POIs for better matching
     const getPoiType = (poi: PointOfInterest): string => {
         const name = poi.name.toLowerCase();
@@ -109,16 +91,13 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         return response.text;
     } catch (error) {
         console.error("Error calling Gemini API for itinerary:", error);
-        throw new Error("Ocorreu um erro ao contatar o guia de IA. Por favor, tente novamente mais tarde.");
+        // Fallback to a simulated response on any API error
+        return "Modo de demonstração: A API do Gemini não está configurada ou a chamada falhou. Aqui está um exemplo de roteiro:\n\n### Dia 1: Aventura e Natureza\n\n**Manhã:**\n- **Pedra do Segredo:** Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\n**Tarde:**\n- **Guaritas:** Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\n**Noite:**\n- **Churrascaria Rodeio:** Termine o dia com um autêntico churrasco gaúcho.";
     }
 };
 
 
 export const getAIChatResponse = async (history: ChatMessage[], user: User): Promise<string> => {
-    if (!ai) {
-        return "Desculpe, meu cérebro de IA está offline. Não consigo conversar agora.";
-    }
-
     const pointsOfInterest = await backendService.getPointsOfInterest();
     const poiList = pointsOfInterest.map(poi => `- ${poi.name}: ${poi.description}`).join('\n');
     
@@ -162,6 +141,7 @@ export const getAIChatResponse = async (history: ChatMessage[], user: User): Pro
         return response.text;
     } catch (error) {
         console.error("Error calling Gemini API for chat:", error);
-        return "Oops! Tive um pequeno curto-circuito. 😵 Poderia tentar perguntar de novo?";
+        // Fallback to a simulated response on any API error
+        return "Desculpe, meu cérebro de IA está offline. Não consigo conversar agora.";
     }
 };

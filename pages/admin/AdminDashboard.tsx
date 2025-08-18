@@ -52,16 +52,19 @@ const AdminDashboard: React.FC = () => {
     if (loading) return <p>Carregando dashboard...</p>;
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold mb-6 text-brand-dark-green">Dashboard da Secretaria</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="space-y-8">
+            <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard icon={Users} title="Total de Turistas" value={stats.totalTourists} />
                 <StatCard icon={Map} title="Total de Rotas" value={stats.totalRoutes} />
                 <StatCard icon={CheckSquare} title="Total de Check-ins" value={stats.totalCheckIns} />
                 <StatCard icon={Star} title="Ponto Mais Visitado" value={stats.mostVisitedPoi} isText />
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                <Bar options={chartOptions} data={chartData} />
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200/80">
+                 <h2 className="text-xl font-semibold mb-4 text-slate-700">Visão Geral da Atividade (Dados Simulados)</h2>
+                <div className="h-96">
+                     <Bar options={{...chartOptions, maintainAspectRatio: false}} data={chartData} />
+                </div>
             </div>
         </div>
     );

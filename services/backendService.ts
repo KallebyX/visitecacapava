@@ -1,4 +1,4 @@
-import type { User, Route, PointOfInterest, Badge, HotelCheckIn } from '../types';
+import type { User, Route, PointOfInterest, Badge, HotelCheckIn, OpinionScale } from '../types';
 import { USERS, ROUTES, POINTS_OF_INTEREST, BADGES, HOTEL_CHECKINS } from '../constants';
 
 // --- MOCK DATABASE with Session Storage Persistence ---
@@ -272,6 +272,41 @@ export const backendService = {
     };
   },
   
+  async getAnalyticsSummary(): Promise<any> {
+    await delay(150);
+    
+    if (db.checkIns.length === 0) {
+      return {
+        totalVisitors: 0,
+        avgCityRating: 'N/A',
+        mostPopularRoute: 'N/A'
+      };
+    }
+
+    const uniqueVisitors = new Set(db.checkIns.map(c => c.touristName)).size;
+    
+    const ratingMap: Record<OpinionScale, number> = {
+      'Péssimo': 1,
+      'Ruim': 2,
+      'Boa': 3,
+      'Muito boa': 4,
+      'Ótima': 5
+    };
+
+    const totalRating = db.checkIns.reduce((sum, c) => sum + (ratingMap[c.cityOpinion] || 3), 0);
+    const avgCityRating = (totalRating / db.checkIns.length).toFixed(1);
+
+    // This is already calculated in getAnalyticsData, so just reuse the logic
+    const completionsByRoute: { [key: string]: number } = { 'Belezas Naturais': 1, 'Riqueza Histórica': 0, 'Sabores da Terra': 0 }; // Mock data
+    const mostPopularRoute = Object.entries(completionsByRoute).sort((a,b) => b[1] - a[1])[0][0] || 'N/A';
+    
+    return {
+      totalVisitors: uniqueVisitors,
+      avgCityRating,
+      mostPopularRoute
+    };
+  },
+
   async getAnalyticsData(): Promise<any> {
     await delay(400);
     // Generate analytics from mock check-in data

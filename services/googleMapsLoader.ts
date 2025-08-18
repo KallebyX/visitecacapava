@@ -11,11 +11,14 @@ export const loadGoogleMapsScript = (): Promise<void> => {
     return googleMapsPromise;
   }
   
-  const scriptUrl = `https://maps.googleapis.com/maps/api/js?v=stable${isApiKeyValid ? `&key=${GOOGLE_MAPS_API_KEY}` : ''}`;
-  
-  if (!isApiKeyValid) {
-      console.warn("Google Maps API key is not configured or is likely invalid. Map will be loaded in development mode.");
+  let scriptUrl = `https://maps.googleapis.com/maps/api/js?v=stable`;
+
+  if (isApiKeyValid) {
+    scriptUrl += `&key=${GOOGLE_MAPS_API_KEY}`;
+  } else {
+    console.warn("Google Maps API key is not configured or is likely invalid. Map will be loaded in development mode.");
   }
+
 
   googleMapsPromise = new Promise((resolve, reject) => {
     // Check if script is already present

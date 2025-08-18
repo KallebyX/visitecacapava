@@ -17,10 +17,26 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ center, zoom = 
     const [map, setMap] = useState<any | null>(null);
     const [markers, setMarkers] = useState<{ [key: string]: any }>({});
     const [mapError, setMapError] = useState<string | null>(null);
+    const hasAuthError = useRef(false);
 
     // Load Maps Script and Initialize Map
     useEffect(() => {
+        // Define a handler for authentication failures
+        const handleAuthFailure = () => {
+            if (hasAuthError.current) return;
+            hasAuthError.current = true;
+
+            console.error("Google Maps API authentication failed. This can be caused by an invalid API key, or billing not being enabled on the associated account.");
+            setMapError("Falha na autenticação do Google Maps. A chave de API pode ser inválida ou o projeto não está configurado corretamente.");
+        };
+
+        // Attach the global error handler before loading the script
+        window.gm_authFailure = handleAuthFailure;
+
         loadGoogleMapsScript().then(() => {
+            if (hasAuthError.current) {
+                return; // Don't proceed if an auth error has already been flagged
+            }
             try {
                 if (mapRef.current && !map) {
                     const newMap = new window.google.maps.Map(mapRef.current, {
@@ -35,12 +51,21 @@ const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ center, zoom = 
                 }
             } catch (e) {
                 console.error("Error initializing Google Map:", e);
-                setMapError("Ocorreu um erro ao inicializar o mapa. A chave de API pode ser inválida para este serviço.");
+                setMapError("Ocorreu um erro ao inicializar o mapa. O serviço pode estar indisponível.");
             }
         }).catch(error => {
             console.error("Failed to load Google Maps:", error);
-            setMapError("Não foi possível carregar o mapa. Verifique sua conexão com a internet.");
+            if (!hasAuthError.current) {
+                setMapError("Não foi possível carregar o mapa. Verifique sua conexão com a internet.");
+            }
         });
+
+        // Cleanup the global handler when the component unmounts
+        return () => {
+            if (window.gm_authFailure === handleAuthFailure) {
+                delete window.gm_authFailure;
+            }
+        };
     }, []); // Runs only once to initialize map
 
     // Update map center, bounds and zoom when props change

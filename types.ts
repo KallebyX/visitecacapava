@@ -76,5 +76,6 @@ declare global {
   const google: any;
   interface Window {
     google: any;
+    gm_authFailure?: () => void;
   }
 }
