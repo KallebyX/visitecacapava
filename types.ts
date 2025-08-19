@@ -4,6 +4,7 @@ export interface PointOfInterest {
   description: string;
   longDescription: string;
   imageUrl: string;
+  website?: string;
   points: number;
   lat: number;
   lng: number;
@@ -59,6 +60,38 @@ export interface Photo {
   poiId?: string; // Optional: link photo to a POI
   timestamp: string;
   likes: string[]; // Array of userIds who liked the photo
+}
+
+export interface Favorite {
+  id: string;
+  userId: string;
+  entityType: 'restaurant' | 'poi' | 'hotel';
+  entityId: string;
+  createdAt: string;
+}
+
+export interface Review {
+  id: string;
+  userId: string;
+  entityType: 'restaurant' | 'poi' | 'hotel';
+  entityId: string;
+  rating: number; // 1-5
+  comment: string;
+  createdAt: string;
+  helpful: number;
+  notHelpful: number;
+  response?: string;
+  verified: boolean;
+  user?: {
+    name: string;
+    avatarUrl: string;
+  };
+}
+
+export interface GalleryLike {
+  userId: string;
+  photoId: string;
+  createdAt: string;
 }
 
 export type TravelReason = 'Turismo' | 'Negócio' | 'Convenção' | 'Férias' | 'Outros';

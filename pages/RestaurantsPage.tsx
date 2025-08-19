@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Star, Clock, Users, Utensils, Search, Filter, Navigation } from 'lucide-react';
 import { backendService } from '../services/backendService';
 import { formatNavigationButtons } from '../utils/navigationUtils';
+import SocialMediaLinks from '../components/SocialMediaLinks';
+import RestaurantDetails from '../components/RestaurantDetails';
+import FavoriteButton from '../components/FavoriteButton';
 
 interface Restaurant {
   id: string;
@@ -15,6 +18,10 @@ interface Restaurant {
   lat: number;
   lng: number;
   phone?: string;
+  whatsapp?: string;
+  instagram?: string;
+  facebook?: string;
+  website?: string;
   hours: {
     open: string;
     close: string;
@@ -23,6 +30,9 @@ interface Restaurant {
   features: string[];
   imageUrl: string;
   verified: boolean;
+  googleMapsPlaceId?: string;
+  specialties: string[];
+  paymentMethods: string[];
 }
 
 interface Review {
@@ -57,15 +67,26 @@ const RestaurantsPage: React.FC = () => {
         cuisine: 'Gaúcha',
         priceRange: 3,
         rating: 4.6,
-        reviewCount: 89,
-        address: 'Rua General Osório, 234 - Centro',
-        lat: -30.5142,
-        lng: -53.4890,
-        phone: '(53) 3281-2345',
-        hours: { open: '11:30', close: '22:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
-        features: ['Estacionamento', 'Wi-Fi', 'Aceita Cartão', 'Ambiente Familiar'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8XzKqY9H3QbZWnZKpW_yF4-Lq5sQ7QkZQw&s',
-        verified: true
+        reviewCount: 178,
+        address: 'Rua General Osório, 356 - Centro, Caçapava do Sul',
+        lat: -30.5112,
+        lng: -53.4919,
+        phone: '(55) 3281-2456',
+        whatsapp: '5553281245',
+        instagram: '@churrascariadogaucho',
+        facebook: 'ChurrascariaDoGaucho',
+        website: 'https://churrascariadogaucho.com.br',
+        hours: {
+          open: '11:30',
+          close: '22:00',
+          days: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+        },
+        features: ['Wi-Fi', 'Estacionamento', 'Ar Condicionado', 'Música ao Vivo'],
+        imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        verified: true,
+        googleMapsPlaceId: 'ChIJXxYzw_example1',
+        specialties: ['Churrasco', 'Costela', 'Linguiça', 'Galeto'],
+        paymentMethods: ['Dinheiro', 'Cartão', 'PIX', 'VR/VA']
       },
       {
         id: '2',
@@ -73,16 +94,25 @@ const RestaurantsPage: React.FC = () => {
         description: 'Pães frescos, doces caseiros e café colonial tradicional',
         cuisine: 'Brasileira',
         priceRange: 2,
-        rating: 4.8,
-        reviewCount: 156,
-        address: 'Praça Coronel João Pessoa, 45 - Centro',
-        lat: -30.5148,
-        lng: -53.4895,
-        phone: '(53) 3281-1567',
-        hours: { open: '06:00', close: '19:00', days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'] },
-        features: ['Wi-Fi', 'Aceita Cartão', 'Takeaway', 'Ambiente Familiar'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2XzY9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
-        verified: true
+        rating: 4.4,
+        reviewCount: 96,
+        address: 'Rua Sete de Setembro, 123 - Centro, Caçapava do Sul',
+        lat: -30.5105,
+        lng: -53.4925,
+        phone: '(55) 3281-1789',
+        whatsapp: '5553281178',
+        instagram: '@padariacentral',
+        hours: {
+          open: '06:00',
+          close: '19:00',
+          days: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+        },
+        features: ['Wi-Fi', 'Café da Manhã', 'Delivery', 'Encomendas'],
+        imageUrl: 'https://images.unsplash.com/photo-1555507036-ab794f4ade2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        verified: true,
+        googleMapsPlaceId: 'ChIJXxYzw_example2',
+        specialties: ['Pães artesanais', 'Cucas', 'Café colonial', 'Doces caseiros'],
+        paymentMethods: ['Dinheiro', 'Cartão', 'PIX']
       },
       {
         id: '3',
@@ -90,16 +120,26 @@ const RestaurantsPage: React.FC = () => {
         description: 'Pizzas artesanais e pratos italianos em ambiente acolhedor',
         cuisine: 'Italiana',
         priceRange: 2,
-        rating: 4.4,
-        reviewCount: 73,
-        address: 'Rua Marechal Floriano, 178 - Centro',
-        lat: -30.5140,
-        lng: -53.4885,
-        phone: '(53) 3281-3456',
-        hours: { open: '18:30', close: '23:30', days: ['Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
-        features: ['Delivery', 'Wi-Fi', 'Aceita Cartão', 'Ambiente Jovem'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY8Z9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
-        verified: true
+        rating: 4.5,
+        reviewCount: 142,
+        address: 'Av. Presidente Vargas, 789 - Centro, Caçapava do Sul',
+        lat: -30.5098,
+        lng: -53.4912,
+        phone: '(55) 3281-3456',
+        whatsapp: '5553281345',
+        instagram: '@bellavitapizza',
+        facebook: 'BellaVitaPizzaria',
+        hours: {
+          open: '18:00',
+          close: '23:30',
+          days: ['Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+        },
+        features: ['Wi-Fi', 'Delivery', 'Ambiente Climatizado', 'Música Ambiente'],
+        imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        verified: true,
+        googleMapsPlaceId: 'ChIJXxYzw_example3',
+        specialties: ['Pizza margherita', 'Lasanha', 'Nhoque', 'Tiramisu'],
+        paymentMethods: ['Dinheiro', 'Cartão', 'PIX', 'VR/VA']
       },
       {
         id: '4',
@@ -108,15 +148,23 @@ const RestaurantsPage: React.FC = () => {
         cuisine: 'Lanches',
         priceRange: 1,
         rating: 4.2,
-        reviewCount: 124,
-        address: 'Rua General Vasco Alves, 89 - Centro',
-        lat: -30.5145,
-        lng: -53.4880,
-        phone: '(53) 3281-4567',
-        hours: { open: '17:00', close: '01:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
-        features: ['Delivery', 'Aceita PIX', 'Ambiente Jovem', 'Música ao Vivo'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX7Z8K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
-        verified: false
+        reviewCount: 87,
+        address: 'Rua Barão do Rio Branco, 234 - Centro, Caçapava do Sul',
+        lat: -30.5118,
+        lng: -53.4928,
+        phone: '(55) 3281-4567',
+        whatsapp: '5553281456',
+        hours: {
+          open: '17:00',
+          close: '00:00',
+          days: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+        },
+        features: ['Wi-Fi', 'Delivery', 'Música Ambiente', 'Área Externa'],
+        imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        verified: false,
+        googleMapsPlaceId: 'ChIJXxYzw_example4',
+        specialties: ['X-Bacon', 'Hambúrguer artesanal', 'Batata frita', 'Milk shake'],
+        paymentMethods: ['Dinheiro', 'Cartão', 'PIX']
       },
       {
         id: '5',
@@ -125,15 +173,26 @@ const RestaurantsPage: React.FC = () => {
         cuisine: 'Regional',
         priceRange: 3,
         rating: 4.7,
-        reviewCount: 92,
-        address: 'Estrada para as Guaritas, Km 3',
-        lat: -30.5200,
-        lng: -53.5000,
-        phone: '(53) 3281-5678',
-        hours: { open: '12:00', close: '20:00', days: ['Sex', 'Sáb', 'Dom'] },
-        features: ['Estacionamento', 'Vista Panorâmica', 'Produtos Locais', 'Azeites Premiados'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW6Y7K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
-        verified: true
+        reviewCount: 156,
+        address: 'Rua Marechal Floriano, 567 - Centro, Caçapava do Sul',
+        lat: -30.5089,
+        lng: -53.4935,
+        phone: '(55) 3281-5678',
+        whatsapp: '5553281567',
+        instagram: '@saborcampeiro',
+        facebook: 'SaborCampeiro',
+        website: 'https://saborcampeiro.com.br',
+        hours: {
+          open: '11:00',
+          close: '21:30',
+          days: ['Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+        },
+        features: ['Wi-Fi', 'Estacionamento', 'Azeites Locais', 'Ambiente Rústico'],
+        imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+        verified: true,
+        googleMapsPlaceId: 'ChIJXxYzw_example5',
+        specialties: ['Cordeiro assado', 'Azeite da região', 'Arroz carreteiro', 'Pacu grelhado'],
+        paymentMethods: ['Dinheiro', 'Cartão', 'PIX', 'VR/VA']
       }
     ];
 
@@ -320,8 +379,14 @@ const RestaurantsPage: React.FC = () => {
               {/* Header */}
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <h3 className="text-xl font-bold text-brand-dark-green mb-1">
+                  <h3 className="text-xl font-bold text-brand-dark-green mb-1 flex items-center gap-2">
                     {restaurant.name}
+                    <FavoriteButton
+                      entityType="restaurant"
+                      entityId={restaurant.id}
+                      userId="user-1" // Mock user - in real app from auth context
+                      size={18}
+                    />
                   </h3>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
                     <span className="bg-brand-beige px-2 py-1 rounded-full">
@@ -367,8 +432,24 @@ const RestaurantsPage: React.FC = () => {
                 ))}
               </div>
 
+              {/* Social Media Links */}
+              <SocialMediaLinks
+                whatsapp={restaurant.whatsapp}
+                instagram={restaurant.instagram}
+                facebook={restaurant.facebook}
+                website={restaurant.website}
+                phone={restaurant.phone}
+                restaurantName={restaurant.name}
+              />
+
+              {/* Restaurant Details */}
+              <RestaurantDetails
+                specialties={restaurant.specialties}
+                paymentMethods={restaurant.paymentMethods}
+              />
+
               {/* Actions */}
-              <div className="flex gap-3">
+              <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => handleNavigation(restaurant)}
                   className="flex-1 bg-brand-green text-white px-4 py-2 rounded-lg font-medium hover:bg-brand-dark-green transition-colors duration-200 flex items-center justify-center gap-2"

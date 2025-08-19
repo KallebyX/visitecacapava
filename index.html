@@ -4,11 +4,79 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Visite Caçapava do Sul</title>
-    <meta name="description" content="Descubra os pontos turísticos de Caçapava do Sul com nossa aplicação interativa.">
+    
+    <!-- SEO Meta Tags -->
+    <title>Visite Caçapava do Sul - Turismo Gamificado com IA</title>
+    <meta name="description" content="Explore Caçapava do Sul com nossa plataforma gamificada de turismo. Descubra pontos turísticos, azeites premiados, restaurantes locais e ganhe pontos visitando atrações. Sistema com IA, navegação integrada e experiência interativa." />
+    <meta name="keywords" content="Caçapava do Sul, turismo, pontos turísticos, azeites premiados, Guaritas do Camaquã, Minas do Camaquã, turismo RS, Rio Grande do Sul, gamificação, IA, restaurantes" />
+    <meta name="author" content="Prefeitura de Caçapava do Sul" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="pt-BR" />
+    <meta name="geo.region" content="BR-RS" />
+    <meta name="geo.placename" content="Caçapava do Sul" />
+    <meta name="geo.position" content="-30.5119;-53.4908" />
+    <meta name="ICBM" content="-30.5119, -53.4908" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://visitecacapava.vercel.app/" />
+    <meta property="og:title" content="Visite Caçapava do Sul - Turismo Gamificado com IA" />
+    <meta property="og:description" content="Explore Caçapava do Sul com nossa plataforma gamificada. Descubra pontos turísticos, azeites premiados e ganhe pontos visitando atrações!" />
+    <meta property="og:image" content="https://visitecacapava.vercel.app/og-image.jpg" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Visite Caçapava do Sul" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://visitecacapava.vercel.app/" />
+    <meta property="twitter:title" content="Visite Caçapava do Sul - Turismo Gamificado" />
+    <meta property="twitter:description" content="Explore Caçapava do Sul com gamificação, IA e navegação integrada!" />
+    <meta property="twitter:image" content="https://visitecacapava.vercel.app/og-image.jpg" />
+    
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TouristAttraction",
+      "name": "Visite Caçapava do Sul",
+      "description": "Plataforma interativa de turismo para Caçapava do Sul com gamificação e IA",
+      "url": "https://visitecacapava.vercel.app/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Caçapava do Sul",
+        "addressRegion": "RS",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -30.5119,
+        "longitude": -53.4908
+      },
+      "touristType": ["Families", "Adults", "Seniors"],
+      "availableLanguage": "pt-BR"
+    }
+    </script>
+    
+    <!-- Acessibilidade - VLibras -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://visitecacapava.vercel.app/" />
   </head>
   <body class="bg-brand-beige">
     <div id="root"></div>
+    
+    <!-- VLibras Widget -->
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+    <script>
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>

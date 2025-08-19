@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { backendService } from '../../services/backendService';
-import { User, Mail, Phone, Award } from 'lucide-react';
+import { User, Mail, Phone, Award, Settings } from 'lucide-react';
+import PointsAdjustmentModal from '../../components/admin/PointsAdjustmentModal';
 
 const ManageTouristsPage: React.FC = () => {
     const [tourists, setTourists] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedTourist, setSelectedTourist] = useState<any>(null);
+    const [showPointsModal, setShowPointsModal] = useState(false);
 
     useEffect(() => {
         backendService.getAllTouristsData().then(data => {
@@ -18,6 +21,19 @@ const ManageTouristsPage: React.FC = () => {
         t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         t.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handlePointsAdjustment = (tourist: any) => {
+        setSelectedTourist(tourist);
+        setShowPointsModal(true);
+    };
+
+    const handlePointsUpdated = (touristId: string, newPoints: number) => {
+        setTourists(prev => prev.map(t => 
+            t.id === touristId ? { ...t, points: newPoints } : t
+        ));
+        setShowPointsModal(false);
+        setSelectedTourist(null);
+    };
 
     if (loading) return <p>Carregando dados dos turistas...</p>;
 
@@ -42,6 +58,7 @@ const ManageTouristsPage: React.FC = () => {
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Contato</th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pontos</th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Ações</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
@@ -69,11 +86,34 @@ const ManageTouristsPage: React.FC = () => {
                                         <span>{tourist.points}</span>
                                     </div>
                                 </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <button
+                                        onClick={() => handlePointsAdjustment(tourist)}
+                                        className="flex items-center px-3 py-1 text-sm bg-brand-green text-white rounded-md hover:bg-brand-dark-green transition-colors"
+                                    >
+                                        <Settings className="h-4 w-4 mr-1" />
+                                        Ajustar Pontos
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {selectedTourist && (
+                <PointsAdjustmentModal
+                    userId={selectedTourist.id}
+                    userName={selectedTourist.name}
+                    currentPoints={selectedTourist.points || 0}
+                    isOpen={showPointsModal}
+                    onClose={() => {
+                        setShowPointsModal(false);
+                        setSelectedTourist(null);
+                    }}
+                    onPointsUpdated={(newPoints) => handlePointsUpdated(selectedTourist.id, newPoints)}
+                />
+            )}
         </div>
     );
 };

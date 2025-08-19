@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { backendService } from '../services/backendService';
 import { Photo } from '../types';
-import { Heart, MessageSquare, Send, ThumbsUp } from 'lucide-react';
+import { Heart, MessageSquare, Send, ThumbsUp, UserCheck, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const PhotoCard: React.FC<{ photo: Photo, onLike: (photoId: string) => void, currentUserId: string | null }> = ({ photo, onLike, currentUserId }) => {
+const PhotoCard: React.FC<{ 
+    photo: Photo, 
+    onLike: (photoId: string) => void, 
+    currentUserId: string | null,
+    isLiking: boolean 
+}> = ({ photo, onLike, currentUserId, isLiking }) => {
     const hasLiked = currentUserId ? photo.likes.includes(currentUserId) : false;
 
     return (
@@ -21,8 +26,20 @@ const PhotoCard: React.FC<{ photo: Photo, onLike: (photoId: string) => void, cur
                 <p className="text-slate-700 mb-4">{photo.caption}</p>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-4">
-                        <button onClick={() => onLike(photo.id)} disabled={hasLiked} className={`flex items-center space-x-1 ${hasLiked ? 'text-pink-500' : 'text-slate-500 hover:text-pink-500'}`}>
-                            <Heart className={`h-6 w-6 ${hasLiked ? 'fill-current' : ''}`} />
+                        <button 
+                            onClick={() => onLike(photo.id)} 
+                            disabled={isLiking || !currentUserId}
+                            className={`flex items-center space-x-1 transition-colors ${
+                                hasLiked 
+                                    ? 'text-pink-500' 
+                                    : 'text-slate-500 hover:text-pink-500'
+                            } disabled:opacity-50`}
+                        >
+                            {isLiking ? (
+                                <Loader2 className="h-6 w-6 animate-spin" />
+                            ) : (
+                                <Heart className={`h-6 w-6 ${hasLiked ? 'fill-current' : ''}`} />
+                            )}
                             <span className="font-semibold">{photo.likes.length}</span>
                         </button>
                         <button className="flex items-center space-x-1 text-slate-500 hover:text-blue-500">
@@ -30,6 +47,12 @@ const PhotoCard: React.FC<{ photo: Photo, onLike: (photoId: string) => void, cur
                             <span className="font-semibold">0</span>
                         </button>
                     </div>
+                    {photo.likes.length > 0 && (
+                        <div className="flex items-center text-xs text-slate-500">
+                            <UserCheck className="h-4 w-4 mr-1" />
+                            {photo.likes.length === 1 ? '1 curtida' : `${photo.likes.length} curtidas`}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
@@ -41,6 +64,7 @@ const PhotoGalleryPage: React.FC = () => {
     const { user } = useAuth();
     const [photos, setPhotos] = useState<Photo[]>([]);
     const [loading, setLoading] = useState(true);
+    const [likingPhotos, setLikingPhotos] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         loadPhotos();
@@ -55,9 +79,50 @@ const PhotoGalleryPage: React.FC = () => {
     };
 
     const handleLike = async (photoId: string) => {
-        if (!user) return;
-        await backendService.likePhoto(photoId, user.id);
-        loadPhotos(); // Refresh to show updated like count and state
+        if (!user || likingPhotos.has(photoId)) return;
+
+        // Add to liking set
+        setLikingPhotos(prev => new Set(prev).add(photoId));
+
+        // Optimistic update
+        const userAlreadyLiked = photos.find(p => p.id === photoId)?.likes.includes(user.id);
+        
+        setPhotos(prev => prev.map(photo => {
+            if (photo.id === photoId) {
+                return {
+                    ...photo,
+                    likes: userAlreadyLiked 
+                        ? photo.likes.filter(id => id !== user.id)
+                        : [...photo.likes, user.id]
+                };
+            }
+            return photo;
+        }));
+
+        try {
+            await backendService.togglePhotoLike(photoId, user.id);
+        } catch (error) {
+            console.error('Error toggling like:', error);
+            // Rollback optimistic update on error
+            setPhotos(prev => prev.map(photo => {
+                if (photo.id === photoId) {
+                    return {
+                        ...photo,
+                        likes: userAlreadyLiked 
+                            ? [...photo.likes, user.id]
+                            : photo.likes.filter(id => id !== user.id)
+                    };
+                }
+                return photo;
+            }));
+        } finally {
+            // Remove from liking set
+            setLikingPhotos(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(photoId);
+                return newSet;
+            });
+        }
     };
     
     const handlePostPhoto = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,7 +167,13 @@ const PhotoGalleryPage: React.FC = () => {
             {/* Photo Feed */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {photos.map(photo => (
-                    <PhotoCard key={photo.id} photo={photo} onLike={handleLike} currentUserId={user?.id || null} />
+                    <PhotoCard 
+                        key={photo.id} 
+                        photo={photo} 
+                        onLike={handleLike} 
+                        currentUserId={user?.id || null} 
+                        isLiking={likingPhotos.has(photo.id)}
+                    />
                 ))}
             </div>
         </div>

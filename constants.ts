@@ -1,4 +1,4 @@
-import type { Badge, PointOfInterest, Route, User, HotelCheckIn, Challenge, Photo } from './types';
+import type { Badge, PointOfInterest, Route, User, HotelCheckIn, Challenge, Photo, Review, Favorite } from './types';
 
 export const POINTS_OF_INTEREST: PointOfInterest[] = [
     // Coordenadas reais de Caçapava do Sul: -30.5108, -53.4944
@@ -374,5 +374,108 @@ export const PHOTOS: Photo[] = [
         poiId: 'poi-4',
         timestamp: '2025-08-16T11:00:00Z',
         likes: ['user-1'],
+    }
+];
+
+export const REVIEWS: Review[] = [
+    // Restaurant reviews
+    {
+        id: 'review-1',
+        userId: 'user-1',
+        entityType: 'restaurant',
+        entityId: '1', // Restaurante e Churrascaria do Gaúcho
+        rating: 5,
+        comment: 'Excelente atendimento e comida deliciosa! O churrasco estava perfeito e o ambiente muito acolhedor.',
+        createdAt: '2024-12-15T18:30:00Z',
+        helpful: 8,
+        notHelpful: 0,
+        response: 'Muito obrigado pela avaliação! Ficamos felizes em saber que gostou da experiência.',
+        verified: true
+    },
+    {
+        id: 'review-2',
+        userId: 'user-4',
+        entityType: 'restaurant',
+        entityId: '1',
+        rating: 4,
+        comment: 'Boa comida, mas o tempo de espera foi um pouco longo. No geral, recomendo!',
+        createdAt: '2024-12-14T20:15:00Z',
+        helpful: 5,
+        notHelpful: 1,
+        verified: true
+    },
+    {
+        id: 'review-3',
+        userId: 'user-5',
+        entityType: 'restaurant',
+        entityId: '2', // Padaria e Confeitaria Central
+        rating: 5,
+        comment: 'Ambiente familiar e comida caseira deliciosa. Os pães estavam fresquinhos!',
+        createdAt: '2024-12-13T09:00:00Z',
+        helpful: 12,
+        notHelpful: 0,
+        response: 'Obrigado! Estaremos sempre de portas abertas para recebê-la.',
+        verified: false
+    },
+    {
+        id: 'review-4',
+        userId: 'user-1',
+        entityType: 'restaurant',
+        entityId: '3', // Pizzaria Bella Vita
+        rating: 4,
+        comment: 'Pizzas saborosas e massa bem feita. Ambiente agradável para jantar em família.',
+        createdAt: '2024-12-12T21:45:00Z',
+        helpful: 6,
+        notHelpful: 0,
+        verified: true
+    },
+    // POI reviews
+    {
+        id: 'review-5',
+        userId: 'user-4',
+        entityType: 'poi',
+        entityId: 'poi-1', // Pedra do Segredo
+        rating: 5,
+        comment: 'Vista espetacular! A trilha é fácil e vale muito a pena. Lugar perfeito para fotos!',
+        createdAt: '2024-12-11T16:20:00Z',
+        helpful: 15,
+        notHelpful: 1,
+        verified: true
+    },
+    {
+        id: 'review-6',
+        userId: 'user-5',
+        entityType: 'poi',
+        entityId: 'poi-2', // Minas do Camaquã
+        rating: 4,
+        comment: 'Lugar histórico fascinante. Recomendo contratar um guia para entender melhor a história.',
+        createdAt: '2024-12-10T14:30:00Z',
+        helpful: 8,
+        notHelpful: 0,
+        verified: true
+    }
+];
+
+export const FAVORITES: Favorite[] = [
+    {
+        id: 'fav-1',
+        userId: 'user-1',
+        entityType: 'restaurant',
+        entityId: '1',
+        createdAt: '2024-12-15T18:35:00Z'
+    },
+    {
+        id: 'fav-2',
+        userId: 'user-1',
+        entityType: 'poi',
+        entityId: 'poi-1',
+        createdAt: '2024-12-14T10:00:00Z'
+    },
+    {
+        id: 'fav-3',
+        userId: 'user-4',
+        entityType: 'restaurant',
+        entityId: '2',
+        createdAt: '2024-12-13T15:20:00Z'
     }
 ];

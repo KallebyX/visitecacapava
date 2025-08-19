@@ -1,5 +1,5 @@
-import type { User, Route, PointOfInterest, Badge, HotelCheckIn, OpinionScale, Challenge, Photo } from '../types';
-import { USERS, ROUTES, POINTS_OF_INTEREST, BADGES, HOTEL_CHECKINS, CHALLENGES, PHOTOS } from '../constants';
+import type { User, Route, PointOfInterest, Badge, HotelCheckIn, OpinionScale, Challenge, Photo, Favorite, Review, GalleryLike } from '../types';
+import { USERS, ROUTES, POINTS_OF_INTEREST, BADGES, HOTEL_CHECKINS, CHALLENGES, PHOTOS, REVIEWS, FAVORITES } from '../constants';
 
 // --- MOCK DATABASE with Session Storage Persistence ---
 // This creates a fully interactive mock backend that persists for the user's session.
@@ -37,6 +37,9 @@ class MockDB {
     checkIns: HotelCheckIn[];
     challenges: Challenge[];
     photos: Photo[];
+    favorites: Favorite[];
+    reviews: Review[];
+    galleryLikes: GalleryLike[];
 
     constructor() {
         this.users = getFromStorage('db_users', USERS);
@@ -46,6 +49,9 @@ class MockDB {
         this.checkIns = getFromStorage('db_checkins', HOTEL_CHECKINS);
         this.challenges = getFromStorage('db_challenges', CHALLENGES);
         this.photos = getFromStorage('db_photos', PHOTOS);
+        this.favorites = getFromStorage('db_favorites', FAVORITES);
+        this.reviews = getFromStorage('db_reviews', REVIEWS);
+        this.galleryLikes = getFromStorage('db_gallery_likes', []);
     }
 
     save() {
@@ -56,6 +62,9 @@ class MockDB {
         saveToStorage('db_checkins', this.checkIns);
         saveToStorage('db_challenges', this.challenges);
         saveToStorage('db_photos', this.photos);
+        saveToStorage('db_favorites', this.favorites);
+        saveToStorage('db_reviews', this.reviews);
+        saveToStorage('db_gallery_likes', this.galleryLikes);
     }
 }
 
@@ -538,6 +547,257 @@ export const backendService = {
             phone: checkInInfo ? checkInInfo.phone : 'N/A',
         };
     });
+  },
+
+  // --- FAVORITES SYSTEM ---
+  async toggleFavorite(userId: string, entityType: 'restaurant' | 'poi' | 'hotel', entityId: string): Promise<{ favorited: boolean }> {
+    await delay(200);
+    
+    const existingFavoriteIndex = db.favorites.findIndex(f => 
+      f.userId === userId && f.entityType === entityType && f.entityId === entityId
+    );
+
+    if (existingFavoriteIndex > -1) {
+      // Remove favorite
+      db.favorites.splice(existingFavoriteIndex, 1);
+      db.save();
+      return { favorited: false };
+    } else {
+      // Add favorite
+      const newFavorite: Favorite = {
+        id: `fav-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        userId,
+        entityType,
+        entityId,
+        createdAt: new Date().toISOString()
+      };
+      db.favorites.push(newFavorite);
+      db.save();
+      return { favorited: true };
+    }
+  },
+
+  async getUserFavorites(userId: string, entityType?: 'restaurant' | 'poi' | 'hotel'): Promise<Favorite[]> {
+    await delay(100);
+    return db.favorites.filter(f => 
+      f.userId === userId && (!entityType || f.entityType === entityType)
+    );
+  },
+
+  // --- REVIEWS SYSTEM ---
+  async getReviews(entityType: 'restaurant' | 'poi' | 'hotel', entityId: string, limit: number = 10, offset: number = 0): Promise<{ items: Review[]; total: number }> {
+    await delay(150);
+    
+    const entityReviews = db.reviews.filter(r => 
+      r.entityType === entityType && r.entityId === entityId
+    );
+
+    // Join with user data
+    const reviewsWithUser = entityReviews.map(review => {
+      const user = db.users.find(u => u.id === review.userId);
+      return {
+        ...review,
+        user: user ? {
+          name: user.name,
+          avatarUrl: user.avatarUrl
+        } : undefined
+      };
+    });
+
+    // Sort by most recent first
+    reviewsWithUser.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    const paginatedReviews = reviewsWithUser.slice(offset, offset + limit);
+
+    return {
+      items: paginatedReviews,
+      total: reviewsWithUser.length
+    };
+  },
+
+  async createReview(userId: string, entityType: 'restaurant' | 'poi' | 'hotel', entityId: string, rating: number, comment: string): Promise<Review> {
+    await delay(200);
+    
+    // Check if user already reviewed this entity
+    const existingReview = db.reviews.find(r => 
+      r.userId === userId && r.entityType === entityType && r.entityId === entityId
+    );
+
+    if (existingReview) {
+      throw new Error('Usuário já avaliou este estabelecimento');
+    }
+
+    const newReview: Review = {
+      id: `review-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      userId,
+      entityType,
+      entityId,
+      rating: Math.max(1, Math.min(5, rating)), // Ensure rating is between 1-5
+      comment: comment.trim(),
+      createdAt: new Date().toISOString(),
+      helpful: 0,
+      notHelpful: 0,
+      verified: Math.random() > 0.3 // 70% chance of being verified
+    };
+
+    db.reviews.push(newReview);
+    
+    // Award points to user for reviewing
+    const user = db.users.find(u => u.id === userId);
+    if (user) {
+      await this.updateUser(userId, { points: user.points + 10 }); // +10 points per review
+    }
+
+    db.save();
+    return newReview;
+  },
+
+  async updateReviewResponse(reviewId: string, response: string): Promise<Review | null> {
+    await delay(150);
+    
+    const reviewIndex = db.reviews.findIndex(r => r.id === reviewId);
+    if (reviewIndex > -1) {
+      db.reviews[reviewIndex].response = response.trim();
+      db.save();
+      return { ...db.reviews[reviewIndex] };
+    }
+    return null;
+  },
+
+  // --- GALLERY LIKES SYSTEM (Improved) ---
+  async togglePhotoLike(photoId: string, userId: string): Promise<{ liked: boolean; totalLikes: number }> {
+    await delay(200);
+    
+    const existingLikeIndex = db.galleryLikes.findIndex(gl => 
+      gl.photoId === photoId && gl.userId === userId
+    );
+
+    if (existingLikeIndex > -1) {
+      // Remove like
+      db.galleryLikes.splice(existingLikeIndex, 1);
+    } else {
+      // Add like
+      const newLike: GalleryLike = {
+        userId,
+        photoId,
+        createdAt: new Date().toISOString()
+      };
+      db.galleryLikes.push(newLike);
+
+      // Award points to photo owner
+      const photo = db.photos.find(p => p.id === photoId);
+      if (photo && photo.userId !== userId) {
+        const photoOwner = db.users.find(u => u.id === photo.userId);
+        if (photoOwner) {
+          await this.updateUser(photo.userId, { points: photoOwner.points + 2 }); // +2 points per like
+        }
+      }
+    }
+
+    const totalLikes = db.galleryLikes.filter(gl => gl.photoId === photoId).length;
+    db.save();
+
+    return {
+      liked: existingLikeIndex === -1,
+      totalLikes
+    };
+  },
+
+  async getPhotoLikes(photoId: string): Promise<{ userIds: string[]; total: number }> {
+    await delay(50);
+    const likes = db.galleryLikes.filter(gl => gl.photoId === photoId);
+    return {
+      userIds: likes.map(l => l.userId),
+      total: likes.length
+    };
+  },
+
+  // --- VALIDATION HELPERS ---
+  validateUrl(url: string): boolean {
+    if (!url || !url.trim()) return false;
+    try {
+      const urlObj = new URL(url);
+      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  },
+
+  validateBirthDate(birthDate: string): boolean {
+    const date = new Date(birthDate);
+    const today = new Date();
+    const year1900 = new Date('1900-01-01');
+    
+    return date >= year1900 && date <= today;
+  },
+
+  validateCheckDates(checkIn: string, checkOut: string): boolean {
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    
+    return checkOutDate >= checkInDate;
+  },
+
+  // Admin points management
+  async adjustUserPoints(userId: string, pointsChange: number, reason: string): Promise<void> {
+    const users = this.getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Validate points change limit
+    if (Math.abs(pointsChange) > 500) {
+      throw new Error('Ajuste de pontos não pode exceder ±500 pontos');
+    }
+
+    const currentPoints = users[userIndex].points || 0;
+    const newPoints = Math.max(0, currentPoints + pointsChange); // Prevent negative points
+    
+    users[userIndex].points = newPoints;
+    
+    // Create audit log entry
+    const auditLog = {
+      id: Date.now().toString(),
+      userId,
+      adminId: 'current-admin', // In real app, get from auth context
+      action: pointsChange > 0 ? 'ADD_POINTS' : 'REMOVE_POINTS',
+      pointsChange,
+      previousPoints: currentPoints,
+      newPoints,
+      reason,
+      timestamp: new Date().toISOString()
+    };
+
+    // Store audit log
+    const auditLogs = JSON.parse(sessionStorage.getItem('pointsAuditLogs') || '[]');
+    auditLogs.push(auditLog);
+    sessionStorage.setItem('pointsAuditLogs', JSON.stringify(auditLogs));
+    
+    sessionStorage.setItem('users', JSON.stringify(users));
+  },
+
+  async getPointsAuditLog(userId?: string): Promise<any[]> {
+    const auditLogs = JSON.parse(sessionStorage.getItem('pointsAuditLogs') || '[]');
+    
+    if (userId) {
+      return auditLogs.filter((log: any) => log.userId === userId);
+    }
+    
+    return auditLogs.sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  },
+
+  // Additional validation helpers
+  validateWebsiteUrl(url: string): boolean {
+    if (!url) return true; // Optional field
+    
+    try {
+      const urlObj = new URL(url);
+      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+    } catch {
+      return false;
+    }
   }
 
 };

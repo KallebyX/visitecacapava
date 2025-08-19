@@ -38,6 +38,9 @@ import HotelDashboard from './pages/hotel/HotelDashboard';
 import HotelCheckInPage from './pages/hotel/HotelCheckInPage';
 
 import RestaurantDashboard from './pages/restaurant/RestaurantDashboard';
+import RestaurantReviewsPage from './pages/restaurant/RestaurantReviewsPage';
+import RestaurantCustomersPage from './pages/restaurant/RestaurantCustomersPage';
+import RestaurantFeedbackPage from './pages/restaurant/RestaurantFeedbackPage';
 
 // Layouts
 // import AdminLayout from './components/layouts/AdminLayout';
@@ -100,6 +103,9 @@ const App: React.FC = () => {
             }
           >
             <Route index element={<RestaurantDashboard />} />
+            <Route path="reviews" element={<RestaurantReviewsPage />} />
+            <Route path="customers" element={<RestaurantCustomersPage />} />
+            <Route path="feedback" element={<RestaurantFeedbackPage />} />
           </Route>
 
           {/* Tourist Routes */}

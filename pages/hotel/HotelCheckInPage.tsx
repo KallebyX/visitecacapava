@@ -30,33 +30,128 @@ const HotelCheckInPage: React.FC = () => {
     const [formState, setFormState] = useState(initialFormState);
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    
+    // Calculate date constraints
+    const today = new Date().toISOString().split('T')[0];
+    const minBirthDate = '1900-01-01';
+    const minCheckOutDate = formState.checkInDate ? 
+        new Date(formState.checkInDate).toISOString().split('T')[0] : today;
+    
+    const validateForm = (): string[] => {
+        const errors: string[] = [];
+        
+        // Validate birth date
+        if (formState.birthDate) {
+            const birthDate = new Date(formState.birthDate);
+            const minDate = new Date('1900-01-01');
+            const maxDate = new Date();
+            
+            if (birthDate < minDate || birthDate > maxDate) {
+                errors.push('Data de nascimento deve estar entre 1900 e hoje');
+            }
+        }
+        
+        // Validate check dates
+        if (formState.checkInDate && formState.checkOutDate) {
+            const checkInDate = new Date(formState.checkInDate);
+            const checkOutDate = new Date(formState.checkOutDate);
+            
+            if (checkOutDate <= checkInDate) {
+                errors.push('Data de check-out deve ser posterior ao check-in');
+            }
+        }
+        
+        return errors;
+    };
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormState(prev => ({ ...prev, [name]: value }));
+        
+        // Clear validation errors when user starts typing
+        if (validationErrors.length > 0) {
+            setValidationErrors([]);
+        }
+        
+        // Auto-adjust check-out date when check-in changes
+        if (name === 'checkInDate' && formState.checkOutDate) {
+            const checkInDate = new Date(value);
+            const checkOutDate = new Date(formState.checkOutDate);
+            
+            if (checkOutDate <= checkInDate) {
+                const nextDay = new Date(checkInDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                setFormState(prev => ({ 
+                    ...prev, 
+                    [name]: value,
+                    checkOutDate: nextDay.toISOString().split('T')[0]
+                }));
+                return;
+            }
+        }
     };
     
     const handleRadioChange = (name: string, value: string) => {
         setFormState(prev => ({...prev, [name]: value}));
-    }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
 
-        setSaving(true);
-        setSuccess(false);
-        
-        const checkInData = {
-            ...formState,
-            checkInDate: new Date(formState.checkInDate).toISOString(),
-            checkOutDate: new Date(formState.checkOutDate).toISOString()
+        // Validate form
+        const errors = validateForm();
+        if (errors.length > 0) {
+            setValidationErrors(errors);
+            return;
         }
 
-        await backendService.createHotelCheckIn(user.id, checkInData);
+        // Validate with backend
+        if (!backendService.validateBirthDate(formState.birthDate)) {
+            setValidationErrors(['Data de nascimento inválida']);
+            return;
+        }
+
+        if (!backendService.validateCheckDates(formState.checkInDate, formState.checkOutDate)) {
+            setValidationErrors(['Check-out deve ser posterior ao check-in']);
+            return;
+        }
+
+        setSaving(true);
+        setSuccess(false);
+        setValidationErrors([]);
         
-        setSaving(false);
-        setSuccess(true);
+        const checkInData = {
+            touristName: formState.touristName,
+            phone: formState.phone,
+            profession: formState.profession,
+            nationality: formState.nationality,
+            birthDate: formState.birthDate,
+            gender: formState.gender,
+            idDocument: formState.idDocument,
+            originCity: formState.originCity,
+            travelReason: formState.travelReason,
+            transportMean: formState.transportMean,
+            discoveryChannel: formState.discoveryChannel,
+            poiOpinion: formState.poiOpinion,
+            cityOpinion: formState.cityOpinion,
+            checkInDate: formState.checkInDate,
+            checkOutDate: formState.checkOutDate
+        };
+
+        try {
+            await backendService.createHotelCheckIn(user.id, checkInData);
+            setSuccess(true);
+            setSaving(false);
+        } catch (error) {
+            setSaving(false);
+            console.error('Error creating check-in:', error);
+            setValidationErrors(['Erro ao registrar check-in. Tente novamente.']);
+            return;
+        }
+
+        // Reset form after successful submission
         setFormState(initialFormState);
 
         setTimeout(() => setSuccess(false), 3000);
@@ -73,6 +168,18 @@ const HotelCheckInPage: React.FC = () => {
                         Check-in registrado com sucesso!
                     </div>
                 )}
+                
+                {validationErrors.length > 0 && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 p-4 rounded-lg mb-6">
+                        <h4 className="font-semibold mb-2">Corrija os seguintes erros:</h4>
+                        <ul className="list-disc list-inside space-y-1">
+                            {validationErrors.map((error, index) => (
+                                <li key={index}>{error}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg">
                         <legend className="text-lg font-semibold px-2">Informações Pessoais</legend>
@@ -93,31 +200,62 @@ const HotelCheckInPage: React.FC = () => {
                             <input type="text" name="nationality" value={formState.nationality} onChange={handleInputChange} required className={inputStyle} />
                         </div>
                         <div>
-                            <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
-                            <input type="date" name="birthDate" value={formState.birthDate} onChange={handleInputChange} required className={inputStyle} />
+                            <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
+                                Data de Nascimento
+                                <span className="text-xs text-gray-500 ml-2">(Entre 1900 e hoje)</span>
+                            </label>
+                            <input 
+                                type="date" 
+                                name="birthDate" 
+                                value={formState.birthDate} 
+                                onChange={handleInputChange} 
+                                min={minBirthDate}
+                                max={today}
+                                required 
+                                className={inputStyle} 
+                            />
                         </div>
                         <div>
                             <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Sexo</label>
-                            <select name="gender" value={formState.gender} onChange={handleInputChange} required className={inputStyle}>
-                                <option>Masculino</option>
-                                <option>Feminino</option>
+                            <select name="gender" value={formState.gender} onChange={handleInputChange} className={inputStyle}>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
                             </select>
                         </div>
                         <div>
                             <label htmlFor="idDocument" className="block text-sm font-medium text-gray-700">Documento de Identidade</label>
                             <input type="text" name="idDocument" value={formState.idDocument} onChange={handleInputChange} required className={inputStyle} />
                         </div>
-                         <div>
-                            <label htmlFor="originCity" className="block text-sm font-medium text-gray-700">Local de Origem (Cidade/Estado)</label>
+                        <div>
+                            <label htmlFor="originCity" className="block text-sm font-medium text-gray-700">Cidade de Origem</label>
                             <input type="text" name="originCity" value={formState.originCity} onChange={handleInputChange} required className={inputStyle} />
                         </div>
-                         <div>
-                            <label htmlFor="checkInDate" className="block text-sm font-medium text-gray-700">Data e Hora do Check-in</label>
-                            <input type="datetime-local" name="checkInDate" value={formState.checkInDate} onChange={handleInputChange} required className={inputStyle} />
+                        <div>
+                            <label htmlFor="checkInDate" className="block text-sm font-medium text-gray-700">Data do Check-in</label>
+                            <input 
+                                type="datetime-local" 
+                                name="checkInDate" 
+                                value={formState.checkInDate} 
+                                onChange={handleInputChange} 
+                                min={new Date().toISOString().slice(0, 16)}
+                                required 
+                                className={inputStyle} 
+                            />
                         </div>
-                         <div>
-                            <label htmlFor="checkOutDate" className="block text-sm font-medium text-gray-700">Data do Check-out</label>
-                            <input type="date" name="checkOutDate" value={formState.checkOutDate} onChange={handleInputChange} required className={inputStyle} />
+                        <div>
+                            <label htmlFor="checkOutDate" className="block text-sm font-medium text-gray-700">
+                                Data do Check-out
+                                <span className="text-xs text-gray-500 ml-2">(Deve ser posterior ao check-in)</span>
+                            </label>
+                            <input 
+                                type="date" 
+                                name="checkOutDate" 
+                                value={formState.checkOutDate} 
+                                onChange={handleInputChange} 
+                                min={minCheckOutDate}
+                                required 
+                                className={inputStyle} 
+                            />
                         </div>
                     </fieldset>
                     
