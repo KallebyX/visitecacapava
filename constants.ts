@@ -7,7 +7,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Pedra do Segredo', 
         description: 'Formação rochosa icônica com vista panorâmica.', 
         longDescription: 'A Pedra do Segredo é um dos mais belos e misteriosos pontos turísticos de Caçapava do Sul. A subida é recompensada com uma vista de 360 graus da região, perfeita para fotos e contemplação.', 
-        imageUrl: 'https://i.ytimg.com/vi/bYf2-T20W0g/maxresdefault.jpg', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#6CBC3A"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="white" text-anchor="middle" dy=".3em">Guaritas do Camaquã</text></svg>'), 
         points: 25, 
         lat: -30.5694, 
         lng: -53.4913 
@@ -27,7 +27,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Cascata do Salso', 
         description: 'Queda d\'água refrescante em meio à natureza.', 
         longDescription: 'Uma bela cascata de fácil acesso, ideal para um banho refrescante nos dias quentes. O som da água e a vegetação ao redor criam um ambiente perfeito para relaxar e se conectar com a natureza.', 
-        imageUrl: 'https://media-cdn.tripadvisor.com/media/photo-s/0d/18/0a/73/cascata-do-salso.jpg', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#4A90E2"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Cascata do Salso</text></svg>'), 
         points: 20, 
         lat: -30.5054, 
         lng: -53.4116 
@@ -67,7 +67,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Guaritas do Camaquã', 
         description: 'Formações rochosas milenares únicas no mundo.', 
         longDescription: 'O Parque das Guaritas é um santuário geológico com formações de arenito que se assemelham a torres e guardiões. Um dos geossítios mais importantes do mundo, perfeito para trekking e contemplação.', 
-        imageUrl: 'https://www.cacapavadosul.rs.gov.br/arquivos/noticias/guaritas-uma-das-7-maravilhas-do-rs_16112022120026.jpeg', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#D2691E"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Guaritas do Camaquã</text></svg>'), 
         points: 30, 
         lat: -30.7397, 
         lng: -53.4682 
@@ -77,7 +77,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Centro Histórico de Caçapava', 
         description: 'Arquitetura colonial preservada no coração da cidade.', 
         longDescription: 'O centro histórico preserva a arquitetura do século XIX com casarões coloniais, praças e monumentos que contam a história da cidade desde sua fundação.', 
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxKl9M8YF3K8QbMqV_cO3P3yJH6qZXhX1bXQ&s', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Minas do Camaquã</text></svg>'), 
         points: 15, 
         lat: -30.5142, 
         lng: -53.4890 
@@ -87,7 +87,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Olivícola Quinta do Vale', 
         description: 'Produtor de azeites premiados internacionalmente.', 
         longDescription: 'Visite o local onde são produzidos azeites que ganharam mais de 50 prêmios internacionais. Tours guiados com degustação e venda de produtos locais.', 
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8mVw5YxJXQkF8O4HJf3K8bHjCwJZc4YJ0_g&s', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#228B22"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Centro Histórico</text></svg>'), 
         points: 20, 
         lat: -30.5200, 
         lng: -53.5100 
@@ -97,7 +97,7 @@ export const POINTS_OF_INTEREST: PointOfInterest[] = [
         name: 'Cerro da Angélica', 
         description: 'Ponto mais alto da região com vista panorâmica.', 
         longDescription: 'Com 348 metros de altitude, o Cerro da Angélica oferece uma vista espetacular de toda a região. Ideal para trilhas e observação de aves.', 
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBYcJq8YX9K1P2VwW3gJfKhY8wJ6F4s5Y9zA&s', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#DC143C"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Igreja Matriz</text></svg>'), 
         points: 25, 
         lat: -30.4800, 
         lng: -53.4500 
@@ -117,14 +117,14 @@ export const ROUTES: Route[] = [
         name: 'Patrimônio Histórico',
         description: 'Viaje no tempo conhecendo os marcos históricos e culturais da região.',
         pointsOfInterest: ['poi-2', 'poi-4', 'poi-5', 'poi-6', 'poi-8'],
-        imageUrl: 'https://i0.wp.com/serrasdonovosul.com/wp-content/uploads/2022/01/forte-dom-pedro-II.jpg?fit=800%2C533&ssl=1'
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Forte Dom Pedro II</text></svg>')
     },
     {
         id: 'route-3',
         name: 'Azeites e Sabores',
         description: 'Descubra os azeites premiados e sabores únicos de Caçapava do Sul.',
         pointsOfInterest: ['poi-9'],
-        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8mVw5YxJXQkF8O4HJf3K8bHjCwJZc4YJ0_g&s'
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#FFD700"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="black" text-anchor="middle" dy=".3em">Azeites Locais</text></svg>')
     }
 ];
 
@@ -232,7 +232,7 @@ export const USERS: User[] = [
         email: 'restaurante@email.com',
         password: 'senha123',
         role: 'restaurant',
-        avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8XzKqY9H3QbZWnZKpW_yF4-Lq5sQ7QkZQw&s',
+        avatarUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="100" fill="#FF6B35"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em">RG</text></svg>'),
         points: 0,
         visited: [],
         badges: [],
@@ -244,7 +244,7 @@ export const USERS: User[] = [
         email: 'pizzaria@email.com',
         password: 'senha123',
         role: 'restaurant',
-        avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY8Z9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
+        avatarUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="100" fill="#FFD700"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="black" text-anchor="middle" dy=".3em">PB</text></svg>'),
         points: 0,
         visited: [],
         badges: [],
@@ -369,7 +369,7 @@ export const PHOTOS: Photo[] = [
         userId: 'user-4',
         userName: 'Carlos Viajante',
         userAvatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
-        imageUrl: 'https://i0.wp.com/serrasdonovosul.com/wp-content/uploads/2022/01/forte-dom-pedro-II.jpg?fit=800%2C533&ssl=1',
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Forte Dom Pedro II</text></svg>'),
         caption: 'Conhecendo um pouco da história do Brasil no Forte Dom Pedro II.',
         poiId: 'poi-4',
         timestamp: '2025-08-16T11:00:00Z',

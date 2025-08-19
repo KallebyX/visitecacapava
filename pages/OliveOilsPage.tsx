@@ -56,7 +56,7 @@ const OliveOilsPage: React.FC = () => {
       lng: -53.5100,
       founded: 2003,
       website: 'https://quintadovale.com.br',
-      imageUrl: 'https://via.placeholder.com/600x300/6CBC3A/FFFFFF?text=Quinta+do+Vale',
+      imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300"><rect width="600" height="300" fill="#6CBC3A"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em">Quinta do Vale</text></svg>'),
       certifications: ['Orgânico', 'Fair Trade', 'ISO 9001'],
       tourAvailable: true,
       awards: [
@@ -98,7 +98,7 @@ const OliveOilsPage: React.FC = () => {
           type: 'Extra Virgem',
           description: 'Azeite monovarietal Picual, com notas frutadas intensas e final amendoado.',
           awards: ['NYIOOC 2023 - Ouro', 'Concurso Argentina 2023 - 1º'],
-          imageUrl: 'https://via.placeholder.com/200x300/FFD700/000000?text=Premium',
+          imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"><rect width="200" height="300" fill="#FFD700"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="black" text-anchor="middle" dy=".3em">Premium</text></svg>'),
           price: 89.90,
           availability: 'available'
         },
@@ -108,7 +108,7 @@ const OliveOilsPage: React.FC = () => {
           type: 'Extra Virgem Blend',
           description: 'Harmoniosa combinação de variedades, equilibrio perfeito entre frutado e picante.',
           awards: ['Prêmio Brasil 2022 - 1º'],
-          imageUrl: 'https://via.placeholder.com/200x300/228B22/FFFFFF?text=Blend',
+          imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"><rect width="200" height="300" fill="#228B22"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Blend</text></svg>'),
           price: 65.90,
           availability: 'available'
         }
@@ -123,7 +123,7 @@ const OliveOilsPage: React.FC = () => {
       lat: -30.5300,
       lng: -53.5200,
       founded: 2008,
-      imageUrl: 'https://via.placeholder.com/600x300/8B4513/FFFFFF?text=Terra+Gaúcha',
+      imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300"><rect width="600" height="300" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em">Terra Gaúcha</text></svg>'),
       certifications: ['Rainforest Alliance', 'Produção Sustentável'],
       tourAvailable: true,
       awards: [
@@ -145,7 +145,7 @@ const OliveOilsPage: React.FC = () => {
           type: 'Extra Virgem',
           description: 'Edição limitada com oliveiras centenárias, sabor intenso e complexo.',
           awards: ['Sul Americano 2023 - 1º'],
-          imageUrl: 'https://via.placeholder.com/200x300/8B0000/FFFFFF?text=Reserva',
+          imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"><rect width="200" height="300" fill="#8B0000"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Reserva</text></svg>'),
           price: 125.00,
           availability: 'limited'
         }

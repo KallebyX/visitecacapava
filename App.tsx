@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { GamificationProvider } from './context/GamificationContext';
+import useErrorHandler from './hooks/useErrorHandler';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
@@ -47,6 +48,8 @@ import RestaurantFeedbackPage from './pages/restaurant/RestaurantFeedbackPage';
 // import AdminLayout from './components/layouts/AdminLayout';
 
 const App: React.FC = () => {
+    // Ativar tratamento global de erros
+    useErrorHandler();
   return (
     <AuthProvider>
       <HashRouter>

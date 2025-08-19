@@ -3,6 +3,7 @@ import { loadGoogleMapsScript } from '../services/googleMapsLoader';
 import { mapStyles } from '../mapStyles';
 import type { PointOfInterest } from '../types';
 import { AlertTriangle } from 'lucide-react';
+import LeafletMap from './LeafletMap';
 
 interface GoogleMapComponentProps {
     center: { lat: number; lng: number };
@@ -13,135 +14,20 @@ interface GoogleMapComponentProps {
 }
 
 const GoogleMapComponent: React.FC<GoogleMapComponentProps> = ({ center, zoom = 14, pois, onMarkerClick, bounds }) => {
-    const mapRef = useRef<HTMLDivElement>(null);
-    const [map, setMap] = useState<any | null>(null);
-    const [markers, setMarkers] = useState<{ [key: string]: any }>({});
-    const [mapError, setMapError] = useState<string | null>(null);
-    const hasAuthError = useRef(false);
-
-    // Load Maps Script and Initialize Map
-    useEffect(() => {
-        // Define a handler for authentication failures
-        const handleAuthFailure = () => {
-            if (hasAuthError.current) return;
-            hasAuthError.current = true;
-
-            console.error("Google Maps API authentication failed. This can be caused by an invalid API key, or billing not being enabled on the associated account.");
-            setMapError("Falha na autenticação do Google Maps. A chave de API pode ser inválida ou o projeto não está configurado corretamente.");
-        };
-
-        // Attach the global error handler before loading the script
-        window.gm_authFailure = handleAuthFailure;
-
-        loadGoogleMapsScript().then(() => {
-            if (hasAuthError.current) {
-                return; // Don't proceed if an auth error has already been flagged
-            }
-            try {
-                if (mapRef.current && !map) {
-                    const newMap = new window.google.maps.Map(mapRef.current, {
-                        center,
-                        zoom,
-                        styles: mapStyles,
-                        disableDefaultUI: true,
-                        zoomControl: true,
-                    });
-                    setMap(newMap);
-                    setMapError(null); // Explicitly clear error on success
-                }
-            } catch (e) {
-                console.error("Error initializing Google Map:", e);
-                setMapError("Ocorreu um erro ao inicializar o mapa. O serviço pode estar indisponível.");
-            }
-        }).catch(error => {
-            console.error("Failed to load Google Maps:", error);
-            if (!hasAuthError.current) {
-                setMapError("Não foi possível carregar o mapa. Verifique sua conexão com a internet.");
-            }
-        });
-
-        // Cleanup the global handler when the component unmounts
-        return () => {
-            if (window.gm_authFailure === handleAuthFailure) {
-                delete window.gm_authFailure;
-            }
-        };
-    }, []); // Runs only once to initialize map
-
-    // Update map center, bounds and zoom when props change
-    useEffect(() => {
-        if (map) {
-            if (bounds) {
-                map.fitBounds(bounds, 100); // 100px padding
-            } else {
-                map.setCenter(center);
-                map.setZoom(zoom);
-            }
-        }
-    }, [map, center, zoom, bounds]);
+    const [useLeaflet, setUseLeaflet] = useState(true); // Usar Leaflet por padrão
     
-    // Manage Markers
-    useEffect(() => {
-        if (map) {
-            // Clear old markers that are no longer in the pois list
-            Object.keys(markers).forEach(poiId => {
-                if (!pois.find(p => p.id === poiId)) {
-                    markers[poiId].setMap(null);
-                    delete markers[poiId];
-                }
-            });
-
-            const newMarkers = { ...markers };
-            pois.forEach(poi => {
-                if (!newMarkers[poi.id]) {
-                    const marker = new window.google.maps.Marker({
-                        position: { lat: poi.lat, lng: poi.lng },
-                        map,
-                        title: poi.name,
-                    });
-                    
-                    marker.addListener('click', () => {
-                        onMarkerClick(poi);
-                    });
-                    
-                    newMarkers[poi.id] = marker;
-                }
-            });
-            setMarkers(newMarkers);
-        }
-    }, [map, pois, onMarkerClick]);
-
-    if (mapError) {
-        return (
-            <div className="w-full h-full bg-yellow-50 flex flex-col p-4 text-center">
-                <div className="flex-shrink-0">
-                    <AlertTriangle className="w-10 h-10 text-yellow-500 mx-auto mb-2" />
-                    <h3 className="font-bold text-yellow-800">Mapa Indisponível</h3>
-                    <p className="text-sm text-yellow-700 mb-4">{mapError}</p>
-                </div>
-                <div className="flex-grow overflow-y-auto w-full text-left pr-2">
-                    <h4 className="font-semibold text-gray-800 mb-2">Alternativamente, explore os pontos na lista:</h4>
-                    <div className="space-y-2">
-                        {pois.map(poi => (
-                            <button
-                                key={poi.id}
-                                onClick={() => onMarkerClick(poi)}
-                                className="w-full flex items-center gap-4 p-2 bg-white/80 rounded-lg shadow-sm hover:bg-brand-light-green/20 transition-colors text-left"
-                            >
-                                <img src={poi.imageUrl} alt={poi.name} className="w-12 h-12 object-cover rounded-md flex-shrink-0" />
-                                <div>
-                                    <p className="font-bold text-sm text-brand-dark-green">{poi.name}</p>
-                                    <p className="text-xs text-gray-600">{poi.description}</p>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    return <div ref={mapRef} className="w-full h-full" />;
+    // Usar sempre o Leaflet para evitar problemas de API
+    return (
+        <div className="w-full h-96">
+            <LeafletMap
+                center={center}
+                zoom={zoom}
+                pois={pois}
+                onMarkerClick={onMarkerClick}
+                className="w-full h-full"
+            />
+        </div>
+    );
 };
 
 export default GoogleMapComponent;

@@ -54,15 +54,39 @@ const AboutCityPage: React.FC = () => {
             type: "mining"
         },
         {
+            year: "1884",
+            title: "Emancipação Municipal",
+            description: "Caçapava do Sul conquista sua emancipação política, tornando-se município independente.",
+            type: "founding"
+        },
+        {
             year: "1940-1990",
             title: "Auge da Mineração",
             description: "Período de intensa atividade minerária com extração de cobre, ouro e outros minerais.",
             type: "mining"
         },
         {
+            year: "1996",
+            title: "Fim da Era do Cobre",
+            description: "Encerramento das atividades da Mina Camaquã, marcando transição para nova economia.",
+            type: "mining"
+        },
+        {
             year: "2006",
             title: "Capital da Geodiversidade",
             description: "Reconhecimento oficial como Capital Gaúcha da Geodiversidade pelo rico patrimônio geológico.",
+            type: "modern"
+        },
+        {
+            year: "2009",
+            title: "Candidatura UNESCO",
+            description: "Início do processo de candidatura do Geoparque Pampa para reconhecimento internacional.",
+            type: "modern"
+        },
+        {
+            year: "2023",
+            title: "UNESCO Global Geopark",
+            description: "Conquista histórica: Geoparque Pampa recebe certificação UNESCO, destacando Caçapava como patrimônio mundial da geodiversidade.",
             type: "modern"
         }
     ];
@@ -333,11 +357,22 @@ const AboutCityPage: React.FC = () => {
                                             Reconhecimento Internacional
                                         </h3>
                                         <p className="text-gray-600 leading-relaxed">
-                                            O título de "Capital Gaúcha da Geodiversidade" não é apenas honorífico. 
-                                            Caçapava abriga uma das maiores diversidades geológicas do planeta em uma 
-                                            área relativamente pequena, com rochas que datam de 2 bilhões de anos e 
-                                            formações que são referência mundial em estudos geológicos.
+                                            O título de "Capital Gaúcha da Geodiversidade" foi o primeiro passo para o reconhecimento 
+                                            internacional. Em 2023, Caçapava atingiu o ápice deste processo com a certificação UNESCO 
+                                            Global Geopark do Geoparque Pampa, tornando-se oficialmente patrimônio mundial da geodiversidade. 
+                                            A cidade abriga uma das maiores diversidades geológicas do planeta em uma área relativamente 
+                                            pequena, com rochas que datam de 2 bilhões de anos e formações que são referência mundial 
+                                            em estudos geológicos.
                                         </p>
+                                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
+                                            <div className="flex items-center">
+                                                <Award className="text-green-600 mr-2" size={20} />
+                                                <span className="font-semibold text-green-800">UNESCO Global Geopark 2023</span>
+                                            </div>
+                                            <p className="text-green-700 text-sm mt-1">
+                                                Reconhecimento oficial da UNESCO destacando Caçapava como patrimônio geológico mundial
+                                            </p>
+                                        </div>
 
                                         <h3 className="text-2xl font-bold text-gray-800 flex items-center">
                                             <ShieldCheck className="mr-3 text-green-600" />
@@ -408,8 +443,10 @@ const AboutCityPage: React.FC = () => {
                                         <Award className="text-blue-600 mb-4" size={48} />
                                         <h3 className="text-xl font-bold text-gray-800 mb-3">Era Moderna</h3>
                                         <p className="text-gray-600">
-                                            O reconhecimento como Capital da Geodiversidade marca uma nova era focada 
-                                            no turismo científico e preservação patrimonial.
+                                            O reconhecimento como Capital da Geodiversidade em 2006 foi apenas o início. 
+                                            A conquista da certificação UNESCO Global Geopark em 2023 marca uma nova era 
+                                            focada no turismo científico internacional, geoturismo sustentável e preservação 
+                                            do patrimônio geológico mundial.
                                         </p>
                                     </div>
                                 </div>

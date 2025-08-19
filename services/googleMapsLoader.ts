@@ -1,8 +1,6 @@
 // services/googleMapsLoader.ts
-const GOOGLE_MAPS_API_KEY = process.env.API_KEY;
-
-// A more robust check for a valid key. A typical Google API key is ~39 characters.
-const isApiKeyValid = GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY.length > 30;
+// Para desenvolvimento, vamos usar o modo sem API key
+const GOOGLE_MAPS_API_KEY = ''; // Deixar vazio para desenvolvimento
 
 let googleMapsPromise: Promise<void> | null = null;
 
@@ -11,14 +9,8 @@ export const loadGoogleMapsScript = (): Promise<void> => {
     return googleMapsPromise;
   }
   
-  let scriptUrl = `https://maps.googleapis.com/maps/api/js?v=stable`;
-
-  if (isApiKeyValid) {
-    scriptUrl += `&key=${GOOGLE_MAPS_API_KEY}`;
-  } else {
-    console.warn("Google Maps API key is not configured or is likely invalid. Map will be loaded in development mode.");
-  }
-
+  // URL básica sem API key para desenvolvimento local
+  let scriptUrl = `https://maps.googleapis.com/maps/api/js?v=weekly&loading=async`;
 
   googleMapsPromise = new Promise((resolve, reject) => {
     // Check if script is already present
