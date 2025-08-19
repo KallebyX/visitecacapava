@@ -6,7 +6,8 @@ const colors = {
   'brand-red': '#D92525',
 };
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
