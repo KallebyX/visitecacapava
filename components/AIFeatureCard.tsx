@@ -1,7 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Brain, Route, Zap, MessageCircle, Clock, Target } from 'lucide-react';
 
 const AIFeatureCard: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleExperimentar = () => {
+    navigate('/itinerary');
+  };
+
   const features = [
     {
       icon: <Route className="h-5 w-5" />,
@@ -67,7 +74,10 @@ const AIFeatureCard: React.FC = () => {
             <p className="text-sm text-blue-100 mb-1">Experimente agora</p>
             <p className="text-lg font-semibold">Planeje sua viagem com IA</p>
           </div>
-          <button className="bg-white text-indigo-700 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-2 group">
+          <button 
+            onClick={handleExperimentar}
+            className="bg-white text-indigo-700 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50 transition-all duration-200 flex items-center gap-2 group transform hover:scale-105 hover:shadow-lg"
+          >
             <Zap className="h-4 w-4 group-hover:text-yellow-500 transition-colors" />
             Experimentar
           </button>

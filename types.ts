@@ -57,9 +57,12 @@ export interface Photo {
   userAvatarUrl: string;
   imageUrl: string;
   caption: string;
+  location?: string; // Location where photo was taken
   poiId?: string; // Optional: link photo to a POI
   timestamp: string;
   likes: string[]; // Array of userIds who liked the photo
+  tags?: string[]; // Optional: array of tags
+  category?: string; // Optional: photo category (landscape, food, etc.)
 }
 
 export interface Favorite {

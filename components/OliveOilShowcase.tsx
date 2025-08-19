@@ -1,31 +1,31 @@
 import React from 'react';
-import { Award, Leaf, Globe, Crown, Star, ExternalLink } from 'lucide-react';
+import { Award, Leaf, Globe, Crown, Star, ExternalLink, Trophy, Target } from 'lucide-react';
 
 const OliveOilShowcase: React.FC = () => {
   const achievements = [
     {
-      icon: <Award className="h-5 w-5" />,
-      title: "Prêmio Internacional",
-      description: "Medalha de Ouro no Concurso Mundial de Azeites",
+      icon: <Crown className="h-5 w-5" />,
+      title: "Melhor do Hemisfério Sul",
+      description: "Prosperato eleita #1 do Hemisfério Sul em 2024",
       year: "2024"
     },
     {
-      icon: <Crown className="h-5 w-5" />,
-      title: "Denominação de Origem",
-      description: "Primeiro azeite gaúcho com D.O. reconhecida",
-      year: "2023"
+      icon: <Trophy className="h-5 w-5" />,
+      title: "4º Lugar Mundial",
+      description: "Ranking EVOO World 2024 - Prosperato",
+      year: "2024"
+    },
+    {
+      icon: <Target className="h-5 w-5" />,
+      title: "Flos Olei 97/100",
+      description: "1ª marca brasileira com 97 pontos",
+      year: "2025"
     },
     {
       icon: <Globe className="h-5 w-5" />,
-      title: "Exportação",
-      description: "Presente em 15 países ao redor do mundo",
+      title: "300+ Prêmios",
+      description: "Produtores locais acumulam mais de 300 prêmios",
       year: "2024"
-    },
-    {
-      icon: <Leaf className="h-5 w-5" />,
-      title: "Sustentabilidade",
-      description: "Certificação orgânica e sustentável",
-      year: "2022"
     }
   ];
 
@@ -36,8 +36,8 @@ const OliveOilShowcase: React.FC = () => {
         <div className="inline-flex items-center gap-3 bg-white/80 rounded-full px-6 py-3 shadow-sm mb-4">
           <div className="text-4xl">🫒</div>
           <div>
-            <h3 className="text-2xl font-bold text-green-800">Azeite de Oliva Caçapavano</h3>
-            <p className="text-green-600">Tradição que conquistou o mundo</p>
+            <h3 className="text-2xl font-bold text-green-800">Azeites de Caçapava do Sul</h3>
+            <p className="text-green-600">Berço da olivicultura gaúcha</p>
           </div>
         </div>
       </div>
@@ -45,14 +45,15 @@ const OliveOilShowcase: React.FC = () => {
       {/* Story Section */}
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <div>
-          <h4 className="text-xl font-bold text-green-800 mb-4">Nossa História</h4>
+          <h4 className="text-xl font-bold text-green-800 mb-4">Excelência Mundial</h4>
           <p className="text-green-700 mb-4">
-            Desde 1950, Caçapava do Sul cultiva oliveiras nas encostas da Serra do Sudeste, 
-            aproveitando o clima privilegiado e solos únicos da região.
+            Caçapava do Sul é responsável por 70% da produção brasileira de azeite de oliva, 
+            com produtores que conquistaram reconhecimento internacional.
           </p>
           <p className="text-green-700">
-            Hoje, nossos azeites extra virgens são reconhecidos internacionalmente 
-            por sua qualidade excepcional e sabor inconfundível.
+            <strong>Prosperato</strong> lidera mundialmente como 4ª melhor do ranking global e 
+            melhor do Hemisfério Sul. <strong>Don José</strong> e <strong>Alma do Segredo</strong> 
+            completam o trio de excelência local.
           </p>
         </div>
         
@@ -63,7 +64,7 @@ const OliveOilShowcase: React.FC = () => {
             className="w-full h-48 object-cover rounded-xl shadow-md"
           />
           <div className="absolute top-3 right-3 bg-white/90 px-3 py-1 rounded-full text-sm font-semibold text-green-800">
-            100% Natural
+            70% Nacional
           </div>
         </div>
       </div>
@@ -88,8 +89,8 @@ const OliveOilShowcase: React.FC = () => {
       <div className="bg-white/70 rounded-xl p-6 border border-green-200">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           <div>
-            <div className="text-3xl font-bold text-green-800">95+</div>
-            <div className="text-sm text-green-600">Score Internacional</div>
+            <div className="text-3xl font-bold text-green-800">97</div>
+            <div className="text-sm text-green-600">Flos Olei Score (Prosperato)</div>
             <div className="flex justify-center mt-1">
               {[1,2,3,4,5].map(i => (
                 <Star key={i} className="h-4 w-4 text-yellow-500 fill-current" />
@@ -97,7 +98,26 @@ const OliveOilShowcase: React.FC = () => {
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-green-800">15</div>
+            <div className="text-3xl font-bold text-green-800">3</div>
+            <div className="text-sm text-green-600">Produtores Premium</div>
+            <div className="text-xs text-green-500 mt-1">Prosperato • Don José • Alma do Segredo</div>
+          </div>
+          <div>
+            <div className="text-3xl font-bold text-green-800">70%</div>
+            <div className="text-sm text-green-600">Produção Nacional</div>
+            <div className="text-xs text-green-500 mt-1">Caçapava do Sul</div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-6 text-center">
+          <button className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-lg">
+            <Leaf className="h-4 w-4" />
+            Conheça Nossos Azeites
+            <ExternalLink className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
             <div className="text-sm text-green-600">Países de Exportação</div>
           </div>
           <div>
