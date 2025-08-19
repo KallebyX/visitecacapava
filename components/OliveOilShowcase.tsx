@@ -118,22 +118,6 @@ const OliveOilShowcase: React.FC = () => {
           </button>
         </div>
       </div>
-            <div className="text-sm text-green-600">Países de Exportação</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-green-800">1ª</div>
-            <div className="text-sm text-green-600">D.O. do Rio Grande do Sul</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Call to Action */}
-      <div className="text-center mt-6">
-        <button className="bg-green-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-green-700 transition-colors inline-flex items-center gap-2">
-          <ExternalLink className="h-4 w-4" />
-          Conheça os Produtores
-        </button>
-      </div>
     </div>
   );
 };
