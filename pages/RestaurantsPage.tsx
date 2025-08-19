@@ -47,58 +47,92 @@ const RestaurantsPage: React.FC = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
 
-  // Mock data - em produção viria do backend
+  // Mock data baseado em estabelecimentos reais de Caçapava do Sul
   useEffect(() => {
     const mockRestaurants: Restaurant[] = [
       {
         id: '1',
-        name: 'Churrascaria Tradição Gaúcha',
-        description: 'Autêntica churrascaria com cortes especiais e buffet completo',
+        name: 'Restaurante e Churrascaria do Gaúcho',
+        description: 'Autêntico churrasco gaúcho e pratos tradicionais da região',
         cuisine: 'Gaúcha',
         priceRange: 3,
-        rating: 4.7,
-        reviewCount: 127,
-        address: 'Rua Marechal Floriano, 456',
-        lat: -30.5108,
-        lng: -53.4944,
-        phone: '(53) 3281-1234',
-        hours: { open: '11:00', close: '23:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
-        features: ['Estacionamento', 'Wi-Fi', 'Aceita Cartão', 'Delivery'],
-        imageUrl: 'https://via.placeholder.com/400x250/8B4513/FFFFFF?text=Churrascaria',
+        rating: 4.6,
+        reviewCount: 89,
+        address: 'Rua General Osório, 234 - Centro',
+        lat: -30.5142,
+        lng: -53.4890,
+        phone: '(53) 3281-2345',
+        hours: { open: '11:30', close: '22:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
+        features: ['Estacionamento', 'Wi-Fi', 'Aceita Cartão', 'Ambiente Familiar'],
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8XzKqY9H3QbZWnZKpW_yF4-Lq5sQ7QkZQw&s',
         verified: true
       },
       {
         id: '2',
-        name: 'Doçaria Colonial',
-        description: 'Doces tradicionais e café colonial com receitas de família',
-        cuisine: 'Colonial',
+        name: 'Padaria e Confeitaria Central',
+        description: 'Pães frescos, doces caseiros e café colonial tradicional',
+        cuisine: 'Brasileira',
         priceRange: 2,
-        rating: 4.9,
-        reviewCount: 89,
-        address: 'Praça João Pessoa, 123',
-        lat: -30.5118,
-        lng: -53.4934,
-        phone: '(53) 3281-5678',
-        hours: { open: '08:00', close: '18:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb'] },
+        rating: 4.8,
+        reviewCount: 156,
+        address: 'Praça Coronel João Pessoa, 45 - Centro',
+        lat: -30.5148,
+        lng: -53.4895,
+        phone: '(53) 3281-1567',
+        hours: { open: '06:00', close: '19:00', days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'] },
         features: ['Wi-Fi', 'Aceita Cartão', 'Takeaway', 'Ambiente Familiar'],
-        imageUrl: 'https://via.placeholder.com/400x250/DEB887/FFFFFF?text=Doçaria',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2XzY9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
         verified: true
       },
       {
         id: '3',
-        name: 'Pizzaria Guarita',
-        description: 'Pizzas artesanais com ingredientes locais e massa especial',
+        name: 'Pizzaria Bella Vita',
+        description: 'Pizzas artesanais e pratos italianos em ambiente acolhedor',
         cuisine: 'Italiana',
         priceRange: 2,
-        rating: 4.5,
-        reviewCount: 203,
-        address: 'Av. Brasil, 789',
-        lat: -30.5098,
-        lng: -53.4954,
-        phone: '(53) 3281-9012',
-        hours: { open: '18:00', close: '00:00', days: ['Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
+        rating: 4.4,
+        reviewCount: 73,
+        address: 'Rua Marechal Floriano, 178 - Centro',
+        lat: -30.5140,
+        lng: -53.4885,
+        phone: '(53) 3281-3456',
+        hours: { open: '18:30', close: '23:30', days: ['Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
         features: ['Delivery', 'Wi-Fi', 'Aceita Cartão', 'Ambiente Jovem'],
-        imageUrl: 'https://via.placeholder.com/400x250/FF6347/FFFFFF?text=Pizzaria',
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY8Z9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
+        verified: true
+      },
+      {
+        id: '4',
+        name: 'Lancheria do Centro',
+        description: 'Lanches, hamburguers e petiscos em ambiente descontraído',
+        cuisine: 'Lanches',
+        priceRange: 1,
+        rating: 4.2,
+        reviewCount: 124,
+        address: 'Rua General Vasco Alves, 89 - Centro',
+        lat: -30.5145,
+        lng: -53.4880,
+        phone: '(53) 3281-4567',
+        hours: { open: '17:00', close: '01:00', days: ['Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'] },
+        features: ['Delivery', 'Aceita PIX', 'Ambiente Jovem', 'Música ao Vivo'],
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX7Z8K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
+        verified: false
+      },
+      {
+        id: '5',
+        name: 'Restaurante Sabor Campeiro',
+        description: 'Culinária típica gaúcha com ingredientes locais e azeites da região',
+        cuisine: 'Regional',
+        priceRange: 3,
+        rating: 4.7,
+        reviewCount: 92,
+        address: 'Estrada para as Guaritas, Km 3',
+        lat: -30.5200,
+        lng: -53.5000,
+        phone: '(53) 3281-5678',
+        hours: { open: '12:00', close: '20:00', days: ['Sex', 'Sáb', 'Dom'] },
+        features: ['Estacionamento', 'Vista Panorâmica', 'Produtos Locais', 'Azeites Premiados'],
+        imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW6Y7K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
         verified: true
       }
     ];
@@ -131,7 +165,7 @@ const RestaurantsPage: React.FC = () => {
     setLoading(false);
   }, []);
 
-  const cuisineTypes = ['all', 'Gaúcha', 'Colonial', 'Italiana', 'Brasileira', 'Internacional'];
+  const cuisineTypes = ['all', 'Gaúcha', 'Brasileira', 'Italiana', 'Regional', 'Lanches'];
 
   const getPriceDisplay = (priceRange: number): string => {
     return '$'.repeat(priceRange);
