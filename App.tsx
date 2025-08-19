@@ -23,6 +23,7 @@ import AboutCityPage from './pages/AboutCityPage';
 import AttractionsPage from './pages/AttractionsPage';
 import RestaurantsPage from './pages/RestaurantsPage';
 import OliveOilsPage from './pages/OliveOilsPage';
+import GameSystemDemo from './pages/GameSystemDemo';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRoutesPage from './pages/admin/ManageRoutesPage';
@@ -74,6 +75,7 @@ const App: React.FC = () => {
             <Route path="tourists" element={<ManageTouristsPage />} />
             <Route path="challenges" element={<ManageChallengesPage />} />
             <Route path="hotel-analytics" element={<HotelAnalyticsPage />} />
+            <Route path="game-system" element={<GameSystemDemo />} />
           </Route>
 
           {/* Hotel Routes */}
