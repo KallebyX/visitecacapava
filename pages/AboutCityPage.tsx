@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
     BookOpen, Castle, Mountain, Trees, MapPin, Clock, Gem, Pickaxe, 
     History, Camera, Calendar, Users, Star, Award, PlayCircle, ChevronLeft, 
@@ -219,10 +220,13 @@ const AboutCityPage: React.FC = () => {
                                 <PlayCircle size={20} />
                                 <span>{isPlaying ? 'Pausar' : 'Reproduzir'} Tour</span>
                             </button>
-                            <button className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                            <Link 
+                                to="/gallery" 
+                                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 px-6 py-3 rounded-lg font-medium transition-all duration-300"
+                            >
                                 <Camera size={20} />
                                 <span>Galeria</span>
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -600,10 +604,13 @@ const AboutCityPage: React.FC = () => {
                                                     
                                                     <p className="text-gray-600 leading-relaxed">{formation.significance}</p>
                                                     
-                                                    <button className="mt-4 flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-300">
+                                                    <Link 
+                                                        to="/map" 
+                                                        className="mt-4 flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                                                    >
                                                         <MapPin size={16} />
                                                         <span>Ver no Mapa</span>
-                                                    </button>
+                                                    </Link>
                                                 </div>
                                                 
                                                 <div className="relative">
@@ -675,10 +682,10 @@ const AboutCityPage: React.FC = () => {
                                         <p className="text-gray-600 mb-4">
                                             O Festival de Inverno e a Feira do Livro são eventos que celebram a rica cultura local.
                                         </p>
-                                        <button className="flex items-center text-red-600 hover:text-red-700 font-medium">
+                                        <Link to="/challenges" className="flex items-center text-red-600 hover:text-red-700 font-medium">
                                             <span>Saiba mais</span>
                                             <ArrowRight className="ml-2" size={16} />
-                                        </button>
+                                        </Link>
                                     </div>
 
                                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200 hover:shadow-lg transition-all duration-300">
@@ -687,10 +694,10 @@ const AboutCityPage: React.FC = () => {
                                         <p className="text-gray-600 mb-4">
                                             A Pedra do Segredo e outras formações rochosas guardam histórias ancestrais.
                                         </p>
-                                        <button className="flex items-center text-green-600 hover:text-green-700 font-medium">
+                                        <Link to="/attractions" className="flex items-center text-green-600 hover:text-green-700 font-medium">
                                             <span>Explorar</span>
                                             <ArrowRight className="ml-2" size={16} />
-                                        </button>
+                                        </Link>
                                     </div>
 
                                     <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200 hover:shadow-lg transition-all duration-300">
@@ -699,10 +706,10 @@ const AboutCityPage: React.FC = () => {
                                         <p className="text-gray-600 mb-4">
                                             O espírito hospitaleiro e a preservação das tradições gaúchas.
                                         </p>
-                                        <button className="flex items-center text-blue-600 hover:text-blue-700 font-medium">
+                                        <Link to="/leaderboard" className="flex items-center text-blue-600 hover:text-blue-700 font-medium">
                                             <span>Conhecer</span>
                                             <ArrowRight className="ml-2" size={16} />
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -748,18 +755,27 @@ const AboutCityPage: React.FC = () => {
                         Venha conhecer pessoalmente este tesouro geológico e cultural único no mundo
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <button className="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                        <Link 
+                            to="/routes"
+                            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center"
+                        >
                             <Calendar className="mr-2" size={20} />
                             Agendar Visita
-                        </button>
-                        <button className="bg-green-700 hover:bg-green-800 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                        </Link>
+                        <Link 
+                            to="/routes"
+                            className="bg-green-700 hover:bg-green-800 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center text-white"
+                        >
                             <MapPin className="mr-2" size={20} />
                             Ver Roteiros
-                        </button>
-                        <button className="bg-blue-700 hover:bg-blue-800 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                        </Link>
+                        <Link 
+                            to="/attractions"
+                            className="bg-blue-700 hover:bg-blue-800 px-8 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center text-white"
+                        >
                             <Info className="mr-2" size={20} />
                             Mais Informações
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </section>

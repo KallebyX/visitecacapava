@@ -199,12 +199,9 @@ const HomePage: React.FC = () => {
                         <h2 className="text-3xl font-bold text-gray-900">Últimas Novidades</h2>
                         <p className="text-gray-600 mt-1">Fique por dentro do que acontece em Caçapava</p>
                     </div>
-                    <Link 
-                        to="/news" 
-                        className="text-brand-green font-semibold hover:text-brand-dark-green flex items-center gap-1"
-                    >
+                    <div className="text-brand-green font-semibold hover:text-brand-dark-green flex items-center gap-1">
                         Ver todas <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -311,7 +308,7 @@ const HomePage: React.FC = () => {
                     </Link>
                     
                     <Link
-                        to="/photo-gallery"
+                        to="/gallery"
                         className="group bg-gradient-to-br from-pink-500 to-purple-600 text-white p-8 rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden"
                     >
                         <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
