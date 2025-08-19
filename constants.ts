@@ -1,130 +1,83 @@
 import type { Badge, PointOfInterest, Route, User, HotelCheckIn, Challenge, Photo, Review, Favorite } from './types';
 
 export const POINTS_OF_INTEREST: PointOfInterest[] = [
-    // Coordenadas reais de Caçapava do Sul: -30.5108, -53.4944
+    // Coordenadas reais de Caçapava do Sul baseadas nos pontos turísticos confirmados
     { 
         id: 'poi-1', 
         name: 'Pedra do Segredo', 
-        description: 'Formação rochosa icônica com vista panorâmica.', 
-        longDescription: 'A Pedra do Segredo é um dos mais belos e misteriosos pontos turísticos de Caçapava do Sul. A subida é recompensada com uma vista de 360 graus da região, perfeita para fotos e contemplação.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#6CBC3A"/><text x="50%" y="50%" font-family="Arial" font-size="20" fill="white" text-anchor="middle" dy=".3em">Guaritas do Camaquã</text></svg>'), 
-        points: 25, 
+        description: 'Formação rochosa imponente de ~120m com trilhas, grutas e mirantes.', 
+        longDescription: 'A Pedra do Segredo é uma formação rochosa imponente de aproximadamente 120 metros de altura, onde segundo a lenda, tesouros jesuítas foram escondidos. Oferece trilhas, grutas para exploração e mirantes com vista panorâmica da região.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Pedra do Segredo</text></svg>'), 
+        points: 30, 
         lat: -30.5694, 
         lng: -53.4913 
     },
     { 
         id: 'poi-2', 
+        name: 'Parque Natural Municipal da Pedra do Segredo', 
+        description: 'Trilhas autoguiadas e guiadas com cavernas e formações únicas.', 
+        longDescription: 'O parque oferece trilhas autoguiadas e guiadas, incluindo a famosa Caverna da Escuridão, o Salão das Estalactites e o Portal do Segredo. Uma experiência única de contato com a natureza e geologia local.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#228B22"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Parque da Pedra do Segredo</text></svg>'), 
+        points: 25, 
+        lat: -30.5700, 
+        lng: -53.4920 
+    },
+    { 
+        id: 'poi-3', 
+        name: 'Parque das Guaritas', 
+        description: 'Geoparque com formações rochosas únicas, extensão de ~30 km².', 
+        longDescription: 'Geoparque reconhecido pela UNESCO com formações rochosas únicas que se estendem por cerca de 30 km². Oferece trilhas espetaculares, algumas em áreas privadas que necessitam de guia especializado.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#D2691E"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Parque das Guaritas</text></svg>'), 
+        points: 35, 
+        lat: -30.7397, 
+        lng: -53.4682 
+    },
+    { 
+        id: 'poi-4', 
         name: 'Minas do Camaquã', 
-        description: 'Complexo mineiro histórico e paisagens deslumbrantes.', 
-        longDescription: 'Explore as ruínas do maior complexo de mineração de cobre do Brasil. O local oferece uma viagem no tempo, com prédios antigos, equipamentos e uma paisagem única moldada pela atividade mineradora.', 
-        imageUrl: 'https://www.minasdocamaqua.com.br/wp-content/uploads/2019/08/Pr%C3%A9dio-do-escrit%C3%B3rio-da-CBC-1.jpg', 
+        description: 'Zona de mineração histórica com lago azul e potencial aquático.', 
+        longDescription: 'Complexo de mineração histórica que abriga um impressionante lago azul em mina a céu aberto. Oferece trilhas, visitação guiada e potencial para esportes aquáticos, sendo um marco da história mineradora local.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#4A90E2"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Minas do Camaquã</text></svg>'), 
         points: 30, 
         lat: -30.7303, 
         lng: -53.7664 
     },
     { 
-        id: 'poi-3', 
-        name: 'Cascata do Salso', 
-        description: 'Queda d\'água refrescante em meio à natureza.', 
-        longDescription: 'Uma bela cascata de fácil acesso, ideal para um banho refrescante nos dias quentes. O som da água e a vegetação ao redor criam um ambiente perfeito para relaxar e se conectar com a natureza.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#4A90E2"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Cascata do Salso</text></svg>'), 
-        points: 20, 
-        lat: -30.5054, 
-        lng: -53.4116 
-    },
-    { 
-        id: 'poi-4', 
+        id: 'poi-5', 
         name: 'Forte Dom Pedro II', 
-        description: 'Marco histórico da Revolução Farroupilha.', 
-        longDescription: 'Construído em 1848, o Forte Dom Pedro II é um importante sítio histórico. Suas muralhas de pedra contam histórias de batalhas e da importância estratégica de Caçapava do Sul no passado.', 
-        imageUrl: 'https://live.staticflickr.com/832/42079148484_f04a796d8e_b.jpg', 
-        points: 15, 
+        description: 'Fortificação hexagonal de pedra e cal do século XIX.', 
+        longDescription: 'Fortificação hexagonal construída em meados do século XIX, com paredes de pedra e cal que chegam a 10 metros de altura. Marco histórico importante da região com visitação livre.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Forte Dom Pedro II</text></svg>'), 
+        points: 20, 
         lat: -30.5144, 
         lng: -53.4883 
     },
     { 
-        id: 'poi-5', 
-        name: 'Casa de Cultura Ulhôa Cintra', 
-        description: 'Centro de cultura e história local.', 
-        longDescription: 'Este casarão histórico, antiga residência do Visconde de Jaguari, hoje abriga um centro cultural com exposições que narram a rica história de Caçapava do Sul e seus personagens ilustres.', 
-        imageUrl: 'https://www.jornalfolhadacidade.com.br/img/noticias/casa-de-ulhoa-cintra-e-tema-de-audiencia-publica.jpg', 
-        points: 10, 
-        lat: -30.5150, 
-        lng: -53.4891 
-    },
-    { 
         id: 'poi-6', 
-        name: 'Igreja Matriz Nossa Senhora da Assunção', 
-        description: 'Imponente igreja no coração da cidade.', 
-        longDescription: 'A Igreja Matriz é um marco de fé e arquitetura no centro de Caçapava do Sul. Construída no século XIX, é um importante patrimônio religioso e histórico da cidade.', 
-        imageUrl: 'https://live.staticflickr.com/7120/7424597086_e5491104e7_b.jpg', 
-        points: 10, 
+        name: 'Centro Histórico Municipal', 
+        description: 'Igreja Matriz, Praça Central, Centro de Cultura e monumentos.', 
+        longDescription: 'Conjunto patrimonial que inclui a Igreja Matriz Nossa Senhora da Assunção, Praça Central, Centro Municipal de Cultura (Museu Lanceiros do Sul, Biblioteca, Arquivo) e o Monumento ao Guerreiro Farrapo, formando o coração histórico da cidade.', 
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#DC143C"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Centro Histórico</text></svg>'), 
+        points: 25, 
         lat: -30.5148, 
         lng: -53.4899 
-    },
-    { 
-        id: 'poi-7', 
-        name: 'Guaritas do Camaquã', 
-        description: 'Formações rochosas milenares únicas no mundo.', 
-        longDescription: 'O Parque das Guaritas é um santuário geológico com formações de arenito que se assemelham a torres e guardiões. Um dos geossítios mais importantes do mundo, perfeito para trekking e contemplação.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#D2691E"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Guaritas do Camaquã</text></svg>'), 
-        points: 30, 
-        lat: -30.7397, 
-        lng: -53.4682 
-    },
-    { 
-        id: 'poi-8', 
-        name: 'Centro Histórico de Caçapava', 
-        description: 'Arquitetura colonial preservada no coração da cidade.', 
-        longDescription: 'O centro histórico preserva a arquitetura do século XIX com casarões coloniais, praças e monumentos que contam a história da cidade desde sua fundação.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Minas do Camaquã</text></svg>'), 
-        points: 15, 
-        lat: -30.5142, 
-        lng: -53.4890 
-    },
-    { 
-        id: 'poi-9', 
-        name: 'Olivícola Quinta do Vale', 
-        description: 'Produtor de azeites premiados internacionalmente.', 
-        longDescription: 'Visite o local onde são produzidos azeites que ganharam mais de 50 prêmios internacionais. Tours guiados com degustação e venda de produtos locais.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#228B22"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Centro Histórico</text></svg>'), 
-        points: 20, 
-        lat: -30.5200, 
-        lng: -53.5100 
-    },
-    { 
-        id: 'poi-10', 
-        name: 'Cerro da Angélica', 
-        description: 'Ponto mais alto da região com vista panorâmica.', 
-        longDescription: 'Com 348 metros de altitude, o Cerro da Angélica oferece uma vista espetacular de toda a região. Ideal para trilhas e observação de aves.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#DC143C"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Igreja Matriz</text></svg>'), 
-        points: 25, 
-        lat: -30.4800, 
-        lng: -53.4500 
     }
 ];
 
 export const ROUTES: Route[] = [
     {
         id: 'route-1',
-        name: 'Belezas Naturais',
-        description: 'Explore paisagens únicas, das formações geológicas às cascatas refrescantes.',
-        pointsOfInterest: ['poi-1', 'poi-3', 'poi-7', 'poi-10'],
-        imageUrl: 'https://www.aventurebox.com/wp-content/uploads/2021/10/trekking-nas-guaritas-3.jpg'
+        name: 'Tesouros Geológicos',
+        description: 'Explore as formações rochosas únicas e parques naturais da região.',
+        pointsOfInterest: ['poi-1', 'poi-2', 'poi-3'],
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Tesouros Geológicos</text></svg>')
     },
     {
         id: 'route-2',
         name: 'Patrimônio Histórico',
-        description: 'Viaje no tempo conhecendo os marcos históricos e culturais da região.',
-        pointsOfInterest: ['poi-2', 'poi-4', 'poi-5', 'poi-6', 'poi-8'],
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Forte Dom Pedro II</text></svg>')
-    },
-    {
-        id: 'route-3',
-        name: 'Azeites e Sabores',
-        description: 'Descubra os azeites premiados e sabores únicos de Caçapava do Sul.',
-        pointsOfInterest: ['poi-9'],
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#FFD700"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="black" text-anchor="middle" dy=".3em">Azeites Locais</text></svg>')
+        description: 'Descubra a rica história através de monumentos e centros culturais.',
+        pointsOfInterest: ['poi-4', 'poi-5', 'poi-6'],
+        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Patrimônio Histórico</text></svg>')
     }
 ];
 
