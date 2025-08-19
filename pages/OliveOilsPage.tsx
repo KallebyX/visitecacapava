@@ -1,10 +1,11 @@
-import React from 'react';
-import { Award, Leaf, MapPin, Star, Users, Calendar, Building2, Home, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Award, Leaf, MapPin, Star, Users, Calendar, Building2, Home, ChevronRight, ExternalLink, Globe, Trophy, Droplets, Eye, Palette } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const oliveOilProducers = [
   {
     name: 'Prosperato',
+    image: '/api/placeholder/400/300',
     highlights: [
       'Marca mais premiada do Brasil (~300 prêmios)',
       'Reconhecida pelo guia Flos Olei (Itália) com 95/100 pontos em 2024 e 97/100 em 2025',
@@ -25,13 +26,16 @@ const oliveOilProducers = [
       'Best in Class – NYIOOC 2019 – Ouro',
       'Gran Prestigio Oro – Olivinus 2017 (Argentina)',
       'Ouro – Terraolivo 2017 (Israel)',
-      'Menção Honrosa – Leone d’oro dei Mastri Oleari 2017 (Itália)'
+      'Menção Honrosa – Leone d\'oro dei Mastri Oleari 2017 (Itália)'
     ],
     website: 'https://prosperato.com.br',
     location: 'BR-290, Vila Progresso, Caçapava do Sul',
+    tastingNotes: ['Frutado intenso', 'Notas de ervas aromáticas', 'Amargor equilibrado', 'Picância suave'],
+    category: 'Premium International'
   },
   {
     name: 'Don José',
+    image: '/api/placeholder/400/300',
     highlights: [
       'Produção manual e comunitária na Fazenda Pitangueira',
       'Premiado com Selo Ibraoliva — Produtos Premium RS',
@@ -41,9 +45,12 @@ const oliveOilProducers = [
     awards: ['Selo Ibraoliva – Produtos Premium RS'],
     website: '',
     location: 'Fazenda Pitangueira, Caçapava do Sul',
+    tastingNotes: ['Sabor frutado', 'Aroma delicado', 'Textura sedosa'],
+    category: 'Familiar Tradicional'
   },
   {
     name: 'Alma do Segredo',
+    image: '/api/placeholder/400/300',
     highlights: [
       'Produção no Vale da Pedra do Segredo',
       'Azeite extra virgem, perfil sensorial equilibrado',
@@ -55,13 +62,14 @@ const oliveOilProducers = [
     awards: ['Medalha de ouro em concurso nacional (2023)'],
     website: '',
     location: 'Vale da Pedra do Segredo, Caçapava do Sul',
+    tastingNotes: ['Alcachofra', 'Tomate verde', 'Frutas frescas', 'Final persistente'],
+    category: 'Gourmet Orgânico'
   },
-  // Outros produtores podem ser adicionados aqui
 ];
 
 const otherProducers = [
   'Vila do Segredo',
-  'Costi Olivos',
+  'Costi Olivos', 
   'Nuance',
   'Guaritas',
   'Cerro dos Olivais',
@@ -70,235 +78,367 @@ const otherProducers = [
 ];
 
 const OliveOilsPage: React.FC = () => {
+  const [selectedProducer, setSelectedProducer] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'producers' | 'quality'>('overview');
+
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4 space-y-12">
-      {/* Introdução */}
-      <section className="text-center space-y-4">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-brand-dark-green mb-2 flex items-center justify-center gap-3">
-          <Leaf className="w-10 h-10 text-green-600" />
-          Azeites de Caçapava do Sul
-        </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-          Caçapava do Sul é referência nacional e internacional em azeite de oliva extravirgem, unindo tradição, inovação e sustentabilidade. Reconhecida como Geoparque Mundial da UNESCO e Capital Gaúcha da Geodiversidade, a cidade lidera a produção e a qualidade do azeite brasileiro, com marcas premiadas e experiências únicas de olivoturismo.
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-yellow-50 to-green-100">
+      {/* Hero Section */}
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-800/10 to-yellow-600/10"></div>
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center mb-6">
+            <Droplets className="w-12 h-12 text-green-600 mr-4" />
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-green-800 to-yellow-600 bg-clip-text text-transparent">
+              Azeites Premium
+            </h1>
+            <Leaf className="w-12 h-12 text-yellow-600 ml-4" />
+          </div>
+          <p className="text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto mb-8 leading-relaxed">
+            Caçapava do Sul: Capital Nacional do Azeite Extravirgem
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+              <Trophy className="w-4 h-4" />
+              300+ Prêmios Internacionais
+            </span>
+            <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              Exportado Mundialmente
+            </span>
+            <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+              <Star className="w-4 h-4" />
+              Qualidade UNESCO
+            </span>
+          </div>
+        </div>
       </section>
 
-      {/* Destaque dos principais produtores */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-6 flex items-center gap-2">
-          <Award className="w-6 h-6 text-yellow-500" />
-          Destaques e Reconhecimento Internacional
-        </h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          {oliveOilProducers.map((producer) => (
-            <div key={producer.name} className="bg-white rounded-2xl shadow-lg p-6 border border-green-100 flex flex-col gap-3">
-              <div className="flex items-center gap-3 mb-2">
-                <Leaf className="w-6 h-6 text-green-600" />
-                <h3 className="text-xl font-bold text-brand-dark-green">{producer.name}</h3>
+      {/* Navigation Tabs */}
+      <section className="max-w-6xl mx-auto px-4 mb-8">
+        <div className="flex justify-center">
+          <div className="bg-white rounded-xl shadow-lg p-2 flex gap-2">
+            {[
+              { id: 'overview', label: 'Visão Geral', icon: Eye },
+              { id: 'producers', label: 'Produtores', icon: Users },
+              { id: 'quality', label: 'Qualidade', icon: Award }
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id as any)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+                  activeTab === id
+                    ? 'bg-green-600 text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Content based on active tab */}
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div className="space-y-12">
+            {/* Statistics */}
+            <section className="grid md:grid-cols-4 gap-6">
+              <div className="bg-white rounded-2xl p-6 shadow-lg text-center border border-green-100">
+                <Trophy className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800">300+</div>
+                <div className="text-gray-600 font-medium">Prêmios Internacionais</div>
               </div>
-              <p className="text-gray-700 mb-2">{producer.description}</p>
-              <ul className="list-disc ml-6 text-gray-600 text-sm mb-2">
-                {producer.highlights.map((h, i) => <li key={i}>{h}</li>)}
-              </ul>
-              {producer.awards && (
-                <div className="mb-2">
-                  <span className="font-semibold text-green-700">Prêmios:</span>
-                  <ul className="list-disc ml-6 text-gray-600 text-sm">
-                    {producer.awards.map((a, i) => <li key={i}>{a}</li>)}
+              <div className="bg-white rounded-2xl p-6 shadow-lg text-center border border-green-100">
+                <Globe className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800">10+</div>
+                <div className="text-gray-600 font-medium">Países de Exportação</div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 shadow-lg text-center border border-green-100">
+                <Leaf className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800">10+</div>
+                <div className="text-gray-600 font-medium">Produtores Locais</div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 shadow-lg text-center border border-green-100">
+                <Star className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800">1ª</div>
+                <div className="text-gray-600 font-medium">D.O. do Rio Grande do Sul</div>
+              </div>
+            </section>
+
+            {/* Fenazeite */}
+            <section className="bg-white rounded-2xl p-8 shadow-lg border border-green-100">
+              <h2 className="text-3xl font-bold text-green-800 mb-6 flex items-center gap-3">
+                <Calendar className="w-8 h-8 text-green-600" />
+                Festa Nacional do Azeite de Oliva (Fenazeite)
+              </h2>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    A Fenazeite é o maior evento anual de Caçapava do Sul, celebrando a cultura olivícola local. Em 2024, a 3ª edição reuniu cerca de 30 mil visitantes, com degustações, feira da agricultura familiar, shows, palestras, oficinas e passeios turísticos aos olivais.
+                  </p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-green-600" />
+                      Mais de 20 mil pessoas em 2024
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-green-600" />
+                      Passeios turísticos a olivais e geossítios
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-green-600" />
+                      Próxima edição: novembro de 2025
+                    </li>
                   </ul>
                 </div>
-              )}
-              {producer.website && (
-                <a href={producer.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">Site oficial</a>
-              )}
-              <div className="flex items-center gap-2 text-gray-500 text-xs mt-2">
-                <MapPin className="w-4 h-4" /> {producer.location}
+                <div className="flex flex-wrap gap-3">
+                  <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Identidade local</span>
+                  <span className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">Turismo & Gastronomia</span>
+                  <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">Reconhecimento internacional</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* Producers Tab */}
+        {activeTab === 'producers' && (
+          <div className="space-y-8">
+            <h2 className="text-3xl font-bold text-green-800 text-center mb-8">Produtores de Azeite Premium</h2>
+            
+            {/* Main Producers */}
+            <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              {oliveOilProducers.map((producer, index) => (
+                <div 
+                  key={producer.name} 
+                  className={`bg-white rounded-2xl shadow-lg overflow-hidden border-2 transition-all duration-300 cursor-pointer ${
+                    selectedProducer === index ? 'border-green-500 scale-105' : 'border-gray-100 hover:border-green-300'
+                  }`}
+                  onClick={() => setSelectedProducer(selectedProducer === index ? null : index)}
+                >
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-bold text-green-800">{producer.name}</h3>
+                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                        {producer.category}
+                      </span>
+                    </div>
+                    
+                    <p className="text-gray-600 mb-4 leading-relaxed">{producer.description}</p>
+                    
+                    {/* Tasting Notes */}
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <Palette className="w-4 h-4" />
+                        Notas de Degustação
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {producer.tastingNotes.map((note, i) => (
+                          <span key={i} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">
+                            {note}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
+                      <MapPin className="w-4 h-4" />
+                      {producer.location}
+                    </div>
+
+                    {/* Awards Preview */}
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Award className="w-4 h-4 text-yellow-500" />
+                        <span className="font-semibold text-gray-700">Principais Prêmios</span>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {producer.awards.slice(0, 2).map((award, i) => (
+                          <div key={i} className="truncate">• {award}</div>
+                        ))}
+                        {producer.awards.length > 2 && (
+                          <div className="text-green-600 font-medium">+ {producer.awards.length - 2} outros prêmios</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Website Link */}
+                    {producer.website && (
+                      <a 
+                        href={producer.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Visitar Site
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Expanded Details */}
+                  {selectedProducer === index && (
+                    <div className="border-t border-gray-100 p-6 bg-gray-50">
+                      <h4 className="font-bold text-gray-800 mb-3">Destaques Completos</h4>
+                      <ul className="space-y-2 text-sm text-gray-600">
+                        {producer.highlights.map((highlight, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <Star className="w-3 h-3 text-green-500 mt-1 flex-shrink-0" />
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <h4 className="font-bold text-gray-800 mb-3 mt-6">Todos os Prêmios</h4>
+                      <ul className="space-y-1 text-sm text-gray-600">
+                        {producer.awards.map((award, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <Trophy className="w-3 h-3 text-yellow-500 mt-1 flex-shrink-0" />
+                            {award}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Other Producers */}
+            <section className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
+              <h3 className="text-xl font-bold text-green-800 mb-4">Outros Produtores Locais</h3>
+              <div className="flex flex-wrap gap-3">
+                {otherProducers.map((name) => (
+                  <span key={name} className="bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-200 font-medium">
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* Quality Tab */}
+        {activeTab === 'quality' && (
+          <div className="space-y-8">
+            <h2 className="text-3xl font-bold text-green-800 text-center mb-8">Qualidade e Certificações</h2>
+            
+            {/* Quality Standards */}
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
+                  <Globe className="w-6 h-6" />
+                  Reconhecimento Internacional
+                </h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-center gap-3">
+                    <Star className="w-5 h-5 text-yellow-500" />
+                    Guia Flos Olei (Itália) - 95-97/100 pontos
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    EVOO World Ranking - Melhor do Hemisfério Sul
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Award className="w-5 h-5 text-green-500" />
+                    Certificações: Itália, Grécia, EUA, Japão
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
+                  <Building2 className="w-6 h-6" />
+                  Selos e Certificações Nacionais
+                </h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-center gap-3">
+                    <Star className="w-5 h-5 text-yellow-500" />
+                    Selo Ouro de Azeite Extravirgem Premium RS
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Award className="w-5 h-5 text-green-500" />
+                    Selo Ibraoliva - Produtos Premium RS
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Leaf className="w-5 h-5 text-green-500" />
+                    Primeira D.O. (Denominação de Origem) do RS
+                  </li>
+                </ul>
               </div>
             </div>
-          ))}
-        </div>
-        <div className="mt-8">
-          <h4 className="font-semibold text-brand-green mb-2">Outros produtores locais:</h4>
-          <ul className="flex flex-wrap gap-3 text-gray-700 text-sm">
-            {otherProducers.map((name) => (
-              <li key={name} className="bg-green-50 px-3 py-1 rounded-full border border-green-100">{name}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
 
-      {/* Fenazeite */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
-          <Calendar className="w-6 h-6 text-green-600" />
-          Festa Nacional do Azeite de Oliva (Fenazeite)
-        </h2>
-        <p className="text-gray-700 mb-4">
-          A Fenazeite é o maior evento anual de Caçapava do Sul, celebrando a cultura olivícola local. Em 2024, a 3ª edição reuniu cerca de 30 mil visitantes, com degustações, feira da agricultura familiar, shows, palestras, oficinas e passeios turísticos aos olivais. O evento fortalece a identidade local e projeta Caçapava como referência nacional e internacional em azeite de oliva.
-        </p>
-        <ul className="list-disc ml-6 text-gray-600 text-sm mb-4">
-          <li>Mais de 20 mil pessoas em 2024, mesmo com chuva</li>
-          <li>Expositores de artesanato e agricultura familiar, experiências gastronômicas e shows culturais</li>
-          <li>Passeios turísticos a olivais e geossítios</li>
-          <li>Próxima edição: novembro de 2025</li>
-        </ul>
-        <div className="flex flex-wrap gap-3 mt-2">
-          <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs">Identidade local</span>
-          <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs">Turismo & Gastronomia</span>
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">Reconhecimento internacional</span>
-        </div>
-      </section>
+            {/* Production Process */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-green-100">
+              <h3 className="text-2xl font-bold text-green-800 mb-6 text-center">Processo de Produção Premium</h3>
+              <div className="grid md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Leaf className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 mb-2">Colheita</h4>
+                  <p className="text-sm text-gray-600">Colheita manual no ponto ideal de maturação</p>
+                </div>
+                <div className="text-center">
+                  <div className="bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Droplets className="w-8 h-8 text-yellow-600" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 mb-2">Extração</h4>
+                  <p className="text-sm text-gray-600">Processo mecânico a frio, preservando qualidade</p>
+                </div>
+                <div className="text-center">
+                  <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Eye className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 mb-2">Análise</h4>
+                  <p className="text-sm text-gray-600">Controle rigoroso de qualidade e pureza</p>
+                </div>
+                <div className="text-center">
+                  <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Star className="w-8 h-8 text-purple-600" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 mb-2">Certificação</h4>
+                  <p className="text-sm text-gray-600">Testes sensoriais e químicos internacionais</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
-      {/* Turismo & Pontos Turísticos */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
-          <MapPin className="w-6 h-6 text-green-600" />
-          Turismo & Atrativos
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Pedra do Segredo</h4>
-            <p className="text-gray-600 text-sm">
-              Principal cartão-postal da cidade e centro do olivoturismo regional.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Guaritas do Camaquã</h4>
-            <p className="text-gray-600 text-sm">
-              Formações rochosas às margens do Rio Camaquã, geossítio de importância mundial.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Geoparque Mundial UNESCO</h4>
-            <p className="text-gray-600 text-sm">
-              Capital Gaúcha da Geodiversidade com diversos geossítios e formações geológicas únicas.
-            </p>
-          </div>
-        </div>
-        <div className="mt-4">
-          <Link to="/routes" className="inline-flex items-center gap-2 text-green-700 hover:underline font-medium">
-            Ver todos os atrativos <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
-
-      {/* Gastronomia */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
-          <Users className="w-6 h-6 text-green-600" />
-          Gastronomia Local
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Churrascaria 21</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Tradição em carnes e costela fogo de chão, ambiente familiar com pratos da culinária gaúcha.
-            </p>
-            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Churrascaria</span>
-          </div>
-          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Cantina Irmãos Micheletto</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Culinária italiana com massas e ambiente aconchegante.
-            </p>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Italiana</span>
-          </div>
-        </div>
-        <div className="bg-green-50 rounded-xl p-4 mt-6">
-          <h4 className="font-semibold text-brand-dark-green mb-2">Influência do Azeite na Gastronomia Local</h4>
-          <p className="text-gray-700 text-sm">
-            Os restaurantes locais incorporam os azeites premiados da região em seus pratos, criando uma identidade gastronômica única que valoriza os produtos locais.
+      {/* Call to Action */}
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <div className="bg-gradient-to-r from-green-600 to-yellow-600 rounded-2xl p-8 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Experimente Nossos Azeites Premium</h2>
+          <p className="text-xl mb-6 opacity-90">
+            Descubra os sabores únicos de Caçapava do Sul e faça parte da tradição olivícola brasileira
           </p>
-        </div>
-      </section>
-
-      {/* Indústrias de Calcário */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-gray-500" />
-          Indústrias de Calcário
-        </h2>
-        <p className="text-gray-700 mb-2">
-          Caçapava do Sul é a Capital Nacional do Calcário, responsável por cerca de 80% do calcário produzido no RS. Empresas como Inducal, Dagoberto Barcellos, FIDA, Sangalli e outras sustentam a economia local há décadas, empregando centenas de trabalhadores e impulsionando a agropecuária gaúcha.
-        </p>
-      </section>
-
-      {/* Hospedagem */}
-      <section>
-        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
-          <Home className="w-6 h-6 text-green-600" />
-          Hospedagem & Experiências
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Pousada Olival Vila do Segredo</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Experiência no Vale da Pedra do Segredo, rodeada por olivais.
-            </p>
-            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Turismo Rural</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Cyro Palace Hotel</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Hotel no centro da cidade.
-            </p>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Hotel</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Chácara do Forte</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Ambiente rural com experiências de ecoturismo.
-            </p>
-            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ecoturismo</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Pousada Bellamina</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Pousada com café da manhã caseiro.
-            </p>
-            <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Pousada</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Hotel Karlton</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Hospedagem com localização central.
-            </p>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Hotel</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Portal do Pampa</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Estilo campeiro com vista para o campo.
-            </p>
-            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Rural</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Novo Hotel</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Opção econômica no centro.
-            </p>
-            <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">Econômico</span>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
-            <h4 className="font-semibold text-brand-dark-green mb-2">Guaritas Hostel</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              Ambiente jovem para mochileiros.
-            </p>
-            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Hostel</span>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button className="bg-white text-green-600 font-bold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              Visitar Produtores
+            </button>
+            <button className="border-2 border-white text-white font-bold px-6 py-3 rounded-lg hover:bg-white hover:text-green-600 transition-colors flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Próxima Fenazeite
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Fontes */}
-      <section className="text-xs text-gray-500 mt-8">
-        <div className="font-semibold mb-1">Fontes:</div>
-        <ul className="list-disc ml-6">
-          <li>Secretaria de Turismo/Geoparque Caçapava</li>
-          <li>TravelTerapia, Pedra do Segredo, Portal Farrapo, Gazeta de Caçapava, Forbes Brasil, Ibraoliva</li>
-          <li>Sites institucionais das indústrias de calcário e azeite</li>
-          <li>TripAdvisor, Facebook/Instagram oficiais, Prefeitura</li>
-        </ul>
-        <div className="mt-2">Atualizado em agosto de 2025</div>
+      {/* Footer Info */}
+      <section className="max-w-6xl mx-auto px-4 pb-8">
+        <div className="text-center text-gray-500 text-sm">
+          <div className="mb-2 font-semibold">Fontes:</div>
+          <p>Secretaria de Turismo/Geoparque Caçapava • Ibraoliva • Forbes Brasil • Sites oficiais dos produtores</p>
+          <div className="mt-2">Atualizado em agosto de 2025</div>
+        </div>
       </section>
     </div>
   );
