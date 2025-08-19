@@ -162,6 +162,9 @@ const NavLinks: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
         <>
             <NavLink to="/" className={getLinkClass('/')} end>Início</NavLink>
             <NavLink to="/routes" className={getLinkClass('/routes')}>Rotas</NavLink>
+            <NavLink to="/attractions" className={getLinkClass('/attractions')}>Atrações</NavLink>
+            <NavLink to="/restaurants" className={getLinkClass('/restaurants')}>Restaurantes</NavLink>
+            <NavLink to="/olive-oils" className={getLinkClass('/olive-oils')}>Azeites</NavLink>
             <NavLink to="/itinerary" className={getLinkClass('/itinerary')}>Roteiro IA</NavLink>
             <NavLink to="/challenges" className={getLinkClass('/challenges')}>Desafios</NavLink>
             <NavLink to="/gallery" className={getLinkClass('/gallery')}>Galeria</NavLink>

@@ -64,6 +64,39 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
             
+            {/* Quick Access Section */}
+            <section>
+                <h2 className="text-3xl font-bold text-center mb-8">O que você gostaria de fazer?</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Link
+                        to="/attractions"
+                        className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105"
+                    >
+                        <div className="text-4xl mb-3">🏔️</div>
+                        <h3 className="text-xl font-bold mb-2">Pontos Turísticos</h3>
+                        <p className="text-blue-100">Descubra as belezas naturais e patrimônios históricos</p>
+                    </Link>
+                    
+                    <Link
+                        to="/restaurants"
+                        className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105"
+                    >
+                        <div className="text-4xl mb-3">🍽️</div>
+                        <h3 className="text-xl font-bold mb-2">Restaurantes</h3>
+                        <p className="text-orange-100">Saboreie a gastronomia local e avalie sua experiência</p>
+                    </Link>
+                    
+                    <Link
+                        to="/olive-oils"
+                        className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105"
+                    >
+                        <div className="text-4xl mb-3">🫒</div>
+                        <h3 className="text-xl font-bold mb-2">Azeites Premiados</h3>
+                        <p className="text-yellow-100">Conheça os azeites que conquistaram o mundo</p>
+                    </Link>
+                </div>
+            </section>
+            
             {/* Featured Routes Section */}
             <section>
                 <h2 className="text-3xl font-bold text-center mb-8">Rotas em Destaque</h2>

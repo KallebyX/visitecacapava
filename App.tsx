@@ -19,6 +19,9 @@ import ItineraryPage from './pages/ItineraryPage';
 import ChallengesPage from './pages/ChallengesPage';
 import PhotoGalleryPage from './pages/PhotoGalleryPage';
 import AboutCityPage from './pages/AboutCityPage';
+import AttractionsPage from './pages/AttractionsPage';
+import RestaurantsPage from './pages/RestaurantsPage';
+import OliveOilsPage from './pages/OliveOilsPage';
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRoutesPage from './pages/admin/ManageRoutesPage';
@@ -105,6 +108,9 @@ const App: React.FC = () => {
             <Route path="challenges" element={<ChallengesPage />} />
             <Route path="gallery" element={<PhotoGalleryPage />} />
             <Route path="about" element={<AboutCityPage />} />
+            <Route path="attractions" element={<AttractionsPage />} />
+            <Route path="restaurants" element={<RestaurantsPage />} />
+            <Route path="olive-oils" element={<OliveOilsPage />} />
           </Route>
         </Routes>
       </HashRouter>
