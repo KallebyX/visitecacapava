@@ -235,6 +235,7 @@ const TouristLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             <main className="container mx-auto px-4 pt-28 pb-12">
                 {children}
             </main>
+            <GlobalAIChat />
         </div>
     );
 };

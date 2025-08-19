@@ -21,12 +21,11 @@
     "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.12",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
