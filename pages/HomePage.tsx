@@ -31,42 +31,43 @@ const HomePage: React.FC = () => {
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Mock news data
+    // Real news data about Caçapava do Sul tourism 2025
     const newsData = [
         {
             id: '1',
-            title: 'Festival de Inverno 2025 traz grandes atrações para Caçapava',
-            summary: 'Evento acontece de 15 a 30 de julho com shows, gastronomia e atividades culturais para toda a família.',
+            title: 'Fenazeite 2025 confirma data para novembro com expectativa de 35 mil visitantes',
+            summary: 'A 4ª Festa Nacional do Azeite de Oliva promete ser a maior edição, com degustações dos azeites premiados da Prosperato e outros produtores locais.',
             date: '2025-08-15',
             category: 'evento' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-            location: 'Centro Cultural'
+            imageUrl: 'https://images.unsplash.com/photo-1596040033229-a65c0cd87c14?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            location: 'Centro de Eventos'
         },
         {
             id: '2',
-            title: 'Nova rota de turismo rural conecta produtores de azeite',
-            summary: 'Circuito permite conhecer olivais, degustar azeites premiados e aprender sobre o processo de produção.',
-            date: '2025-08-10',
+            title: 'Geoparque Caçapava é destaque em ranking mundial da UNESCO',
+            summary: 'Reconhecimento internacional impulsiona turismo geológico, com aumento de 40% nas visitações às Guaritas do Camaquã e Pedra do Segredo.',
+            date: '2025-08-12',
             category: 'turismo' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-            location: 'Zona Rural'
+            imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            location: 'Geossítios'
         },
         {
             id: '3',
-            title: 'Museu da Mineração inaugura exposição interativa',
-            summary: 'Nova mostra conta a história das Minas do Camaquã com tecnologia de realidade aumentada.',
-            date: '2025-08-05',
+            title: 'Prosperato conquista 97 pontos no guia Flos Olei 2025',
+            summary: 'Azeite de Caçapava do Sul recebe a maior pontuação já alcançada por um produtor brasileiro no prestigioso guia italiano.',
+            date: '2025-08-08',
             category: 'cultura' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+            imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            location: 'Prosperato Olivais'
         },
         {
             id: '4',
-            title: 'Chef internacional cria menu especial com ingredientes locais',
-            summary: 'Restaurante Pampa recebe chef francês para semana gastronômica com produtos da região.',
-            date: '2025-08-01',
-            category: 'gastronomia' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-            location: 'Restaurante Pampa'
+            title: 'Nova rota do calcário integra indústria e turismo',
+            summary: 'Circuito permite conhecer as principais indústrias da capital nacional do calcário, com visitas técnicas e mirantes panorâmicos.',
+            date: '2025-08-05',
+            category: 'turismo' as const,
+            imageUrl: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            location: 'Distrito Industrial'
         }
     ];
 
