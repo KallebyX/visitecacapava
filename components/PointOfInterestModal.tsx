@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import type { PointOfInterest, Badge } from '../types';
 import { useGamification } from '../context/GamificationContext';
-import { X, CheckCircle, Info, MessageSquare, Send, Bot, Star, Trophy } from 'lucide-react';
+import { X, CheckCircle, Info, MessageSquare, Send, Bot, Star, Trophy, Navigation } from 'lucide-react';
 import { askAIGuideStream } from '../services/geminiService';
+import { formatNavigationButtons } from '../utils/navigationUtils';
 
 interface PointOfInterestModalProps {
   poi: PointOfInterest;
@@ -21,6 +22,21 @@ const PointOfInterestModal: React.FC<PointOfInterestModalProps> = ({ poi, onClos
   const [showAiChat, setShowAiChat] = useState(false);
 
   const isVisited = getVisitedIds().has(poi.id);
+
+  const handleNavigation = () => {
+    const links = formatNavigationButtons(poi.lat, poi.lng, poi.name);
+    
+    if (navigator.userAgent.includes('Mobile')) {
+      window.open(links.waze, '_blank');
+    } else {
+      const userChoice = confirm(`Navegar para ${poi.name}?\n\nOK = Waze | Cancelar = Google Maps`);
+      if (userChoice) {
+        window.open(links.waze, '_blank');
+      } else {
+        window.open(links.googleMaps, '_blank');
+      }
+    }
+  };
 
   const handleCheckIn = async () => {
     setIsCheckingIn(true);
@@ -94,6 +110,13 @@ const PointOfInterestModal: React.FC<PointOfInterestModalProps> = ({ poi, onClos
               )}
 
               <div className="mt-auto space-y-3">
+                <button
+                  onClick={handleNavigation}
+                  className="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors"
+                >
+                  <Navigation size={20} />
+                  Como Chegar
+                </button>
                  <button 
                   onClick={handleCheckIn} 
                   disabled={isVisited || isCheckingIn}

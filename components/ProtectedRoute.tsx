@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  roles: ('tourist' | 'hotel' | 'secretaria')[];
+  roles: ('tourist' | 'hotel' | 'secretaria' | 'restaurant')[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
@@ -24,6 +24,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
         return <Navigate to="/admin" replace />;
       case 'hotel':
         return <Navigate to="/hotel" replace />;
+      case 'restaurant':
+        return <Navigate to="/restaurant" replace />;
       default:
         return <Navigate to="/login" replace />;
     }

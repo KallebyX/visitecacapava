@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import TouristLayout from './components/layouts/TouristLayout';
 import AdminLayout from './components/layouts/AdminLayout';
 import HotelLayout from './components/layouts/HotelLayout';
+import RestaurantLayout from './components/layouts/RestaurantLayout';
 
 import HomePage from './pages/HomePage';
 import RoutesPage from './pages/RoutesPage';
@@ -35,6 +36,8 @@ import HotelAnalyticsPage from './pages/admin/HotelAnalyticsPage';
 
 import HotelDashboard from './pages/hotel/HotelDashboard';
 import HotelCheckInPage from './pages/hotel/HotelCheckInPage';
+
+import RestaurantDashboard from './pages/restaurant/RestaurantDashboard';
 
 // Layouts
 // import AdminLayout from './components/layouts/AdminLayout';
@@ -83,6 +86,20 @@ const App: React.FC = () => {
           >
             <Route index element={<HotelDashboard />} />
             <Route path="checkin" element={<HotelCheckInPage />} />
+          </Route>
+
+          {/* Restaurant Routes */}
+          <Route
+            path="/restaurant"
+            element={
+              <ProtectedRoute roles={['restaurant']}>
+                <RestaurantLayout>
+                  <Outlet />
+                </RestaurantLayout>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<RestaurantDashboard />} />
           </Route>
 
           {/* Tourist Routes */}

@@ -225,6 +225,31 @@ export const USERS: User[] = [
         badges: [],
         routeProgress: [],
     },
+    // Restaurant users
+    {
+        id: 'user-restaurant-1',
+        name: 'Restaurante do Gaúcho',
+        email: 'restaurante@email.com',
+        password: 'senha123',
+        role: 'restaurant',
+        avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr8XzKqY9H3QbZWnZKpW_yF4-Lq5sQ7QkZQw&s',
+        points: 0,
+        visited: [],
+        badges: [],
+        routeProgress: [],
+    },
+    {
+        id: 'user-restaurant-2',
+        name: 'Pizzaria Bella Vita',
+        email: 'pizzaria@email.com',
+        password: 'senha123',
+        role: 'restaurant',
+        avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY8Z9K3QbZWnZKpW_yF4-Lq5sQ7QkZw&s',
+        points: 0,
+        visited: [],
+        badges: [],
+        routeProgress: [],
+    },
     // Secretaria user
     {
         id: 'user-3',

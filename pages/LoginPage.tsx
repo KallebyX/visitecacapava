@@ -34,6 +34,9 @@ const LoginPage: React.FC = () => {
             case 'hotel':
                 navigate('/hotel');
                 break;
+            case 'restaurant':
+                navigate('/restaurant');
+                break;
             default:
                 navigate('/');
         }
@@ -101,6 +104,7 @@ const LoginPage: React.FC = () => {
                 <ul className="list-disc list-inside mt-1 text-gray-700">
                     <li><strong className="font-semibold">Turista:</strong> turista@email.com</li>
                     <li><strong className="font-semibold">Hotel:</strong> hotel@email.com</li>
+                    <li><strong className="font-semibold">Restaurante:</strong> restaurante@email.com</li>
                     <li><strong className="font-semibold">Admin:</strong> secretaria@email.com</li>
                 </ul>
                 <p className="mt-2">A senha para todos é: <strong className="font-semibold">senha123</strong></p>

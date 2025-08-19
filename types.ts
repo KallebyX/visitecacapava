@@ -30,7 +30,7 @@ export interface User {
   name: string;
   email: string;
   password?: string; // In a real app, this would be a hash
-  role: 'tourist' | 'hotel' | 'secretaria';
+  role: 'tourist' | 'hotel' | 'secretaria' | 'restaurant';
   avatarUrl: string;
   points: number;
   visited: { pointId: string; date: string }[];
