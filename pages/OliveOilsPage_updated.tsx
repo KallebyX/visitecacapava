@@ -149,17 +149,66 @@ const OliveOilsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Links para outras seções */}
-      <section className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow p-6 border border-gray-100 flex flex-col gap-2">
-          <h3 className="font-semibold text-brand-dark-green flex items-center gap-2 mb-2"><Home className="w-5 h-5 text-green-600" /> Turismo & Pontos Turísticos</h3>
-          <p className="text-gray-600 text-sm mb-2">Descubra as belezas naturais, geossítios e monumentos históricos de Caçapava do Sul, Geoparque Mundial da UNESCO e Capital Gaúcha da Geodiversidade.</p>
-          <Link to="/routes" className="text-green-700 hover:underline flex items-center gap-1 text-sm font-medium">Ver atrativos <ChevronRight className="w-4 h-4" /></Link>
+      {/* Turismo & Pontos Turísticos */}
+      <section>
+        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
+          <MapPin className="w-6 h-6 text-green-600" />
+          Turismo & Atrativos
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Pedra do Segredo</h4>
+            <p className="text-gray-600 text-sm">
+              Principal cartão-postal da cidade e centro do olivoturismo regional.
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Guaritas do Camaquã</h4>
+            <p className="text-gray-600 text-sm">
+              Formações rochosas às margens do Rio Camaquã, geossítio de importância mundial.
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Geoparque Mundial UNESCO</h4>
+            <p className="text-gray-600 text-sm">
+              Capital Gaúcha da Geodiversidade com diversos geossítios e formações geológicas únicas.
+            </p>
+          </div>
         </div>
-        <div className="bg-white rounded-2xl shadow p-6 border border-gray-100 flex flex-col gap-2">
-          <h3 className="font-semibold text-brand-dark-green flex items-center gap-2 mb-2"><Users className="w-5 h-5 text-green-600" /> Gastronomia Local</h3>
-          <p className="text-gray-600 text-sm mb-2">Sabores autênticos: churrascarias, restaurantes, cafés e a influência do azeite de oliva na culinária regional.</p>
-          <Link to="/restaurants" className="text-green-700 hover:underline flex items-center gap-1 text-sm font-medium">Ver restaurantes <ChevronRight className="w-4 h-4" /></Link>
+        <div className="mt-4">
+          <Link to="/routes" className="inline-flex items-center gap-2 text-green-700 hover:underline font-medium">
+            Ver todos os atrativos <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Gastronomia */}
+      <section>
+        <h2 className="text-2xl font-bold text-brand-green mb-4 flex items-center gap-2">
+          <Users className="w-6 h-6 text-green-600" />
+          Gastronomia Local
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Churrascaria 21</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Tradição em carnes e costela fogo de chão, ambiente familiar com pratos da culinária gaúcha.
+            </p>
+            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Churrascaria</span>
+          </div>
+          <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Cantina Irmãos Micheletto</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Culinária italiana com massas e ambiente aconchegante.
+            </p>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Italiana</span>
+          </div>
+        </div>
+        <div className="bg-green-50 rounded-xl p-4 mt-6">
+          <h4 className="font-semibold text-brand-dark-green mb-2">Influência do Azeite na Gastronomia Local</h4>
+          <p className="text-gray-700 text-sm">
+            Os restaurantes locais incorporam os azeites premiados da região em seus pratos, criando uma identidade gastronômica única que valoriza os produtos locais.
+          </p>
         </div>
       </section>
 
@@ -180,9 +229,64 @@ const OliveOilsPage: React.FC = () => {
           <Home className="w-6 h-6 text-green-600" />
           Hospedagem & Experiências
         </h2>
-        <p className="text-gray-700 mb-2">
-          De pousadas rurais charmosas a hotéis urbanos, Caçapava do Sul oferece opções para todos os perfis de viajantes. Destaque para a Pousada Olival Vila do Segredo, Cyro Palace Hotel, Chácara do Forte, Bellamina, Karlton, Portal do Pampa, Novo Hotel e Guaritas Hostel.
-        </p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Pousada Olival Vila do Segredo</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Experiência no Vale da Pedra do Segredo, rodeada por olivais.
+            </p>
+            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Turismo Rural</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Cyro Palace Hotel</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Hotel no centro da cidade.
+            </p>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Hotel</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Chácara do Forte</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Ambiente rural com experiências de ecoturismo.
+            </p>
+            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ecoturismo</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Pousada Bellamina</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Pousada com café da manhã caseiro.
+            </p>
+            <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Pousada</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Hotel Karlton</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Hospedagem com localização central.
+            </p>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Hotel</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Portal do Pampa</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Estilo campeiro com vista para o campo.
+            </p>
+            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Rural</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Novo Hotel</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Opção econômica no centro.
+            </p>
+            <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">Econômico</span>
+          </div>
+          <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
+            <h4 className="font-semibold text-brand-dark-green mb-2">Guaritas Hostel</h4>
+            <p className="text-gray-600 text-sm mb-2">
+              Ambiente jovem para mochileiros.
+            </p>
+            <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Hostel</span>
+          </div>
+        </div>
       </section>
 
       {/* Fontes */}
