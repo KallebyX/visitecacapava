@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🌟 Visite Caçapava do Sul
 
-# Run and deploy your AI Studio app
+Sistema gamificado de turismo para Caçapava do Sul com integração de navegação, avaliações e IA.
 
-This contains everything you need to run your app locally.
+## 🚀 Deploy no Vercel
 
-View your app in AI Studio: https://ai.studio/apps/drive/11ze9chUy2PzljGJCo5tz_TK1myJDZKUC
+### 1. Setup no Vercel
+1. Acesse [vercel.com](https://vercel.com) e faça login com GitHub
+2. Clique em "Add New Project"
+3. Importe este repositório
+4. Configure as variáveis de ambiente:
+   - `GEMINI_API_KEY`: Sua chave da API do Google Gemini
 
-## Run Locally
+### 2. Configuração Local
+```bash
+# Clone o repositório
+git clone https://github.com/KallebyX/visitecacapava.git
+cd visitecacapava
 
-**Prerequisites:**  Node.js
+# Instale as dependências
+npm install
 
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite .env com sua chave da API
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# Execute localmente
+npm run dev
+```
