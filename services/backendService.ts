@@ -798,6 +798,144 @@ export const backendService = {
     } catch {
       return false;
     }
+  },
+
+  // New social profile methods
+  async followUser(followerId: string, followingId: string): Promise<void> {
+    await this.delay();
+    const users = this.db.users;
+    
+    const followerIndex = users.findIndex(u => u.id === followerId);
+    const followingIndex = users.findIndex(u => u.id === followingId);
+    
+    if (followerIndex === -1 || followingIndex === -1) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Initialize arrays if they don't exist
+    if (!users[followerIndex].following) users[followerIndex].following = [];
+    if (!users[followingIndex].followers) users[followingIndex].followers = [];
+
+    // Add to following/followers if not already present
+    if (!users[followerIndex].following!.includes(followingId)) {
+      users[followerIndex].following!.push(followingId);
+    }
+    
+    if (!users[followingIndex].followers!.includes(followerId)) {
+      users[followingIndex].followers!.push(followerId);
+    }
+
+    this.db.save();
+  },
+
+  async unfollowUser(followerId: string, followingId: string): Promise<void> {
+    await this.delay();
+    const users = this.db.users;
+    
+    const followerIndex = users.findIndex(u => u.id === followerId);
+    const followingIndex = users.findIndex(u => u.id === followingId);
+    
+    if (followerIndex === -1 || followingIndex === -1) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Remove from following/followers
+    if (users[followerIndex].following) {
+      users[followerIndex].following = users[followerIndex].following!.filter(id => id !== followingId);
+    }
+    
+    if (users[followingIndex].followers) {
+      users[followingIndex].followers = users[followingIndex].followers!.filter(id => id !== followerId);
+    }
+
+    this.db.save();
+  },
+
+  async getUserFollowers(userId: string): Promise<User[]> {
+    await this.delay();
+    const user = this.db.users.find(u => u.id === userId);
+    if (!user || !user.followers) return [];
+    
+    return this.db.users.filter(u => user.followers!.includes(u.id));
+  },
+
+  async getUserFollowing(userId: string): Promise<User[]> {
+    await this.delay();
+    const user = this.db.users.find(u => u.id === userId);
+    if (!user || !user.following) return [];
+    
+    return this.db.users.filter(u => user.following!.includes(u.id));
+  },
+
+  async updateUserProfile(userId: string, updates: Partial<User>): Promise<User> {
+    await this.delay();
+    const users = this.db.users;
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Merge updates with existing user data
+    users[userIndex] = { ...users[userIndex], ...updates };
+    
+    this.db.save();
+    return users[userIndex];
+  },
+
+  async addUserPhoto(photo: Omit<Photo, 'id'>): Promise<Photo> {
+    await this.delay();
+    const newPhoto: Photo = {
+      ...photo,
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      likes: []
+    };
+    
+    this.db.photos.push(newPhoto);
+    this.db.save();
+    return newPhoto;
+  },
+
+  async deleteUserPhoto(photoId: string, userId: string): Promise<void> {
+    await this.delay();
+    const photoIndex = this.db.photos.findIndex(p => p.id === photoId && p.userId === userId);
+    
+    if (photoIndex === -1) {
+      throw new Error('Foto não encontrada ou sem permissão para deletar');
+    }
+
+    this.db.photos.splice(photoIndex, 1);
+    this.db.save();
+  },
+
+  async getUserStats(userId: string): Promise<any> {
+    await this.delay();
+    const user = this.db.users.find(u => u.id === userId);
+    if (!user) throw new Error('Usuário não encontrado');
+
+    const userPhotos = await this.getUserPhotos(userId);
+    const userReviews = await this.getUserReviews(userId);
+    const userFavorites = await this.getUserFavorites(userId);
+    
+    const likesReceived = userPhotos.reduce((sum, photo) => sum + (photo.likes?.length || 0), 0);
+    const followersCount = user.followers?.length || 0;
+    const followingCount = user.following?.length || 0;
+
+    return {
+      totalPoints: user.points,
+      visitedPois: user.visited.length,
+      earnedBadges: user.badges.length,
+      photosShared: userPhotos.length,
+      likesReceived,
+      reviewsWritten: userReviews.length,
+      favoriteRestaurants: userFavorites.filter(f => f.entityType === 'restaurant').length,
+      favoriteHotels: userFavorites.filter(f => f.entityType === 'hotel').length,
+      favoritePois: userFavorites.filter(f => f.entityType === 'poi').length,
+      followersCount,
+      followingCount,
+      checkInsCount: user.visited.length
+    };
   }
 
 };

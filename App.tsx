@@ -35,6 +35,7 @@ import PoiEditor from './pages/admin/PoiEditor';
 import ManageTouristsPage from './pages/admin/ManageTouristsPage';
 import ManageChallengesPage from './pages/admin/ManageChallengesPage';
 import HotelAnalyticsPage from './pages/admin/HotelAnalyticsPage';
+import AdminUserProfilePage from './pages/admin/AdminUserProfilePage';
 
 import HotelDashboard from './pages/hotel/HotelDashboard';
 import HotelCheckInPage from './pages/hotel/HotelCheckInPage';
@@ -76,6 +77,7 @@ const App: React.FC = () => {
             <Route path="pois/edit/:poiId" element={<PoiEditor />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="tourists" element={<ManageTouristsPage />} />
+            <Route path="tourists/:userId" element={<AdminUserProfilePage />} />
             <Route path="challenges" element={<ManageChallengesPage />} />
             <Route path="hotel-analytics" element={<HotelAnalyticsPage />} />
             <Route path="game-system" element={<GameSystemDemo />} />

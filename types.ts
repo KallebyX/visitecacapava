@@ -37,6 +37,27 @@ export interface User {
   visited: { pointId: string; date: string }[];
   badges: string[]; // array of Badge ids
   routeProgress: { routeId: string; status: 'completed'; completedDate: string }[];
+  // New social features
+  bio?: string;
+  phone?: string;
+  birthDate?: string;
+  gender?: 'Masculino' | 'Feminino' | 'Outro';
+  hometown?: string;
+  socialMedia?: {
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+  };
+  followers?: string[]; // array of User ids
+  following?: string[]; // array of User ids
+  joinDate?: string;
+  verified?: boolean;
+  privacySettings?: {
+    profilePublic: boolean;
+    showStats: boolean;
+    showVisits: boolean;
+    allowMessages: boolean;
+  };
 }
 
 export interface Challenge {
