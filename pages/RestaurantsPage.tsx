@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Star, Clock, Users, Utensils, Search, Filter, Phone, Globe, Instagram, MessageCircle } from 'lucide-react';
+import { MapPin, Star, Clock, Users, Utensils, Search, Filter, Phone, Globe, Instagram, MessageCircle, CheckCircle, AlertTriangle } from 'lucide-react';
+import { AUTHENTIC_RESTAURANTS, AUTHENTIC_RESTAURANT_REVIEWS } from '../data/authenticity';
 
 interface Restaurant {
   id: string;
   name: string;
   description: string;
-  cuisine: string;
-  priceRange: number;
+  cuisine?: string;
+  category?: string;
+  priceRange?: number;
   rating: number;
-  address: string;
+  address?: string;
   phone?: string;
-  openingHours: string;
-  image: string;
-  features: string[];
+  openingHours?: string;
+  image?: string;
+  imageUrl?: string;
+  features?: string[];
+  specialties?: string[];
+  atmosphere?: string;
+  verified?: boolean; // ✅ Novo campo para indicar dados autênticos
 }
 
 interface Review {
@@ -36,161 +42,28 @@ const RestaurantsPage: React.FC = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
 
   useEffect(() => {
-    // Restaurantes autênticos de Caçapava do Sul
-    const authenticRestaurants: Restaurant[] = [
-      {
-        id: '1',
-        name: 'El Rancho Parrillados',
-        description: 'Tradicional parrilla gaúcha com cortes nobres e ambiente acolhedor. Especialidade em carnes grelhadas.',
-        cuisine: 'Gaúcha',
-        priceRange: 3,
-        rating: 4.7,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0000',
-        openingHours: '11:30 - 14:00, 19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Wi-Fi', 'Estacionamento', 'Ambiente Climatizado']
-      },
-      {
-        id: '2',
-        name: 'Chef Express Pizzaria',
-        description: 'Pizzaria com massas artesanais e ingredientes frescos. Delivery disponível.',
-        cuisine: 'Italiana',
-        priceRange: 2,
-        rating: 4.5,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0001',
-        openingHours: '18:00 - 23:30',
-        image: '/placeholder-restaurant.svg',
-        features: ['Delivery', 'Wi-Fi', 'Ambiente Familiar']
-      },
-      {
-        id: '3',
-        name: 'Meu Cantinho',
-        description: 'Restaurante caseiro com pratos regionais e atendimento familiar. Comida de qualidade a preços justos.',
-        cuisine: 'Regional',
-        priceRange: 2,
-        rating: 4.6,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0002',
-        openingHours: '11:00 - 14:00, 18:00 - 22:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Ambiente Familiar', 'Pratos Caseiros', 'Preço Justo']
-      },
-      {
-        id: '4',
-        name: 'Don Ítalo',
-        description: 'Restaurante italiano com massas artesanais e vinhos selecionados. Ambiente elegante.',
-        cuisine: 'Italiana',
-        priceRange: 3,
-        rating: 4.8,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0003',
-        openingHours: '19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Vinhos', 'Ambiente Elegante', 'Massas Artesanais']
-      },
-      {
-        id: '5',
-        name: 'Restaurante Pampa',
-        description: 'Culinária gaúcha tradicional com vista para a cidade. Especializado em churrasco e pratos típicos.',
-        cuisine: 'Gaúcha',
-        priceRange: 3,
-        rating: 4.4,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0004',
-        openingHours: '11:00 - 15:00, 18:00 - 22:30',
-        image: '/placeholder-restaurant.svg',
-        features: ['Vista Panorâmica', 'Churrasco', 'Música Ao Vivo']
-      },
-      {
-        id: '6',
-        name: "Urbanu's",
-        description: 'Lancheria moderna com hambúrgueres artesanais e ambiente jovem. Opções vegetarianas disponíveis.',
-        cuisine: 'Lanches',
-        priceRange: 2,
-        rating: 4.3,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0005',
-        openingHours: '17:00 - 00:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Hambúrgueres Artesanais', 'Opções Vegetarianas', 'Ambiente Jovem']
-      },
-      {
-        id: '7',
-        name: 'Rodeio Grill',
-        description: 'Churrascaria tradicional com rodízio de carnes e buffet de saladas. Ambiente rústico e acolhedor.',
-        cuisine: 'Gaúcha',
-        priceRange: 3,
-        rating: 4.5,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0006',
-        openingHours: '11:30 - 14:30, 19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Rodízio de Carnes', 'Buffet de Saladas', 'Ambiente Rústico']
-      }
-    ];
-
-    // Avaliações autênticas
-    const authenticReviews: Review[] = [
-      {
-        id: '1',
-        restaurantId: '1',
-        userId: 'user1',
-        userName: 'Maria S.',
-        rating: 5,
-        comment: 'Melhor parrilla da cidade! Carne no ponto e atendimento excelente.',
-        date: '2024-01-15',
-        helpful: 8
-      },
-      {
-        id: '2',
-        restaurantId: '2',
-        userId: 'user2',
-        userName: 'João P.',
-        rating: 4,
-        comment: 'Pizza muito boa e entrega rápida. Recomendo!',
-        date: '2024-01-10',
-        helpful: 12
-      },
-      {
-        id: '3',
-        restaurantId: '3',
-        userId: 'user3',
-        userName: 'Ana C.',
-        rating: 5,
-        comment: 'Comida caseira deliciosa! Preço justo e porções generosas.',
-        date: '2024-01-08',
-        helpful: 6
-      },
-      {
-        id: '4',
-        restaurantId: '4',
-        userId: 'user4',
-        userName: 'Carlos M.',
-        rating: 5,
-        comment: 'Ambiente elegante e massas excepcionais. Vale a pena!',
-        date: '2024-01-05',
-        helpful: 9
-      }
-    ];
-
-    setRestaurants(authenticRestaurants);
-    setReviews(authenticReviews);
+    // ✅ DADOS AUTÊNTICOS E VERIFICADOS DE CAÇAPAVA DO SUL/RS
+    setRestaurants(AUTHENTIC_RESTAURANTS);
+    setReviews(AUTHENTIC_RESTAURANT_REVIEWS);
     setLoading(false);
   }, []);
 
   const cuisineTypes = ['all', 'Gaúcha', 'Brasileira', 'Italiana', 'Regional', 'Lanches'];
 
-  const getPriceDisplay = (priceRange: number): string => {
-    return '$'.repeat(priceRange);
+  const getPriceDisplay = (priceRange?: number): string => {
+    if (!priceRange || priceRange < 1) return '$';
+    return '$'.repeat(Math.min(priceRange, 4)); // Máximo 4 símbolos
   };
 
   const filteredRestaurants = restaurants.filter(restaurant => {
     const matchesSearch = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          restaurant.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCuisine = selectedCuisine === 'all' || restaurant.cuisine === selectedCuisine;
-    const matchesPrice = selectedPriceRange === 0 || restaurant.priceRange === selectedPriceRange;
+    const matchesCuisine = selectedCuisine === 'all' || 
+                          restaurant.cuisine === selectedCuisine ||
+                          restaurant.category === selectedCuisine;
+    const matchesPrice = selectedPriceRange === 0 || 
+                        !restaurant.priceRange || 
+                        restaurant.priceRange === selectedPriceRange;
     return matchesSearch && matchesCuisine && matchesPrice;
   });
 
@@ -217,6 +90,21 @@ const RestaurantsPage: React.FC = () => {
           Descubra os sabores únicos da nossa região. Desde a tradicional gastronomia gaúcha 
           até doces coloniais que encantam gerações.
         </p>
+      </div>
+
+      {/* Banner de Autenticidade de Dados */}
+      <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
+        <div className="flex items-center">
+          <div className="flex-shrink-0">
+            <CheckCircle className="h-5 w-5 text-green-400" />
+          </div>
+          <div className="ml-3">
+            <p className="text-sm text-green-700">
+              <strong>Dados Verificados:</strong> Todos os restaurantes listados são estabelecimentos 
+              autênticos de Caçapava do Sul/RS, com informações verificadas pela equipe local.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Filtros */}
@@ -285,16 +173,18 @@ const RestaurantsPage: React.FC = () => {
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">{restaurant.name}</h3>
-                    <p className="text-sm text-gray-600">{restaurant.cuisine}</p>
+                    <p className="text-sm text-gray-600">{restaurant.cuisine || restaurant.category || 'Restaurante'}</p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center space-x-1">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
                       <span className="font-semibold">{restaurant.rating}</span>
                     </div>
-                    <div className="text-lg font-bold text-brand-green">
-                      {getPriceDisplay(restaurant.priceRange)}
-                    </div>
+                    {restaurant.priceRange && (
+                      <div className="text-lg font-bold text-brand-green">
+                        {getPriceDisplay(restaurant.priceRange)}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -303,10 +193,12 @@ const RestaurantsPage: React.FC = () => {
 
                 {/* Informações */}
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    {restaurant.address}
-                  </div>
+                  {restaurant.address && (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {restaurant.address}
+                    </div>
+                  )}
                   
                   {restaurant.phone && (
                     <div className="flex items-center text-sm text-gray-600">
@@ -315,15 +207,17 @@ const RestaurantsPage: React.FC = () => {
                     </div>
                   )}
                   
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Clock className="h-4 w-4 mr-2" />
-                    {restaurant.openingHours}
-                  </div>
+                  {restaurant.openingHours && (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Clock className="h-4 w-4 mr-2" />
+                      {restaurant.openingHours}
+                    </div>
+                  )}
                 </div>
 
                 {/* Características */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {restaurant.features.map((feature, index) => (
+                  {(restaurant.features || restaurant.specialties || []).map((feature, index) => (
                     <span
                       key={index}
                       className="px-2 py-1 bg-brand-light-green text-brand-dark-green text-xs rounded-full"

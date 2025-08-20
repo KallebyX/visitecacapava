@@ -200,15 +200,8 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ onClose }) => {
                         type="date"
                         value={birthDate}
                         onChange={(e) => setBirthDate(e.target.value)}
-                        min="1900-01-01"
-                        max={new Date().toISOString().split('T')[0]}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-brand-green focus:border-brand-green"
                       />
-                      {birthDate && (new Date(birthDate).getFullYear() < 1900 || new Date(birthDate) > new Date()) && (
-                        <p className="text-red-500 text-xs mt-1">
-                          ⚠️ Data inválida. Use uma data entre 1900 e hoje.
-                        </p>
-                      )}
                     </div>
 
                     <div>

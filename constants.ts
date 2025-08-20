@@ -1,125 +1,73 @@
 import type { Badge, PointOfInterest, Route, User, HotelCheckIn, Challenge, Photo, Review, Favorite } from './types';
+import { AUTHENTIC_POI_CACAPAVA, AUTHENTIC_ROUTES } from './data/authentic-pois';
 
-export const POINTS_OF_INTEREST: PointOfInterest[] = [
-    // Coordenadas reais de Caçapava do Sul baseadas nos pontos turísticos confirmados
-    { 
-        id: 'poi-1', 
-        name: 'Pedra do Segredo', 
-        description: 'Formação rochosa imponente de ~120m com trilhas, grutas e mirantes.', 
-        longDescription: 'A Pedra do Segredo é uma formação rochosa imponente de aproximadamente 120 metros de altura, onde segundo a lenda, tesouros jesuítas foram escondidos. Oferece trilhas, grutas para exploração e mirantes com vista panorâmica da região.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Pedra do Segredo</text></svg>'), 
-        points: 30, 
-        lat: -30.5694, 
-        lng: -53.4913 
-    },
-    { 
-        id: 'poi-2', 
-        name: 'Parque Natural Municipal da Pedra do Segredo', 
-        description: 'Trilhas autoguiadas e guiadas com cavernas e formações únicas.', 
-        longDescription: 'O parque oferece trilhas autoguiadas e guiadas, incluindo a famosa Caverna da Escuridão, o Salão das Estalactites e o Portal do Segredo. Uma experiência única de contato com a natureza e geologia local.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#228B22"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Parque da Pedra do Segredo</text></svg>'), 
-        points: 25, 
-        lat: -30.5700, 
-        lng: -53.4920 
-    },
-    { 
-        id: 'poi-3', 
-        name: 'Parque das Guaritas', 
-        description: 'Geoparque com formações rochosas únicas, extensão de ~30 km².', 
-        longDescription: 'Geoparque reconhecido pela UNESCO com formações rochosas únicas que se estendem por cerca de 30 km². Oferece trilhas espetaculares, algumas em áreas privadas que necessitam de guia especializado.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#D2691E"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Parque das Guaritas</text></svg>'), 
-        points: 35, 
-        lat: -30.7397, 
-        lng: -53.4682 
-    },
-    { 
-        id: 'poi-4', 
-        name: 'Minas do Camaquã', 
-        description: 'Zona de mineração histórica com lago azul e potencial aquático.', 
-        longDescription: 'Complexo de mineração histórica que abriga um impressionante lago azul em mina a céu aberto. Oferece trilhas, visitação guiada e potencial para esportes aquáticos, sendo um marco da história mineradora local.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#4A90E2"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Minas do Camaquã</text></svg>'), 
-        points: 30, 
-        lat: -30.7303, 
-        lng: -53.7664 
-    },
-    { 
-        id: 'poi-5', 
-        name: 'Forte Dom Pedro II', 
-        description: 'Fortificação hexagonal de pedra e cal do século XIX.', 
-        longDescription: 'Fortificação hexagonal construída em meados do século XIX, com paredes de pedra e cal que chegam a 10 metros de altura. Marco histórico importante da região com visitação livre.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Forte Dom Pedro II</text></svg>'), 
-        points: 20, 
-        lat: -30.5144, 
-        lng: -53.4883 
-    },
-    { 
-        id: 'poi-6', 
-        name: 'Centro Histórico Municipal', 
-        description: 'Igreja Matriz, Praça Central, Centro de Cultura e monumentos.', 
-        longDescription: 'Conjunto patrimonial que inclui a Igreja Matriz Nossa Senhora da Assunção, Praça Central, Centro Municipal de Cultura (Museu Lanceiros do Sul, Biblioteca, Arquivo) e o Monumento ao Guerreiro Farrapo, formando o coração histórico da cidade.', 
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#DC143C"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Centro Histórico</text></svg>'), 
-        points: 25, 
-        lat: -30.5148, 
-        lng: -53.4899 
-    }
-];
+// ✅ PONTOS TURÍSTICOS AUTÊNTICOS DE CAÇAPAVA DO SUL/RS
+// Dados verificados e validados geograficamente
+export const POINTS_OF_INTEREST: PointOfInterest[] = AUTHENTIC_POI_CACAPAVA;
 
-export const ROUTES: Route[] = [
-    {
-        id: 'route-1',
-        name: 'Tesouros Geológicos',
-        description: 'Explore as formações rochosas únicas e parques naturais da região.',
-        pointsOfInterest: ['poi-1', 'poi-2', 'poi-3'],
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B4513"/><text x="50%" y="50%" font-family="Arial" font-size="18" fill="white" text-anchor="middle" dy=".3em">Tesouros Geológicos</text></svg>')
-    },
-    {
-        id: 'route-2',
-        name: 'Patrimônio Histórico',
-        description: 'Descubra a rica história através de monumentos e centros culturais.',
-        pointsOfInterest: ['poi-4', 'poi-5', 'poi-6'],
-        imageUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="400" height="200" fill="#8B7355"/><text x="50%" y="50%" font-family="Arial" font-size="16" fill="white" text-anchor="middle" dy=".3em">Patrimônio Histórico</text></svg>')
-    }
-];
+// ✅ ROTAS TEMÁTICAS BASEADAS NOS PONTOS AUTÊNTICOS
+export const ROUTES: Route[] = AUTHENTIC_ROUTES;
 
-const route1Pois = new Set(ROUTES.find(r => r.id === 'route-1')?.pointsOfInterest || []);
-const route2Pois = new Set(ROUTES.find(r => r.id === 'route-2')?.pointsOfInterest || []);
-const route3Pois = new Set(ROUTES.find(r => r.id === 'route-3')?.pointsOfInterest || []);
+const route1Pois = new Set(ROUTES.find(r => r.id === 'route-authentic-1')?.pointsOfInterest || []);
+const route2Pois = new Set(ROUTES.find(r => r.id === 'route-authentic-2')?.pointsOfInterest || []);
+const route3Pois = new Set(ROUTES.find(r => r.id === 'route-authentic-3')?.pointsOfInterest || []);
 
 export const BADGES: Badge[] = [
     {
         id: 'badge-1',
         name: 'Explorador da Natureza',
-        description: 'Visitou todos os pontos da rota Belezas Naturais.',
+        description: 'Visitou todos os pontos da rota Belezas Naturais e Geoparque.',
         icon: 'Mountain',
-        criteria: (visitedIds) => Array.from(route1Pois).every(poiId => visitedIds.has(poiId)),
-    },
-    {
-        id: 'badge-2',
-        name: 'Historiador',
-        description: 'Visitou todos os pontos da rota Riqueza Histórica.',
-        icon: 'BookOpen',
         criteria: (visitedIds) => Array.from(route2Pois).every(poiId => visitedIds.has(poiId)),
     },
     {
+        id: 'badge-2',
+        name: 'Historiador de Caçapava',
+        description: 'Visitou todos os pontos da rota Patrimônio Histórico e Cultural.',
+        icon: 'BookOpen',
+        criteria: (visitedIds) => Array.from(route1Pois).every(poiId => visitedIds.has(poiId)),
+    },
+    {
         id: 'badge-5',
-        name: 'Bom de Garfo',
-        description: 'Visitou todos os pontos da rota Sabores da Terra.',
-        icon: 'Utensils',
+        name: 'Conhecedor Cultural',
+        description: 'Visitou todos os pontos da rota Diversidade Cultural.',
+        icon: 'Users',
         criteria: (visitedIds) => Array.from(route3Pois).every(poiId => visitedIds.has(poiId)),
     },
     {
         id: 'badge-3',
-        name: 'Pioneiro',
-        description: 'Realizou seu primeiro check-in.',
+        name: 'Pioneiro Caçapavano',
+        description: 'Realizou seu primeiro check-in em Caçapava do Sul.',
         icon: 'Star',
         criteria: (visitedIds) => visitedIds.size === 1,
     },
     {
         id: 'badge-4',
         name: 'Mestre Desbravador',
-        description: 'Visitou todos os pontos turísticos disponíveis.',
-        icon: 'Leaf',
+        description: 'Visitou todos os pontos turísticos autênticos de Caçapava do Sul.',
+        icon: 'Award',
         criteria: (visitedIds, allPoiIds) => allPoiIds ? visitedIds.size === allPoiIds.size : false,
+    },
+    {
+        id: 'badge-6',
+        name: 'Guardião do Patrimônio',
+        description: 'Visitou o Forte Dom Pedro II e o Museu Lanceiros Negros.',
+        icon: 'Shield',
+        criteria: (visitedIds) => visitedIds.has('poi-authentic-1') && visitedIds.has('poi-authentic-4'),
+    },
+    {
+        id: 'badge-7',
+        name: 'Explorador da Pedra do Segredo',
+        description: 'Visitou a Pedra do Segredo e seu Parque Natural.',
+        icon: 'Mountain',
+        criteria: (visitedIds) => visitedIds.has('poi-authentic-5') && visitedIds.has('poi-authentic-6'),
+    },
+    {
+        id: 'badge-8',
+        name: 'Descobridor de Geoparques',
+        description: 'Visitou as Minas do Camaquã e o Parque das Guaritas.',
+        icon: 'Gem',
+        criteria: (visitedIds) => visitedIds.has('poi-authentic-7') && visitedIds.has('poi-authentic-8'),
     }
 ];
 
@@ -134,8 +82,8 @@ export const USERS: User[] = [
         avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
         points: 55,
         visited: [
-            { pointId: 'poi-1', date: '2023-10-26T10:00:00Z' },
-            { pointId: 'poi-4', date: '2023-10-26T14:30:00Z' },
+            { pointId: 'poi-authentic-5', date: '2023-10-26T10:00:00Z' }, // Pedra do Segredo
+            { pointId: 'poi-authentic-1', date: '2023-10-26T14:30:00Z' }, // Forte Dom Pedro II
         ],
         badges: ['badge-3'],
         routeProgress: [],
