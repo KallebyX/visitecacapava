@@ -470,34 +470,72 @@ export const backendService = {
 
   async getAnalyticsData(): Promise<any> {
     await delay(400);
-    // Generate analytics from mock check-in data
+    // Generate analytics from mock check-in data with default values
     const analytics = {
-      demographics: { byGender: {}, ageRanges: {}, byNationality: {} },
-      travelBehavior: { byReason: {}, byTransport: {}, byDiscovery: {} },
-      satisfaction: { poi: {}, city: {} },
-      routeAnalytics: { completionsByRoute: { 'Belezas Naturais': 1, 'Riqueza Histórica': 0, 'Sabores da Terra': 0 }, mostPopularRoute: 'Belezas Naturais' }
+      demographics: { 
+        byGender: { Masculino: 5, Feminino: 8, Outro: 2 }, 
+        ageRanges: { '18-25': 3, '26-35': 7, '36-45': 4, '46-60': 3, '60+': 1 }, 
+        byNationality: { Brasil: 12, Argentina: 2, Uruguai: 1 } 
+      },
+      travelBehavior: { 
+        byReason: { Turismo: 10, Negócios: 3, Família: 2 }, 
+        byTransport: { Carro: 8, Ônibus: 4, Avião: 3 }, 
+        byDiscovery: { 'Redes Sociais': 6, 'Amigos': 5, 'Site Oficial': 4 } 
+      },
+      satisfaction: { 
+        poi: { Excelente: 8, Bom: 5, Regular: 2 }, 
+        city: { Excelente: 10, Bom: 4, Regular: 1 } 
+      },
+      routeAnalytics: { 
+        completionsByRoute: { 'Belezas Naturais': 1, 'Riqueza Histórica': 0, 'Sabores da Terra': 0 }, 
+        mostPopularRoute: 'Belezas Naturais' 
+      }
     };
     
     const count = (obj: any, key: string) => { obj[key] = (obj[key] || 0) + 1; };
 
+    // Reset counters before processing
+    analytics.demographics.byGender = { Masculino: 0, Feminino: 0, Outro: 0 };
+    analytics.demographics.ageRanges = { '18-25': 0, '26-35': 0, '36-45': 0, '46-60': 0, '60+': 0 };
+    analytics.demographics.byNationality = { Brasil: 0, Argentina: 0, Uruguai: 0 };
+    analytics.travelBehavior.byReason = { Turismo: 0, Negócios: 0, Família: 0 };
+    analytics.travelBehavior.byTransport = { Carro: 0, Ônibus: 0, Avião: 0 };
+    analytics.travelBehavior.byDiscovery = { 'Redes Sociais': 0, 'Amigos': 0, 'Site Oficial': 0 };
+    analytics.satisfaction.poi = { Excelente: 0, Bom: 0, Regular: 0 };
+    analytics.satisfaction.city = { Excelente: 0, Bom: 0, Regular: 0 };
+
     db.checkIns.forEach(c => {
-        count(analytics.demographics.byGender, c.gender);
-        count(analytics.demographics.byNationality, c.nationality);
+        count(analytics.demographics.byGender, c.gender || 'Não informado');
+        count(analytics.demographics.byNationality, c.nationality || 'Brasil');
         
-        const age = new Date().getFullYear() - new Date(c.birthDate).getFullYear();
-        if (age < 20) count(analytics.demographics.ageRanges, '0-19');
-        else if (age < 30) count(analytics.demographics.ageRanges, '20-29');
-        else if (age < 40) count(analytics.demographics.ageRanges, '30-39');
-        else if (age < 50) count(analytics.demographics.ageRanges, '40-49');
-        else count(analytics.demographics.ageRanges, '50+');
+        const age = new Date().getFullYear() - new Date(c.birthDate || '1990-01-01').getFullYear();
+        if (age < 26) count(analytics.demographics.ageRanges, '18-25');
+        else if (age < 36) count(analytics.demographics.ageRanges, '26-35');
+        else if (age < 46) count(analytics.demographics.ageRanges, '36-45');
+        else if (age < 61) count(analytics.demographics.ageRanges, '46-60');
+        else count(analytics.demographics.ageRanges, '60+');
 
-        count(analytics.travelBehavior.byReason, c.travelReason);
-        count(analytics.travelBehavior.byTransport, c.transportMean);
-        count(analytics.travelBehavior.byDiscovery, c.discoveryChannel);
+        count(analytics.travelBehavior.byReason, c.travelReason || 'Turismo');
+        count(analytics.travelBehavior.byTransport, c.transportMean || 'Carro');
+        count(analytics.travelBehavior.byDiscovery, c.discoveryChannel || 'Site Oficial');
 
-        count(analytics.satisfaction.poi, c.poiOpinion);
-        count(analytics.satisfaction.city, c.cityOpinion);
+        count(analytics.satisfaction.poi, c.poiOpinion || 'Bom');
+        count(analytics.satisfaction.city, c.cityOpinion || 'Bom');
     });
+
+    // Garantir dados mínimos para demonstração
+    if (Object.values(analytics.demographics.byGender).every(v => v === 0)) {
+      analytics.demographics.byGender = { Masculino: 5, Feminino: 8, Outro: 2 };
+    }
+    if (Object.values(analytics.demographics.ageRanges).every(v => v === 0)) {
+      analytics.demographics.ageRanges = { '18-25': 3, '26-35': 7, '36-45': 4, '46-60': 3, '60+': 1 };
+    }
+    if (Object.values(analytics.demographics.byNationality).every(v => v === 0)) {
+      analytics.demographics.byNationality = { Brasil: 12, Argentina: 2, Uruguai: 1 };
+    }
+    if (Object.values(analytics.travelBehavior.byReason).every(v => v === 0)) {
+      analytics.travelBehavior.byReason = { Turismo: 10, Negócios: 3, Família: 2 };
+    }
 
     return analytics;
   },

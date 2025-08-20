@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const MapOutlineIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const MapOutlineIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     viewBox="0 0 100 100"
     fill="none"
