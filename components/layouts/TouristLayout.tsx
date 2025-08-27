@@ -69,17 +69,17 @@ const GlobalAIChat: React.FC = () => {
             {/* FAB */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 bg-brand-green text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform z-40"
+                className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 bg-brand-green text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-transform z-40"
                 aria-label="Abrir assistente virtual"
             >
-                <Bot size={32} />
+                <Bot size={28} className="sm:w-8 sm:h-8" />
             </button>
 
             {/* Chat Modal */}
             <div className={`fixed inset-0 z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <div className="absolute inset-0 bg-black/40" onClick={() => setIsOpen(false)}></div>
                 
-                <div className={`absolute bottom-0 right-0 mb-6 mr-6 w-full max-w-md bg-brand-beige rounded-2xl shadow-2xl flex flex-col transition-transform duration-300 ${isOpen ? 'translate-y-0' : 'translate-y-10'}`}>
+                <div className={`absolute bottom-0 right-0 mb-2 mr-2 sm:mb-6 sm:mr-6 w-full max-w-[calc(100%-1rem)] sm:max-w-md bg-brand-beige rounded-2xl shadow-2xl flex flex-col transition-transform duration-300 ${isOpen ? 'translate-y-0' : 'translate-y-10'}`}>
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-brand-light-green/20">
                         <h3 className="text-lg font-bold flex items-center gap-2"><Sparkles className="text-brand-green" /> Assistente Virtual Cacá</h3>
@@ -167,6 +167,7 @@ const NavLinks: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
             <NavLink to="/olive-oils" className={getLinkClass('/olive-oils')}>Azeites</NavLink>
             <NavLink to="/itinerary" className={getLinkClass('/itinerary')}>Roteiro IA</NavLink>
             <NavLink to="/challenges" className={getLinkClass('/challenges')}>Desafios</NavLink>
+
             <NavLink to="/gallery" className={getLinkClass('/gallery')}>Galeria</NavLink>
             <NavLink to="/about" className={getLinkClass('/about')}>A Cidade</NavLink>
             <NavLink to="/leaderboard" className={getLinkClass('/leaderboard')}>Ranking</NavLink>
@@ -235,7 +236,7 @@ const TouristLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     return (
         <div className="bg-brand-beige min-h-screen">
             <TouristHeader />
-            <main className="container mx-auto px-4 pt-28 pb-12">
+            <main className="container mx-auto px-2 sm:px-4 pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12">
                 {children}
             </main>
             <GlobalAIChat />

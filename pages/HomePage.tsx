@@ -118,7 +118,7 @@ const HomePage: React.FC = () => {
     return (
         <div className="space-y-12">
             {/* Hero Section - Enhanced */}
-            <section className="relative text-center bg-gradient-to-br from-brand-dark-green via-brand-green to-emerald-700 text-white rounded-3xl overflow-hidden py-24 px-4">
+            <section className="relative text-center bg-gradient-to-br from-brand-dark-green via-brand-green to-emerald-700 text-white rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 px-4">
                 <div className="absolute inset-0 opacity-20">
                     <img 
                         src="/img/logo/VisiteCacapavaSimbolo.png" 
@@ -128,14 +128,14 @@ const HomePage: React.FC = () => {
                 </div>
                 
                 {/* Floating elements */}
-                <div className="absolute top-8 left-8 bg-white/10 rounded-full p-3 animate-pulse">
-                    <Sparkles className="h-6 w-6" />
+                <div className="absolute top-4 sm:top-8 left-4 sm:left-8 bg-white/10 rounded-full p-2 sm:p-3 animate-pulse">
+                    <Sparkles className="h-4 w-4 sm:h-6 sm:w-6" />
                 </div>
-                <div className="absolute top-16 right-12 bg-white/10 rounded-full p-2 animate-bounce">
-                    <Star className="h-4 w-4" />
+                <div className="absolute top-8 sm:top-16 right-6 sm:right-12 bg-white/10 rounded-full p-1.5 sm:p-2 animate-bounce">
+                    <Star className="h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
-                <div className="absolute bottom-12 left-16 bg-white/10 rounded-full p-2 animate-pulse">
-                    <Heart className="h-4 w-4" />
+                <div className="absolute bottom-6 sm:bottom-12 left-8 sm:left-16 bg-white/10 rounded-full p-1.5 sm:p-2 animate-pulse">
+                    <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
 
                 <div className="relative z-10 max-w-4xl mx-auto">
@@ -145,31 +145,38 @@ const HomePage: React.FC = () => {
                         </span>
                     </div>
                     
-                    <h1 className="font-display text-5xl md:text-7xl lg:text-8xl tracking-wider mb-4">
+                    <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-wider mb-2 sm:mb-4">
                         Explore. Conquiste.
                     </h1>
-                    <h2 className="font-black text-4xl md:text-6xl lg:text-7xl text-brand-light-green mb-6">
+                    <h2 className="font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-brand-light-green mb-4 sm:mb-6">
                         Caçapava do Sul
                     </h2>
                     
-                    <p className="text-xl text-brand-beige mb-8 max-w-3xl mx-auto leading-relaxed">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl text-brand-beige mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
                         Transforme sua visita em uma aventura inesquecível. Descubra rotas personalizadas por IA, 
                         complete desafios exclusivos e conecte-se com a autêntica cultura gaúcha.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
                         <Link
                             to="/routes"
-                            className="bg-brand-light-green text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-white hover:text-brand-green transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2"
+                            className="w-full sm:w-auto bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 animate-pulse"
                         >
-                            <Play className="h-5 w-5" />
+                            <Navigation className="h-4 w-4 sm:h-5 sm:w-5" />
+                            🎮 Rotas Jogáveis
+                        </Link>
+                        <Link
+                            to="/routes"
+                            className="w-full sm:w-auto bg-brand-light-green text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg hover:bg-white hover:text-brand-green transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+                        >
+                            <Play className="h-4 w-4 sm:h-5 sm:w-5" />
                             Começar Aventura
                         </Link>
                         <Link
                             to="/attractions"
-                            className="border-2 border-white text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-white hover:text-brand-green transition-all duration-300 flex items-center gap-2"
+                            className="w-full sm:w-auto border-2 border-white text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg hover:bg-white hover:text-brand-green transition-all duration-300 flex items-center justify-center gap-2"
                         >
-                            <Map className="h-5 w-5" />
+                            <Map className="h-4 w-4 sm:h-5 sm:w-5" />
                             Explorar Pontos
                         </Link>
                     </div>

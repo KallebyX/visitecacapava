@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Simples API Gemini</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .response { background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 10px 0; white-space: pre-wrap; }
+        .loading { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Simples API Gemini</h1>
+    
+    <div class="test-section">
+        <h3>Teste Básico</h3>
+        <button onclick="testBasic()">Testar API Básica</button>
+        <div id="basic-response" class="response" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE";
+        
+        async function testBasic() {
+            const btn = document.querySelector('button');
+            const responseDiv = document.getElementById('basic-response');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testando...';
+            responseDiv.style.display = 'block';
+            responseDiv.innerHTML = '<div class="loading">Testando API Gemini...</div>';
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: "Responda apenas com 'API funcionando!'"
+                            }]
+                        }]
+                    })
+                });
+
+                console.log('Status:', response.status);
+                console.log('Headers:', response.headers);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                    responseDiv.innerHTML = `<strong>✅ Sucesso!</strong>\n\nResposta: ${data.candidates[0].content.parts[0].text}`;
+                } else {
+                    responseDiv.innerHTML = `<strong>⚠️ Resposta inesperada:</strong>\n\n${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                responseDiv.innerHTML = `<strong>❌ Erro:</strong>\n\n${error.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Testar API Básica';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -27,7 +27,7 @@
 ```diff
 - const API_KEY = process.env.API_KEY;
 + // Chave da API do Gemini para demonstração
-+ const API_KEY = process.env.VITE_GEMINI_API_KEY || "sua_chave_aqui";
++ const API_KEY = "AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE" || process.env.API_KEY;
 ```
 
 ### 🛠️ **2. Implementação Direta da API REST**
@@ -197,4 +197,4 @@ const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
 ---
 *Correções da API Gemini realizadas em: Janeiro 2025*
 *Sistema: Visite Caçapava - Turismo Inteligente*
-*Chave da API: Configure via variável de ambiente VITE_GEMINI_API_KEY*
+*Chave da API: AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE*

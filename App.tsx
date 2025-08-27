@@ -12,7 +12,7 @@ import HotelLayout from './components/layouts/HotelLayout';
 import RestaurantLayout from './components/layouts/RestaurantLayout';
 
 import HomePage from './pages/HomePage';
-import RoutesPage from './pages/RoutesPage';
+import RoutesPage from './pages/RoutesPage_new';
 import ProfilePage from './pages/ProfilePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import RouteDetailPage from './pages/RouteDetailPage';
@@ -25,6 +25,7 @@ import AttractionsPage from './pages/AttractionsPage';
 import RestaurantsPage from './pages/RestaurantsPage_new';
 import OliveOilsPage from './pages/OliveOilsPage';
 import GameSystemDemo from './pages/GameSystemDemo';
+
 
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageRoutesPage from './pages/admin/ManageRoutesPage';

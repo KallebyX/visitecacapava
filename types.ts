@@ -16,6 +16,11 @@ export interface Route {
   description: string;
   pointsOfInterest: string[]; // array of PointOfInterest ids
   imageUrl?: string;
+  distance?: number; // distância em km
+  estimatedTime?: number; // tempo estimado em minutos
+  difficulty?: 'Fácil' | 'Moderado' | 'Difícil';
+  category?: string;
+  mapUrl?: string;
 }
 
 export interface Badge {

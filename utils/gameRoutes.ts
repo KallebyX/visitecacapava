@@ -1,406 +1,219 @@
-// Sistema de rotas gamificadas estilo Pokémon GO
-import { Coordinates, calculateDistance, insideBBox } from './geolocation';
+import type { Route, PointOfInterest } from '../types';
 
+// Tipos específicos para o jogo
 export interface RoutePoint {
   id: string;
   name: string;
-  category: 'historia' | 'natureza' | 'gastronomia' | 'familia';
-  coordinates: Coordinates;
   description: string;
-  difficulty: 'facil' | 'medio' | 'dificil';
-  estimatedTime: number; // minutos
+  coordinates: { lat: number; lng: number };
+  category: string;
+  estimatedTime: number;
   xpReward: number;
-  visited?: boolean;
-  discoverable?: boolean; // se está no raio de descoberta
 }
 
 export interface GameRoute {
   id: string;
   name: string;
-  description: string;
   points: RoutePoint[];
-  totalDistance: number; // metros
-  estimatedDuration: number; // minutos
-  difficulty: 'facil' | 'medio' | 'dificil';
+  estimatedDuration: number;
   xpReward: number;
-  category: string;
-  isActive: boolean;
-  progress: number; // 0-100
-  completedAt?: Date;
+  progress: number;
 }
 
-export interface RouteMission {
+// Coordenadas base de Caçapava do Sul
+const CACAPAVA_CENTER = { lat: -30.5119, lng: -53.4917 };
+
+const generateCoordinates = (offsetLat: number, offsetLng: number) => ({
+  lat: CACAPAVA_CENTER.lat + offsetLat,
+  lng: CACAPAVA_CENTER.lng + offsetLng
+});
+
+// Rotas gamificadas básicas (compatível com o tipo Route)
+export const GAME_ROUTES: Route[] = [
+  {
+    id: 'rota-historica-centro',
+    name: 'Coração Histórico',
+    description: 'Descubra os tesouros históricos do centro de Caçapava do Sul',
+    pointsOfInterest: ['poi-igreja-matriz', 'poi-pedra-segredo', 'poi-guaritas'],
+    imageUrl: '/img/pontos_turisticos/IgrejaMatriz.jpg'
+  },
+  {
+    id: 'rota-natureza-aventura',
+    name: 'Aventura Natural',
+    description: 'Uma jornada pela natureza exuberante',
+    pointsOfInterest: ['poi-pedra-segredo', 'poi-guaritas', 'poi-cascata-salso'],
+    imageUrl: '/img/pontos_turisticos/pedradosegredo.png'
+  }
+];
+
+// POIs para o jogo - usando estrutura personalizada
+export const GAME_POIS_DATA: Array<{
   id: string;
-  title: string;
+  name: string;
   description: string;
-  type: 'category_diversity' | 'route_completion' | 'daily_streak' | 'exploration';
-  requirements: {
-    categoriesRequired?: string[];
-    routesRequired?: string[];
-    consecutiveDays?: number;
-    poisRequired?: number;
-  };
-  reward: {
-    xp: number;
-    badge?: string;
-    title?: string;
-  };
-  progress: number; // 0-100
-  completed: boolean;
-  deadline?: Date;
-}
-
-/**
- * POIs âncora de Caçapava do Sul para seeds e rotas temáticas
- */
-export const ANCHOR_POIS: RoutePoint[] = [
+  coordinates: { lat: number; lng: number };
+  category: string;
+  imageUrl: string;
+  points: number;
+  difficulty: string;
+}> = [
   {
-    id: 'pedra-do-segredo',
+    id: 'poi-igreja-matriz',
+    name: 'Igreja Matriz',
+    description: 'Igreja histórica no coração de Caçapava',
+    coordinates: generateCoordinates(0, 0.001),
+    category: 'História',
+    imageUrl: '/img/pontos_turisticos/IgrejaMatriz.jpg',
+    points: 50,
+    difficulty: 'Fácil'
+  },
+  {
+    id: 'poi-pedra-segredo',
     name: 'Pedra do Segredo',
-    category: 'natureza',
-    coordinates: { lat: -30.5089, lng: -53.4821 },
-    description: 'Formação rochosa única que equilibra toneladas em equilíbrio perfeito',
-    difficulty: 'medio',
-    estimatedTime: 45,
-    xpReward: 50
+    description: 'Formação rochosa espetacular',
+    coordinates: generateCoordinates(0.02, 0.015),
+    category: 'Natureza',
+    imageUrl: '/img/pontos_turisticos/pedradosegredo.png',
+    points: 100,
+    difficulty: 'Moderado'
   },
   {
-    id: 'guaritas',
-    name: 'Parque das Guaritas',
-    category: 'natureza',
-    coordinates: { lat: -30.5234, lng: -53.4567 },
-    description: 'Formações rochosas de 550 milhões de anos com paisagens deslumbrantes',
-    difficulty: 'medio',
-    estimatedTime: 90,
-    xpReward: 75
+    id: 'poi-guaritas',
+    name: 'Guaritas do Camaquã',
+    description: 'Formações rochosas milenares de arenito',
+    coordinates: generateCoordinates(-0.32, 0),
+    category: 'Natureza',
+    imageUrl: '/img/pontos_turisticos/guaritas.png',
+    points: 150,
+    difficulty: 'Moderado'
   },
   {
-    id: 'forte-dom-pedro-ii',
-    name: 'Forte Dom Pedro II',
-    category: 'historia',
-    coordinates: { lat: -30.5156, lng: -53.4912 },
-    description: 'Forte histórico da época imperial, testemunho da Revolução Farroupilha',
-    difficulty: 'facil',
-    estimatedTime: 30,
-    xpReward: 40
+    id: 'poi-cascata-salso',
+    name: 'Cascata do Salso',
+    description: 'Cachoeira deslumbrante com águas cristalinas',
+    coordinates: generateCoordinates(0.15, -0.08),
+    category: 'Natureza',
+    imageUrl: '/img/pontos_turisticos/cascata.jpg',
+    points: 120,
+    difficulty: 'Difícil'
   },
   {
-    id: 'minas-camaqua',
-    name: 'Minas do Camaquã',
-    category: 'historia',
-    coordinates: { lat: -30.5291, lng: -53.5123 },
-    description: 'Complexo minerário histórico com mais de 150 anos de atividade',
-    difficulty: 'dificil',
-    estimatedTime: 120,
-    xpReward: 100
-  },
-  {
-    id: 'casa-borges-medeiros',
-    name: 'Casa de Borges de Medeiros',
-    category: 'historia',
-    coordinates: { lat: -30.5134, lng: -53.4889 },
-    description: 'Residência histórica do importante político gaúcho',
-    difficulty: 'facil',
-    estimatedTime: 25,
-    xpReward: 35
+    id: 'poi-museu-lanceiros',
+    name: 'Museu dos Lanceiros Negros',
+    description: 'História da Revolução Farroupilha',
+    coordinates: generateCoordinates(-0.005, 0.003),
+    category: 'História',
+    imageUrl: '/img/pontos_turisticos/museu.jpg',
+    points: 80,
+    difficulty: 'Fácil'
   }
 ];
 
-/**
- * Rotas temáticas pré-definidas
- */
-export const THEMED_ROUTES: Partial<GameRoute>[] = [
+// Configurações do jogo
+export const GAME_CONFIG = {
+  checkInRadius: { default: 50, precise: 30, extended: 100 },
+  points: { checkIn: 10, firstVisit: 50, routeCompletion: 100 }
+};
+
+// Utilitários
+export const GameUtils = {
+  calculateDistance: (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }): number => {
+    const R = 6371e3;
+    const φ1 = pos1.lat * Math.PI/180;
+    const φ2 = pos2.lat * Math.PI/180;
+    const Δφ = (pos2.lat-pos1.lat) * Math.PI/180;
+    const Δλ = (pos2.lng-pos1.lng) * Math.PI/180;
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  },
+
+  isWithinCheckInRadius: (playerPos: { lat: number; lng: number }, poiPos: { lat: number; lng: number }, radius = 50): boolean => {
+    return GameUtils.calculateDistance(playerPos, poiPos) <= radius;
+  }
+};
+
+// Função para verificar POIs próximos
+export const checkNearbyPOIs = (
+  userLocation: { lat: number; lng: number }, 
+  route: GameRoute, 
+  radius = 100
+): RoutePoint[] => {
+  return route.points.filter(poi => 
+    GameUtils.calculateDistance(userLocation, poi.coordinates) <= radius
+  );
+};
+
+// Função para gerar polyline da rota
+export const generateRoutePolyline = (points: RoutePoint[]): [number, number][] => {
+  return points.map(point => [point.coordinates.lat, point.coordinates.lng]);
+};
+
+// Converter POIs personalizados para RoutePoints
+export const convertPOIDataToRoutePoint = (poi: typeof GAME_POIS_DATA[0]): RoutePoint => ({
+  id: poi.id,
+  name: poi.name,
+  description: poi.description,
+  coordinates: poi.coordinates,
+  category: poi.category,
+  estimatedTime: 15, // tempo padrão em minutos
+  xpReward: poi.points
+});
+
+// Rotas de jogo completas
+export const FULL_GAME_ROUTES: GameRoute[] = [
   {
-    id: 'rota-historia',
-    name: 'Rota Histórica Farroupilha',
-    description: 'Explore os locais que marcaram a história de Caçapava do Sul',
-    category: 'historia',
-    difficulty: 'medio'
+    id: 'rota-historica-centro',
+    name: 'Coração Histórico',
+    points: GAME_POIS_DATA
+      .filter(poi => ['poi-igreja-matriz', 'poi-museu-lanceiros'].includes(poi.id))
+      .map(convertPOIDataToRoutePoint),
+    estimatedDuration: 120,
+    xpReward: 150,
+    progress: 0
   },
   {
-    id: 'rota-geodiversidade',
-    name: 'Rota da Geodiversidade',
-    description: 'Descubra formações geológicas únicas de milhões de anos',
-    category: 'natureza',
-    difficulty: 'dificil'
-  },
-  {
-    id: 'rota-centro',
-    name: 'Centro Histórico',
-    description: 'Conheça o coração cultural e arquitetônico da cidade',
-    category: 'familia',
-    difficulty: 'facil'
+    id: 'rota-natureza-aventura', 
+    name: 'Aventura Natural',
+    points: GAME_POIS_DATA
+      .filter(poi => ['poi-pedra-segredo', 'poi-guaritas', 'poi-cascata-salso'].includes(poi.id))
+      .map(convertPOIDataToRoutePoint),
+    estimatedDuration: 240,
+    xpReward: 300,
+    progress: 0
   }
 ];
 
-/**
- * Calcula distância total de uma rota
- */
-export function calculateRouteDistance(points: RoutePoint[]): number {
-  let totalDistance = 0;
-  for (let i = 0; i < points.length - 1; i++) {
-    totalDistance += calculateDistance(points[i].coordinates, points[i + 1].coordinates);
-  }
-  return totalDistance;
-}
+// ANCHOR_POIS para compatibilidade
+export const ANCHOR_POIS = GAME_POIS_DATA.map(convertPOIDataToRoutePoint);
 
-/**
- * Estima duração da rota baseada na distância e dificuldade dos pontos
- */
-export function estimateRouteDuration(points: RoutePoint[]): number {
-  let totalTime = 0;
-  const distance = calculateRouteDistance(points);
-  
-  // Tempo de caminhada (velocidade média 4 km/h)
-  const walkingTime = (distance / 1000) * 15; // minutos
-  
-  // Tempo de visita nos pontos
-  const visitTime = points.reduce((sum, point) => sum + point.estimatedTime, 0);
-  
-  return Math.round(walkingTime + visitTime);
-}
-
-/**
- * Gera rota personalizada baseada no perfil do usuário
- */
-export function generatePersonalizedRoute(
-  userPreferences: {
-    categories: string[];
-    difficulty: 'facil' | 'medio' | 'dificil';
-    timeAvailable: number; // minutos
-    startLocation: Coordinates;
-  },
-  availablePOIs: RoutePoint[]
-): GameRoute {
-  
-  // Filtrar POIs por preferências
-  let filteredPOIs = availablePOIs.filter(poi => {
-    return userPreferences.categories.includes(poi.category) &&
-           poi.difficulty === userPreferences.difficulty &&
-           insideBBox(poi.coordinates.lat, poi.coordinates.lng);
-  });
-  
-  // Ordenar por distância do ponto inicial
-  filteredPOIs.sort((a, b) => {
-    const distA = calculateDistance(userPreferences.startLocation, a.coordinates);
-    const distB = calculateDistance(userPreferences.startLocation, b.coordinates);
-    return distA - distB;
-  });
-  
-  // Selecionar POIs que cabem no tempo disponível
-  const selectedPOIs: RoutePoint[] = [];
-  let currentTime = 0;
-  
-  for (const poi of filteredPOIs) {
-    const estimatedTime = poi.estimatedTime + 15; // +15 min para deslocamento
-    if (currentTime + estimatedTime <= userPreferences.timeAvailable && selectedPOIs.length < 6) {
-      selectedPOIs.push(poi);
-      currentTime += estimatedTime;
-    }
-  }
-  
-  // Otimizar ordem dos POIs (algoritmo simples do vizinho mais próximo)
-  const optimizedRoute = optimizeRouteOrder(selectedPOIs, userPreferences.startLocation);
-  
-  const routeId = `custom_${Date.now()}`;
-  const totalDistance = calculateRouteDistance(optimizedRoute);
-  const totalDuration = estimateRouteDuration(optimizedRoute);
-  const totalXP = optimizedRoute.reduce((sum, poi) => sum + poi.xpReward, 0);
+// Função para gerar rota personalizada
+export const generatePersonalizedRoute = (
+  interests: string[], 
+  duration: number,
+  difficulty: string
+): GameRoute => {
+  // Por enquanto, retorna uma rota padrão baseada nos interesses
+  const routeId = interests.includes('história') ? 'rota-historica-centro' : 'rota-natureza-aventura';
+  const baseRoute = FULL_GAME_ROUTES.find(r => r.id === routeId) || FULL_GAME_ROUTES[0];
   
   return {
-    id: routeId,
-    name: 'Rota Personalizada',
-    description: `Rota customizada com ${optimizedRoute.length} pontos de interesse`,
-    points: optimizedRoute,
-    totalDistance,
-    estimatedDuration: totalDuration,
-    difficulty: userPreferences.difficulty,
-    xpReward: totalXP,
-    category: 'personalizada',
-    isActive: true,
-    progress: 0
+    ...baseRoute,
+    id: `personalized-${Date.now()}`,
+    name: `Rota Personalizada - ${interests.join(', ')}`,
+    estimatedDuration: duration
   };
-}
+};
 
-/**
- * Otimiza ordem dos POIs usando algoritmo do vizinho mais próximo
- */
-function optimizeRouteOrder(pois: RoutePoint[], startLocation: Coordinates): RoutePoint[] {
-  if (pois.length <= 1) return pois;
-  
-  const optimized: RoutePoint[] = [];
-  const remaining = [...pois];
-  let currentLocation = startLocation;
-  
-  while (remaining.length > 0) {
-    let nearestIndex = 0;
-    let nearestDistance = calculateDistance(currentLocation, remaining[0].coordinates);
-    
-    for (let i = 1; i < remaining.length; i++) {
-      const distance = calculateDistance(currentLocation, remaining[i].coordinates);
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearestIndex = i;
-      }
-    }
-    
-    const nearest = remaining.splice(nearestIndex, 1)[0];
-    optimized.push(nearest);
-    currentLocation = nearest.coordinates;
-  }
-  
-  return optimized;
-}
-
-/**
- * Atualiza progresso da rota baseado nos check-ins
- */
-export function updateRouteProgress(route: GameRoute, completedPOIs: string[]): GameRoute {
-  const completedCount = route.points.filter(point => 
-    completedPOIs.includes(point.id)
-  ).length;
-  
-  const progress = Math.round((completedCount / route.points.length) * 100);
+// Função para atualizar progresso da rota
+export const updateRouteProgress = (route: GameRoute, completedPOIs: string[]): GameRoute => {
+  const totalPOIs = route.points.length;
+  const completed = route.points.filter(poi => completedPOIs.includes(poi.id)).length;
+  const progress = totalPOIs > 0 ? Math.round((completed / totalPOIs) * 100) : 0;
   
   return {
     ...route,
-    progress,
-    completedAt: progress === 100 ? new Date() : undefined,
-    points: route.points.map(point => ({
-      ...point,
-      visited: completedPOIs.includes(point.id)
-    }))
+    progress
   };
-}
-
-/**
- * Verifica se usuário está próximo de algum POI da rota
- */
-export function checkNearbyPOIs(
-  userLocation: Coordinates, 
-  route: GameRoute, 
-  radius: number = 60
-): RoutePoint[] {
-  
-  return route.points.filter(point => {
-    const distance = calculateDistance(userLocation, point.coordinates);
-    return distance <= radius && !point.visited;
-  }).map(point => ({
-    ...point,
-    discoverable: true
-  }));
-}
-
-/**
- * Gera coordenadas para polyline da rota
- */
-export function generateRoutePolyline(points: RoutePoint[]): Coordinates[] {
-  return points.map(point => point.coordinates);
-}
-
-/**
- * Missões diárias e semanais
- */
-export const DAILY_MISSIONS: RouteMission[] = [
-  {
-    id: 'three-categories',
-    title: 'Explorador Diverso',
-    description: 'Visite 3 categorias diferentes de POIs hoje',
-    type: 'category_diversity',
-    requirements: {
-      categoriesRequired: ['historia', 'natureza', 'gastronomia']
-    },
-    reward: {
-      xp: 100,
-      badge: 'diverso'
-    },
-    progress: 0,
-    completed: false
-  },
-  {
-    id: 'complete-route',
-    title: 'Aventureiro Completo',
-    description: 'Complete uma rota inteira hoje',
-    type: 'route_completion',
-    requirements: {
-      routesRequired: ['any']
-    },
-    reward: {
-      xp: 150,
-      badge: 'aventureiro'
-    },
-    progress: 0,
-    completed: false
-  }
-];
-
-/**
- * Verifica progresso das missões
- */
-export function updateMissionProgress(
-  missions: RouteMission[],
-  userActivity: {
-    visitedCategories: string[];
-    completedRoutes: string[];
-    consecutiveDays: number;
-    totalPOIs: number;
-  }
-): RouteMission[] {
-  
-  return missions.map(mission => {
-    let progress = 0;
-    
-    switch (mission.type) {
-      case 'category_diversity':
-        if (mission.requirements.categoriesRequired) {
-          const requiredCount = mission.requirements.categoriesRequired.length;
-          const visitedCount = mission.requirements.categoriesRequired.filter(cat =>
-            userActivity.visitedCategories.includes(cat)
-          ).length;
-          progress = Math.round((visitedCount / requiredCount) * 100);
-        }
-        break;
-        
-      case 'route_completion':
-        progress = userActivity.completedRoutes.length > 0 ? 100 : 0;
-        break;
-        
-      case 'daily_streak':
-        if (mission.requirements.consecutiveDays) {
-          progress = Math.min(
-            (userActivity.consecutiveDays / mission.requirements.consecutiveDays) * 100,
-            100
-          );
-        }
-        break;
-        
-      case 'exploration':
-        if (mission.requirements.poisRequired) {
-          progress = Math.min(
-            (userActivity.totalPOIs / mission.requirements.poisRequired) * 100,
-            100
-          );
-        }
-        break;
-    }
-    
-    return {
-      ...mission,
-      progress,
-      completed: progress >= 100
-    };
-  });
-}
-
-/**
- * Calcula bônus de XP para completar missões
- */
-export function calculateMissionXP(mission: RouteMission): number {
-  let bonusMultiplier = 1;
-  
-  if (mission.type === 'daily_streak') {
-    bonusMultiplier = 1.5; // 50% bônus para streaks
-  }
-  
-  return Math.round(mission.reward.xp * bonusMultiplier);
-}
+};

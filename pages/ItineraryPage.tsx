@@ -7,6 +7,7 @@ import {
   ChevronDown, ChevronUp, Play, Pause
 } from 'lucide-react';
 import { generateItinerary } from '../services/geminiService';
+import AIStatusIndicator from '../components/AIStatusIndicator';
 
 const interestOptions = [
   { id: "natureza", label: "Natureza", icon: TreePine, color: "bg-green-100 text-green-700 border-green-200" },
@@ -292,6 +293,7 @@ const ItineraryPage: React.FC = () => {
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
               IA Guia Turístico
             </span>
+            <AIStatusIndicator className="ml-2" />
           </div>
           
           <h1 className="text-5xl font-bold text-gray-800 mb-4">
@@ -449,6 +451,7 @@ const ItineraryPage: React.FC = () => {
                       value={budget} 
                       onChange={(e) => setBudget(e.target.value)}
                       className="w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all"
+                      aria-label="Seleção de orçamento"
                     >
                       <option value="baixo">Econômico (R$ 50-100/dia)</option>
                       <option value="medio">Moderado (R$ 100-200/dia)</option>
@@ -463,6 +466,7 @@ const ItineraryPage: React.FC = () => {
                       value={groupSize} 
                       onChange={(e) => setGroupSize(e.target.value)}
                       className="w-full p-4 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all"
+                      aria-label="Tamanho do grupo"
                     >
                       <option value="1">Solo</option>
                       <option value="2">Casal</option>

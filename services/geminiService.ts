@@ -1,10 +1,11 @@
 import { backendService } from './backendService';
+import { openAIService } from './openaiService';
 import type { PointOfInterest, User, ChatMessage } from '../types';
 
-// Chave da API do Gemini - configurada via variável de ambiente
-const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY;
+// Chave da API do Gemini - pode ser configurada via variável de ambiente
+const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || "AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE";
 
-// Função auxiliar para chamar a API do Gemini
+// Função auxiliar para chamar a API do Gemini com fallback para OpenAI
 const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
     
@@ -28,7 +29,6 @@ const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
     };
 
     console.log('Chamando API Gemini:', url);
-    console.log('Request body:', requestBody);
 
     try {
         const response = await fetch(url, {
@@ -40,26 +40,34 @@ const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
         });
 
         console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('API Error response:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+            console.error('Gemini API Error:', errorText);
+            throw new Error(`Gemini API error: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('API Response data:', data);
         
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+            console.log('Resposta recebida do Gemini com sucesso');
             return data.candidates[0].content.parts[0].text;
         } else {
-            console.error('Unexpected API response structure:', data);
-            throw new Error('Unexpected API response structure');
+            console.error('Estrutura de resposta inesperada do Gemini:', data);
+            throw new Error('Estrutura de resposta inesperada');
         }
     } catch (error) {
-        console.error('Error in callGeminiAPI:', error);
-        throw error;
+        console.warn('Gemini API falhou, tentando com OpenAI...', error);
+        
+        // Fallback para OpenAI
+        try {
+            const response = await openAIService.generateContent(prompt, systemInstruction);
+            console.log('Resposta recebida do OpenAI com sucesso');
+            return response;
+        } catch (openAIError) {
+            console.error('OpenAI também falhou:', openAIError);
+            throw new Error('Ambas APIs (Gemini e OpenAI) falharam');
+        }
     }
 };
 
