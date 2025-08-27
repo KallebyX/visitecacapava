@@ -1,22 +1,83 @@
-import { GoogleGenAI } from "@google/genai";
 import { backendService } from './backendService';
 import type { PointOfInterest, User, ChatMessage } from '../types';
 
-const API_KEY = process.env.API_KEY;
+// Chave da API do Gemini para demonstração
+const API_KEY = "AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE" || process.env.API_KEY;
 
-// Always initialize the client. If API_KEY is undefined, pass an empty string.
-// The API calls will then fail gracefully and be caught by the try/catch blocks below.
-const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
+// Função auxiliar para chamar a API do Gemini
+const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+    
+    let fullPrompt = prompt;
+    if (systemInstruction) {
+        fullPrompt = `${systemInstruction}\n\n${prompt}`;
+    }
+    
+    const requestBody = {
+        contents: [{
+            parts: [{
+                text: fullPrompt
+            }]
+        }],
+        generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+        }
+    };
+
+    console.log('Chamando API Gemini:', url);
+    console.log('Request body:', requestBody);
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('API Response data:', data);
+        
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+            return data.candidates[0].content.parts[0].text;
+        } else {
+            console.error('Unexpected API response structure:', data);
+            throw new Error('Unexpected API response structure');
+        }
+    } catch (error) {
+        console.error('Error in callGeminiAPI:', error);
+        throw error;
+    }
+};
 
 export const askAIGuideStream = async (locationName: string, question: string) => {
-  const prompt = `Você é um guia turístico amigável e experiente de Caçapava do Sul, Brasil. Um turista está visitando "${locationName}" e tem uma pergunta. Responda de forma concisa, útil e calorosa. Pergunta: "${question}"`;
+  const prompt = `Você é um guia turístico de Caçapava do Sul. Um turista está visitando "${locationName}" e pergunta: "${question}". Responda de forma concisa, útil e calorosa.`;
 
   try {
-    const response = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-    return response;
+    const response = await callGeminiAPI(prompt);
+    
+    // Simula um stream de resposta
+    async function* responseStreamGenerator() {
+        const words = response.split(' ');
+        for (const word of words) {
+            await new Promise(res => setTimeout(res, 50));
+            yield { text: word + ' ' };
+        }
+    }
+    return responseStreamGenerator();
   } catch (error) {
     console.error("Error calling Gemini API (askAIGuideStream):", error);
     
@@ -58,41 +119,33 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         `- ${poi.name}: ${poi.description} (Tipo: ${getPoiType(poi)})`
     ).join('\n');
 
-    const prompt = `
-        Você é um guia turístico especialista e criativo para a cidade de Caçapava do Sul, no Brasil.
-        Sua tarefa é criar um roteiro de viagem personalizado e detalhado, baseado nas preferências de um turista.
+    const prompt = `Crie um roteiro de viagem para Caçapava do Sul com base nas seguintes informações:
 
-        **Contexto - Pontos de Interesse Disponíveis:**
-        Aqui está uma lista dos pontos de interesse em Caçapava do Sul que você DEVE usar como base para suas recomendações. Não invente lugares que não estão nesta lista.
-        ${poiList}
+Pontos de Interesse Disponíveis:
+${poiList}
 
-        **Preferências do Turista:**
-        - **Duração da Viagem:** ${preferences.duration}
-        - **Principais Interesses:** ${preferences.interests.join(', ')}
-        - **Ritmo Desejado:** ${preferences.pace}
-        - **Observações Adicionais:** ${preferences.notes || 'Nenhuma.'}
+Preferências do Turista:
+- Duração: ${preferences.duration}
+- Interesses: ${preferences.interests.join(', ')}
+- Ritmo: ${preferences.pace}
+- Observações: ${preferences.notes || 'Nenhuma'}
 
-        **Sua Tarefa:**
-        1.  Crie um roteiro dia a dia, se a duração for maior que um dia.
-        2.  Use os pontos de interesse da lista fornecida que melhor se encaixam nos interesses do turista.
-        3.  Organize as atividades de forma lógica (manhã, tarde, noite) e considere o ritmo solicitado.
-        4.  Para cada sugestão, escreva um parágrafo curto e envolvente, explicando por que o local é uma boa escolha e o que o turista pode fazer lá.
-        5.  O tom deve ser amigável, acolhedor e inspirador.
-        6.  Retorne a resposta em formato **Markdown**, usando títulos (##, ###) para os dias e negrito (**) para os nomes dos locais.
+Instruções:
+1. Crie um roteiro organizado por dia e período (manhã, tarde, noite)
+2. Use apenas os pontos de interesse listados acima
+3. Seja amigável e inspirador
+4. Escreva de forma limpa, sem formatação markdown
+5. Comece com um título criativo
 
-        Comece o roteiro com um título criativo.
-    `;
+Gere um roteiro personalizado e detalhado.`;
     
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-        });
-        return response.text;
+        const response = await callGeminiAPI(prompt);
+        return response;
     } catch (error) {
         console.error("Error calling Gemini API for itinerary:", error);
         // Fallback to a simulated response on any API error
-        return "Modo de demonstração: A API do Gemini não está configurada ou a chamada falhou. Aqui está um exemplo de roteiro:\n\n### Dia 1: Aventura e Natureza\n\n**Manhã:**\n- **Pedra do Segredo:** Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\n**Tarde:**\n- **Guaritas:** Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\n**Noite:**\n- **Churrascaria Rodeio:** Termine o dia com um autêntico churrasco gaúcho.";
+        return "Modo de demonstração: A API do Gemini não está configurada ou a chamada falhou. Aqui está um exemplo de roteiro:\n\nDia 1: Aventura e Natureza\n\nManhã:\n- Pedra do Segredo: Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\nTarde:\n- Guaritas: Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\nNoite:\n- Churrascaria Rodeio: Termine o dia com um autêntico churrasco gaúcho.";
     }
 };
 
@@ -146,15 +199,17 @@ export const getAIChatResponse = async (history: ChatMessage[], user: User): Pro
     `;
     
     try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: history,
-            config: {
-                systemInstruction,
-            }
-        });
-
-        return response.text;
+        // Para o chat, precisamos formatar o histórico corretamente
+        const lastUserMessage = history.filter(msg => msg.role === 'user').pop();
+        if (!lastUserMessage) {
+            return "Olá! Como posso ajudar você hoje?";
+        }
+        
+        const userPrompt = lastUserMessage.parts[0].text;
+        console.log('Chat prompt:', userPrompt);
+        
+        const response = await callGeminiAPI(userPrompt, systemInstruction);
+        return response;
     } catch (error) {
         console.error("Error calling Gemini API for chat:", error);
         // Fallback to a simulated response on any API error

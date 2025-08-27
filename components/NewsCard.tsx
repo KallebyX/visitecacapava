@@ -47,7 +47,7 @@ const CategoryBadge = ({ category }: { category: NewsItemProps['category'] }) =>
 const NewsCard: React.FC<{ news: NewsItemProps; featured?: boolean }> = ({ news, featured = false }) => {
   return (
     <div className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group ${featured ? 'md:col-span-2 md:row-span-2' : ''}`}>
-      <div className={`relative ${featured ? 'h-64' : 'h-48'} overflow-hidden`}>
+      <div className={`relative ${featured ? 'h-72 md:h-96' : 'h-48 md:h-56'} overflow-hidden`}>
         <img
           src={news.imageUrl}
           alt={news.title}

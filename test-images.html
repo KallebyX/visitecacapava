@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Imagens - Visite Caçapava</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .image-test { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .image-test img { max-width: 200px; max-height: 200px; border: 1px solid #ddd; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Carregamento de Imagens</h1>
+    
+    <div class="image-test">
+        <h3>🏛️ Logo do Sistema</h3>
+        <p>Testando: <code>/img/logo/VisiteCacapavaLogo_Página 4.png</code></p>
+        <img src="/img/logo/VisiteCacapavaLogo_Página 4.png" 
+             alt="Logo Sistema" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🍽️ Logo El Rancho</h3>
+        <p>Testando: <code>/img/restaurantes/El Rancho/ElRanchoLogo.png</code></p>
+        <img src="/img/restaurantes/El Rancho/ElRanchoLogo.png" 
+             alt="El Rancho Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🍕 Logo Chef Pizzaria</h3>
+        <p>Testando: <code>/img/restaurantes/Chef Pizzaria/ChefExpressLogo.png</code></p>
+        <img src="/img/restaurantes/Chef Pizzaria/ChefExpressLogo.png" 
+             alt="Chef Pizzaria Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🏠 Logo Meu Cantinho</h3>
+        <p>Testando: <code>/img/restaurantes/Meu Cantinho/MeuCantinhoLogo.png</code></p>
+        <img src="/img/restaurantes/Meu Cantinho/MeuCantinhoLogo.png" 
+             alt="Meu Cantinho Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🇮🇹 Logo Don Ítalo</h3>
+        <p>Testando: <code>/img/restaurantes/Don Italo /DonItaloLogo.png</code></p>
+        <img src="/img/restaurantes/Don Italo /DonItaloLogo.png" 
+             alt="Don Ítalo Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🍖 Logo Rodeio Grill</h3>
+        <p>Testando: <code>/img/restaurantes/Rodeio Churrascaria/Rodeio Churrascaria.png</code></p>
+        <img src="/img/restaurantes/Rodeio Churrascaria/Rodeio Churrascaria.png" 
+             alt="Rodeio Grill Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <div class="image-test">
+        <h3>🥪 Logo AM Lanches</h3>
+        <p>Testando: <code>/img/restaurantes/AM Lanches/LogoAMAtualizada2024.png</code></p>
+        <img src="/img/restaurantes/AM Lanches/LogoAMAtualizada2024.png" 
+             alt="AM Lanches Logo" 
+             onload="this.nextElementSibling.textContent='✅ Carregou com sucesso!'"
+             onerror="this.nextElementSibling.textContent='❌ Erro ao carregar'">
+        <p class="status">⏳ Carregando...</p>
+    </div>
+
+    <script>
+        console.log('🧪 Teste de imagens iniciado');
+        
+        // Verificar se o servidor está rodando
+        fetch('/')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Servidor respondendo');
+                } else {
+                    console.log('⚠️ Servidor com status:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Erro ao conectar com servidor:', error);
+            });
+    </script>
+</body>
+</html>

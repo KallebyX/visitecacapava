@@ -242,9 +242,38 @@ const ItineraryPage: React.FC = () => {
 
           {/* Itinerary Content */}
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
-            <div className="prose prose-lg max-w-none">
-              <div className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed">
-                {animatedText}
+            <div className="max-w-none">
+              <div className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed text-lg">
+                {animatedText.split('\n').map((line, index) => {
+                  // Formatação especial para diferentes tipos de linha
+                  if (line.trim().startsWith('Dia') && line.includes(':')) {
+                    return (
+                      <h2 key={index} className="text-2xl font-bold text-green-600 mb-4 mt-6 first:mt-0">
+                        {line}
+                      </h2>
+                    );
+                  } else if (line.trim().startsWith('Manhã:') || line.trim().startsWith('Tarde:') || line.trim().startsWith('Noite:')) {
+                    return (
+                      <h3 key={index} className="text-xl font-semibold text-blue-600 mb-3 mt-4">
+                        {line}
+                      </h3>
+                    );
+                  } else if (line.trim().startsWith('-')) {
+                    return (
+                      <div key={index} className="ml-6 mb-3 text-gray-700">
+                        {line}
+                      </div>
+                    );
+                  } else if (line.trim() === '') {
+                    return <div key={index} className="mb-3"></div>;
+                  } else {
+                    return (
+                      <p key={index} className="mb-3 text-gray-800">
+                        {line}
+                      </p>
+                    );
+                  }
+                })}
               </div>
             </div>
           </div>

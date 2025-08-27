@@ -49,9 +49,11 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-brand-dark-green p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-            <div className="inline-block w-24 h-24 text-brand-light-green">
-              <MapOutlineIcon />
-            </div>
+            <img 
+              src="/img/logo/VisiteCacapavaSimbolo.png" 
+              alt="Visite Caçapava" 
+              className="inline-block w-24 h-24 object-contain mx-auto mb-4"
+            />
              <div className="text-brand-beige">
               <div className="font-display tracking-wider text-3xl leading-none">VISITE</div>
               <div className="font-black text-4xl leading-none -mt-1">CAÇAPAVA</div>

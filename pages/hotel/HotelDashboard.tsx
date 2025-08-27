@@ -4,7 +4,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { useAuth } from '../../context/AuthContext';
 import { HotelCheckIn } from '../../types';
-import { chartColors, transparentChartColors } from '../../utils/chartUtils';
+import { chartColors } from '../../utils/chartUtils';
 import { BedDouble, Users, MapPin } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
@@ -61,8 +61,22 @@ const HotelDashboard: React.FC = () => {
         labels: Object.keys(dashboardData.travelBehavior.byReason),
         datasets: [{
             data: Object.values(dashboardData.travelBehavior.byReason),
-            backgroundColor: transparentChartColors,
-            borderColor: chartColors,
+            backgroundColor: [
+                'rgba(59, 130, 246, 0.8)',   // blue
+                'rgba(236, 72, 153, 0.8)',   // pink
+                'rgba(107, 114, 128, 0.8)',  // gray
+                'rgba(20, 184, 166, 0.8)',   // teal
+                'rgba(34, 197, 94, 0.8)',    // green
+                'rgba(234, 179, 8, 0.8)',    // yellow
+            ],
+            borderColor: [
+                'rgba(59, 130, 246, 1)',     // blue
+                'rgba(236, 72, 153, 1)',     // pink
+                'rgba(107, 114, 128, 1)',    // gray
+                'rgba(20, 184, 166, 1)',     // teal
+                'rgba(34, 197, 94, 1)',      // green
+                'rgba(234, 179, 8, 1)',      // yellow
+            ],
             borderWidth: 2,
         }],
     };
@@ -72,8 +86,8 @@ const HotelDashboard: React.FC = () => {
         datasets: [{
             label: 'Hóspedes',
             data: Object.values(dashboardData.demographics.byOrigin),
-            backgroundColor: 'rgba(108, 188, 58, 0.7)',
-            borderColor: 'rgba(108, 188, 58, 1)',
+            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+            borderColor: 'rgba(34, 197, 94, 1)',
             borderWidth: 1,
         }],
     };

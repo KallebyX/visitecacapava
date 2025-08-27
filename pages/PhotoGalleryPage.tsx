@@ -18,7 +18,7 @@ const mockPhotos: Photo[] = [
     userId: 'user1',
     userName: 'Maria Silva',
     userAvatarUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150',
-    imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+    imageUrl: '/img/pontos_turisticos/pedradosegredo.png',
     caption: 'Nascer do sol incrível na Pedra do Segredo! 🌅 Um dos momentos mais mágicos da minha vida.',
     location: 'Pedra do Segredo',
     timestamp: '2024-01-15T06:30:00Z',
@@ -31,7 +31,7 @@ const mockPhotos: Photo[] = [
     userId: 'user2',
     userName: 'João Santos',
     userAvatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-    imageUrl: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800',
+    imageUrl: '/img/pontos_turisticos/guaritas.png',
     caption: 'Explorando as formações rochosas únicas do Parque das Guaritas. A natureza é uma artista! 🎨',
     location: 'Parque das Guaritas',
     timestamp: '2024-01-14T14:20:00Z',
@@ -39,19 +39,7 @@ const mockPhotos: Photo[] = [
     tags: ['aventura', 'geologia', 'hiking'],
     category: 'adventure'
   },
-  {
-    id: '3',
-    userId: 'user3',
-    userName: 'Ana Costa',
-    userAvatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
-    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800',
-    caption: 'Almoço no El Rancho foi espetacular! Carne no ponto perfeito e vista incrível da cidade 🥩✨',
-    location: 'El Rancho Parrillados',
-    timestamp: '2024-01-13T13:45:00Z',
-    likes: ['user1', 'user2', 'user4', 'user5'],
-    tags: ['gastronomia', 'churrasco', 'local'],
-    category: 'food'
-  }
+
 ];
 
 interface PhotoCardProps {

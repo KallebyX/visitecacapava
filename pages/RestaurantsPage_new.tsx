@@ -48,7 +48,7 @@ const RestaurantsPage: React.FC = () => {
         address: 'Centro, Caçapava do Sul',
         phone: '(55) 3281-0000',
         openingHours: '11:30 - 14:00, 19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
+        image: '/img/restaurantes/El Rancho/ElRanchoLogo.png',
         features: ['Wi-Fi', 'Estacionamento', 'Ambiente Climatizado']
       },
       {
@@ -61,7 +61,7 @@ const RestaurantsPage: React.FC = () => {
         address: 'Centro, Caçapava do Sul',
         phone: '(55) 3281-0001',
         openingHours: '18:00 - 23:30',
-        image: '/placeholder-restaurant.svg',
+        image: '/img/restaurantes/Chef Pizzaria/ChefExpressLogo.png',
         features: ['Delivery', 'Wi-Fi', 'Ambiente Familiar']
       },
       {
@@ -74,7 +74,7 @@ const RestaurantsPage: React.FC = () => {
         address: 'Centro, Caçapava do Sul',
         phone: '(55) 3281-0002',
         openingHours: '11:00 - 14:00, 18:00 - 22:00',
-        image: '/placeholder-restaurant.svg',
+        image: '/img/restaurantes/Meu Cantinho/MeuCantinhoLogo.png',
         features: ['Ambiente Familiar', 'Pratos Caseiros', 'Preço Justo']
       },
       {
@@ -87,34 +87,21 @@ const RestaurantsPage: React.FC = () => {
         address: 'Centro, Caçapava do Sul',
         phone: '(55) 3281-0003',
         openingHours: '19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
+        image: '/img/restaurantes/Don Italo /DonItaloLogo.png',
         features: ['Vinhos', 'Ambiente Elegante', 'Massas Artesanais']
       },
       {
         id: '5',
-        name: 'Restaurante Pampa',
-        description: 'Culinária gaúcha tradicional com vista para a cidade. Especializado em churrasco e pratos típicos.',
-        cuisine: 'Gaúcha',
-        priceRange: 3,
-        rating: 4.4,
-        address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0004',
-        openingHours: '11:00 - 15:00, 18:00 - 22:30',
-        image: '/placeholder-restaurant.svg',
-        features: ['Vista Panorâmica', 'Churrasco', 'Música Ao Vivo']
-      },
-      {
-        id: '6',
-        name: "Urbanu's",
-        description: 'Lancheria moderna com hambúrgueres artesanais e ambiente jovem. Opções vegetarianas disponíveis.',
+        name: 'AM Lanches',
+        description: 'Lanches rápidos e refeições leves com ambiente familiar e atendimento ágil.',
         cuisine: 'Lanches',
-        priceRange: 2,
+        priceRange: 1,
         rating: 4.3,
         address: 'Centro, Caçapava do Sul',
-        phone: '(55) 3281-0005',
-        openingHours: '17:00 - 00:00',
-        image: '/placeholder-restaurant.svg',
-        features: ['Hambúrgueres Artesanais', 'Opções Vegetarianas', 'Ambiente Jovem']
+        phone: '(55) 3281-0007',
+        openingHours: '07:00 - 19:00',
+        image: '/img/restaurantes/AM Lanches/LogoAMAtualizada2024.png',
+        features: ['Lanches Rápidos', 'Refeições Leves', 'Atendimento Ágil']
       },
       {
         id: '7',
@@ -126,7 +113,7 @@ const RestaurantsPage: React.FC = () => {
         address: 'Centro, Caçapava do Sul',
         phone: '(55) 3281-0006',
         openingHours: '11:30 - 14:30, 19:00 - 23:00',
-        image: '/placeholder-restaurant.svg',
+        image: '/img/restaurantes/Rodeio Churrascaria/Rodeio Churrascaria.png',
         features: ['Rodízio de Carnes', 'Buffet de Saladas', 'Ambiente Rústico']
       }
     ];
@@ -263,21 +250,30 @@ const RestaurantsPage: React.FC = () => {
       </div>
 
       {/* Lista de Restaurantes */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredRestaurants.map(restaurant => {
           const restaurantReviews = getRestaurantReviews(restaurant.id);
           
           return (
             <div key={restaurant.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
               {/* Imagem do Restaurante */}
-              <div className="h-48 bg-gray-200 flex items-center justify-center">
-                <svg 
-                  className="w-16 h-16 text-gray-400" 
-                  fill="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
+              <div className="h-56 bg-gray-200 overflow-hidden flex items-center justify-center">
+                <img 
+                  src={restaurant.image} 
+                  alt={`${restaurant.name} - ${restaurant.cuisine}`}
+                  className="w-full h-full object-contain p-6 hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement!.innerHTML = `
+                      <div class="flex items-center justify-center h-full">
+                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                      </div>
+                    `;
+                  }}
+                />
               </div>
 
               <div className="p-6">

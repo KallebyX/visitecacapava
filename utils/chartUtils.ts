@@ -19,4 +19,4 @@ export const chartColorsArray = [
     '#8b5cf6', '#6366f1', '#06b6d4', '#a3e635'
 ];
 
-export const transparentChartColors = chartColorsArray.map(color => `${color}B3`);
+export const transparentChartColors = chartColorsArray.map(color => `${color}80`);

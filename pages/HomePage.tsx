@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
             summary: 'A 4ª Festa Nacional do Azeite de Oliva promete ser a maior edição, com degustações dos azeites premiados da Prosperato e outros produtores locais.',
             date: '2025-08-15',
             category: 'evento' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1596040033229-a65c0cd87c14?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
             location: 'Centro de Eventos'
         },
         {
@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
             summary: 'Reconhecimento internacional impulsiona turismo geológico, com aumento de 40% nas visitações às Guaritas do Camaquã e Pedra do Segredo.',
             date: '2025-08-12',
             category: 'turismo' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            imageUrl: '/img/pontos_turisticos/guaritas.png',
             location: 'Geossítios'
         },
         {
@@ -57,7 +57,7 @@ const HomePage: React.FC = () => {
             summary: 'Azeite de Caçapava do Sul recebe a maior pontuação já alcançada por um produtor brasileiro no prestigioso guia italiano.',
             date: '2025-08-08',
             category: 'cultura' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
             location: 'Prosperato Olivais'
         },
         {
@@ -66,7 +66,7 @@ const HomePage: React.FC = () => {
             summary: 'Circuito permite conhecer as principais indústrias da capital nacional do calcário, com visitas técnicas e mirantes panorâmicos.',
             date: '2025-08-05',
             category: 'turismo' as const,
-            imageUrl: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+            imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
             location: 'Distrito Industrial'
         }
     ];
@@ -119,8 +119,12 @@ const HomePage: React.FC = () => {
         <div className="space-y-12">
             {/* Hero Section - Enhanced */}
             <section className="relative text-center bg-gradient-to-br from-brand-dark-green via-brand-green to-emerald-700 text-white rounded-3xl overflow-hidden py-24 px-4">
-                <div className="absolute inset-0 opacity-5">
-                    <MapOutlineIcon className="w-full h-full" />
+                <div className="absolute inset-0 opacity-20">
+                    <img 
+                        src="/img/logo/VisiteCacapavaSimbolo.png" 
+                        alt="Background Pattern" 
+                        className="w-full h-full object-cover opacity-10"
+                    />
                 </div>
                 
                 {/* Floating elements */}
@@ -204,7 +208,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                     {newsData.map((news, index) => (
                         <NewsCard 
                             key={news.id} 

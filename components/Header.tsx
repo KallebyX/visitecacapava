@@ -68,10 +68,22 @@ const Header: React.FC = () => {
       <header className="bg-brand-beige/80 backdrop-blur-sm sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-20">
-            <NavLink to="/" className="flex items-center gap-2 group">
-              <div className="w-16 h-16 text-brand-green group-hover:text-brand-light-green transition-colors">
-                <MapOutlineIcon />
-              </div>
+            <NavLink to="/" className="flex items-center gap-3 group">
+              <img 
+                src="/img/logo/VisiteCacapavaSimbolo.png" 
+                alt="Visite Caçapava" 
+                className="w-12 h-12 md:w-14 md:h-14 object-contain group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  // Fallback para texto se a imagem falhar
+                  target.parentElement!.innerHTML = `
+                    <div class="w-12 h-12 md:w-14 md:h-14 bg-brand-green rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      VC
+                    </div>
+                  `;
+                }}
+              />
               <div className="text-brand-dark-green">
                 <div className="font-display tracking-wider text-xl leading-none">VISITE</div>
                 <div className="font-black text-2xl leading-none -mt-1">CAÇAPAVA</div>

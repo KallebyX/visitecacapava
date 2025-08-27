@@ -22,7 +22,7 @@ import ChallengesPage from './pages/ChallengesPage';
 import PhotoGalleryPage from './pages/PhotoGalleryPage';
 import AboutCityPage from './pages/AboutCityPage';
 import AttractionsPage from './pages/AttractionsPage';
-import RestaurantsPage from './pages/RestaurantsPage';
+import RestaurantsPage from './pages/RestaurantsPage_new';
 import OliveOilsPage from './pages/OliveOilsPage';
 import GameSystemDemo from './pages/GameSystemDemo';
 

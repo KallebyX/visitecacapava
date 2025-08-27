@@ -57,7 +57,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4914,
           description: 'Marco central da cidade',
           longDescription: 'Marco central da cidade, ponto de encontro tradicional dos moradores locais',
-          imageUrl: '/images/praca-redemocao.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 50
         },
         order: 1,
@@ -74,7 +74,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4918,
           description: 'Principal templo religioso da cidade',
           longDescription: 'Principal templo religioso da cidade, construído no século XIX',
-          imageUrl: '/images/igreja-matriz.jpg',
+          imageUrl: '/img/pontos_turisticos/IgrejaMatriz.jpg',
           points: 75
         },
         order: 2,
@@ -91,7 +91,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4925,
           description: 'Acervo histórico local',
           longDescription: 'Museu que preserva a história e cultura local com acervo rico em objetos históricos',
-          imageUrl: '/images/museu-municipal.jpg',
+          imageUrl: '/img/pontos_turisticos/MuseuLanceirosNegros.png',
           points: 100
         },
         order: 3,
@@ -108,7 +108,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4932,
           description: 'Centro comercial histórico',
           longDescription: 'Centro comercial histórico onde a comunidade se reúne há décadas',
-          imageUrl: '/images/mercado-publico.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 75
         },
         order: 4,
@@ -143,7 +143,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4800,
           description: 'Entrada oficial do complexo das Guaritas',
           longDescription: 'Portal de entrada oficial para o complexo natural das Guaritas do Camaquã',
-          imageUrl: '/images/guaritas-entrada.jpg',
+          imageUrl: '/img/pontos_turisticos/MinasCamaqua2.png',
           points: 75
         },
         order: 1,
@@ -160,7 +160,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4785,
           description: 'Formação rochosa imponente',
           longDescription: 'Formação rochosa majestosa que lembra uma catedral natural esculpida pelo tempo',
-          imageUrl: '/images/guarita-cathedral.jpg',
+          imageUrl: '/img/pontos_turisticos/pedradosegredo.png',
           points: 150
         },
         order: 2,
@@ -177,7 +177,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4770,
           description: 'Vista panorâmica das formações',
           longDescription: 'Mirante com vista panorâmica espetacular de todas as formações rochosas da região',
-          imageUrl: '/images/mirante-guaritas.jpg',
+          imageUrl: '/img/pontos_turisticos/PedranaCruz2.png',
           points: 125
         },
         order: 3,
@@ -194,7 +194,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4755,
           description: 'Zona de conservação da flora local',
           longDescription: 'Área especialmente protegida para conservação da biodiversidade e flora nativa',
-          imageUrl: '/images/preservacao-ambiental.jpg',
+          imageUrl: '/img/pontos_turisticos/cascata.png',
           points: 100
         },
         order: 4,
@@ -229,7 +229,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4600,
           description: 'Centro de visitação dos olivais',
           longDescription: 'Centro de recepção e visitação dos famosos olivais que produzem azeites premiados',
-          imageUrl: '/images/olivais-recepcao.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 50
         },
         order: 1,
@@ -246,7 +246,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4590,
           description: 'Degustação dos azeites premiados',
           longDescription: 'Sala especial para degustação dos azeites extra virgem premiados internacionalmente',
-          imageUrl: '/images/degustacao-premium.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 125
         },
         order: 2,
@@ -263,7 +263,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4575,
           description: 'Processo de produção dos azeites',
           longDescription: 'Fábrica onde acontece o processo artesanal de produção dos azeites premiados',
-          imageUrl: '/images/fabrica-azeites.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 100
         },
         order: 3,
@@ -280,7 +280,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4560,
           description: 'Loja oficial dos azeites locais',
           longDescription: 'Loja oficial onde é possível adquirir os azeites e produtos diretamente dos produtores',
-          imageUrl: '/images/loja-azeites.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 75
         },
         order: 4,
@@ -316,7 +316,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4850,
           description: 'Centro de Tradições Gaúchas',
           longDescription: 'Centro de Tradições Gaúchas onde são preservadas e praticadas as tradições locais',
-          imageUrl: '/images/ctg-farroupilha.jpg',
+          imageUrl: '/img/logo/logo-cacapava.png',
           points: 100
         },
         order: 1,
@@ -333,7 +333,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4835,
           description: 'Monumento histórico da revolução',
           longDescription: 'Memorial dedicado à Revolução Farroupilha e aos heróis que lutaram pela república',
-          imageUrl: '/images/memorial-farroupilha.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 125
         },
         order: 2,
@@ -350,7 +350,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4820,
           description: 'Centro cultural e artesanato',
           longDescription: 'Espaço dedicado à cultura local, artesanato e manifestações artísticas da região',
-          imageUrl: '/images/casa-cultura.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 150
         },
         order: 3,
@@ -367,7 +367,7 @@ export const THEMATIC_ROUTES: ThematicRoute[] = [
           lng: -53.4805,
           description: 'Espaço de eventos culturais',
           longDescription: 'Anfiteatro municipal onde acontecem apresentações culturais e eventos da cidade',
-          imageUrl: '/images/anfiteatro-municipal.jpg',
+          imageUrl: '/img/logo/VisiteCacapavaSimbolo.png',
           points: 100
         },
         order: 4,
