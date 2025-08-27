@@ -1,8 +1,8 @@
 import { backendService } from './backendService';
 import type { PointOfInterest, User, ChatMessage } from '../types';
 
-// Chave da API do Gemini para demonstração
-const API_KEY = "AIzaSyCIO_I4T5g_bTXZDFvHcPvQwO6z2VyIitE" || process.env.API_KEY;
+// Chave da API do Gemini - configurada via variável de ambiente
+const API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY;
 
 // Função auxiliar para chamar a API do Gemini
 const callGeminiAPI = async (prompt: string, systemInstruction?: string) => {
