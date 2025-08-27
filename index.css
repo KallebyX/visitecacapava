@@ -4,9 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import responsive styles */
-@import './styles/responsive.css';
-
 /* Google Maps Animations */
 @keyframes pulse {
   0% {

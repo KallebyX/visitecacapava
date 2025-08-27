@@ -1,10 +1,35 @@
 // Sistema de QR Code seguro e check-in por proximidade
-import crypto from 'crypto';
+// Usando Web Crypto API para compatibilidade com navegador
 
 // Configurações de segurança
-const QR_SECRET = process.env.QR_SECRET || 'cacapava_qr_secret_2024';
+const QR_SECRET = 'cacapava_qr_secret_2024';
 const CHECKIN_COOLDOWN = 30 * 60 * 1000; // 30 minutos em ms
 const MAX_CHECKINS_PER_DAY = 20; // Rate limiting
+
+// Função auxiliar para gerar bytes aleatórios
+function generateRandomBytes(length: number): string {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// Função auxiliar para criar HMAC usando Web Crypto API
+async function createHMAC(message: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const messageData = encoder.encode(message);
+  
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+  return Array.from(new Uint8Array(signature), byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 export interface CheckinData {
   userId: string;
@@ -28,11 +53,11 @@ export interface QRPayload {
 /**
  * Gera QR Code assinado para um POI
  */
-export function generateSecureQR(poiId: string): string {
+export async function generateSecureQR(poiId: string): Promise<string> {
   const timestamp = Date.now();
-  const nonce = crypto.randomBytes(8).toString('hex');
+  const nonce = generateRandomBytes(8);
   const payload = `${poiId}:${nonce}:${timestamp}`;
-  const signature = crypto.createHmac('sha256', QR_SECRET).update(payload).digest('hex');
+  const signature = await createHMAC(payload, QR_SECRET);
   
   const qrData = {
     poiId,
@@ -48,7 +73,7 @@ export function generateSecureQR(poiId: string): string {
 /**
  * Valida QR Code assinado
  */
-export function validateQR(qrString: string): { valid: boolean; poiId?: string; error?: string } {
+export async function validateQR(qrString: string): Promise<{ valid: boolean; poiId?: string; error?: string }> {
   try {
     if (!qrString.startsWith('VC:')) {
       return { valid: false, error: 'Formato de QR inválido' };
@@ -69,7 +94,7 @@ export function validateQR(qrString: string): { valid: boolean; poiId?: string; 
     
     // Verifica assinatura
     const payload = `${poiId}:${nonce}:${timestamp}`;
-    const expectedSignature = crypto.createHmac('sha256', QR_SECRET).update(payload).digest('hex');
+    const expectedSignature = await createHMAC(payload, QR_SECRET);
     
     if (signature !== expectedSignature) {
       return { valid: false, error: 'Assinatura inválida' };
