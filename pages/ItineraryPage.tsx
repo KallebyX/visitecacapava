@@ -7,7 +7,7 @@ import {
   ChevronDown, ChevronUp, Play, Pause
 } from 'lucide-react';
 import { generateItinerary } from '../services/geminiService';
-import AIStatusIndicator from '../components/AIStatusIndicator';
+import { AIStatusIndicator } from '../components/AIStatusIndicator';
 
 const interestOptions = [
   { id: "natureza", label: "Natureza", icon: TreePine, color: "bg-green-100 text-green-700 border-green-200" },
