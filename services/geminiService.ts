@@ -152,10 +152,72 @@ Gere um roteiro personalizado e detalhado.`;
         return response;
     } catch (error) {
         console.error("Error calling Gemini API for itinerary:", error);
-        // Fallback to a simulated response on any API error
-        return "Modo de demonstração: A API do Gemini não está configurada ou a chamada falhou. Aqui está um exemplo de roteiro:\n\nDia 1: Aventura e Natureza\n\nManhã:\n- Pedra do Segredo: Comece o dia com uma trilha leve e aprecie a vista incrível deste famoso ponto turístico.\n\nTarde:\n- Guaritas: Explore as formações rochosas que parecem castelos. Ótimo para fotos!\n\nNoite:\n- Churrascaria Rodeio: Termine o dia com um autêntico churrasco gaúcho.";
+        // Fallback para resposta de demonstração mais inteligente
+        return generateDemoItinerary(preferences);
     }
 };
+
+// Função para gerar roteiro de demonstração baseado nas preferências
+function generateDemoItinerary(preferences: ItineraryPreferences): string {
+    const { duration, interests, pace } = preferences;
+    const days = parseInt(duration.split(' ')[0]) || 1;
+    
+    let roteiro = `🌟 Roteiro Personalizado para Caçapava do Sul\n`;
+    roteiro += `Duração: ${duration} | Ritmo: ${pace} | Interesses: ${interests.join(', ')}\n\n`;
+    
+    for (let day = 1; day <= days; day++) {
+        roteiro += `=== DIA ${day} ===\n\n`;
+        
+        // Manhã
+        roteiro += `MANHÃ (9h-12h):\n`;
+        if (interests.includes('natureza')) {
+            roteiro += `- Pedra do Segredo: Trilha matinal com vista espetacular\n`;
+            roteiro += `- Tempo: 2-3 horas | Dificuldade: Moderada\n`;
+        } else if (interests.includes('historia')) {
+            roteiro += `- Igreja Matriz: Arquitetura histórica no centro da cidade\n`;
+            roteiro += `- Tempo: 1 hora | Dificuldade: Fácil\n`;
+        } else {
+            roteiro += `- Centro Histórico: Caminhada pelo coração da cidade\n`;
+            roteiro += `- Tempo: 2 horas | Dificuldade: Fácil\n`;
+        }
+        
+        // Tarde
+        roteiro += `\nTARDE (14h-17h):\n`;
+        if (interests.includes('natureza') && day === 1) {
+            roteiro += `- Guaritas do Camaquã: Formações rochosas de 550 milhões de anos\n`;
+            roteiro += `- Tempo: 3 horas | Dificuldade: Moderada\n`;
+        } else if (interests.includes('gastronomia')) {
+            roteiro += `- Tour pelos Azeites: Degustação de azeites premiados\n`;
+            roteiro += `- Tempo: 2 horas | Dificuldade: Fácil\n`;
+        } else {
+            roteiro += `- Minas do Camaquã: História da mineração local\n`;
+            roteiro += `- Tempo: 2-3 horas | Dificuldade: Moderada\n`;
+        }
+        
+        // Noite
+        roteiro += `\nNOITE (19h):\n`;
+        if (interests.includes('gastronomia')) {
+            roteiro += `- Jantar em churrascaria tradicional gaúcha\n`;
+            roteiro += `- Degustação de vinhos locais\n`;
+        } else {
+            roteiro += `- Jantar no centro com culinária regional\n`;
+            roteiro += `- Caminhada noturna pelas ruas históricas\n`;
+        }
+        
+        if (day < days) {
+            roteiro += `\n`;
+        }
+    }
+    
+    roteiro += `\n💡 DICAS IMPORTANTES:\n`;
+    roteiro += `- Leve protetor solar e água para trilhas\n`;
+    roteiro += `- Verifique horários de funcionamento\n`;
+    roteiro += `- Use o GPS do app para navegação\n`;
+    
+    roteiro += `\n⚠️ MODO DEMONSTRAÇÃO: Configure as APIs (Gemini/OpenAI) para roteiros mais precisos e atualizados.\n`;
+    
+    return roteiro;
+}
 
 
 export const getAIChatResponse = async (history: ChatMessage[], user: User): Promise<string> => {
@@ -220,7 +282,93 @@ export const getAIChatResponse = async (history: ChatMessage[], user: User): Pro
         return response;
     } catch (error) {
         console.error("Error calling Gemini API for chat:", error);
-        // Fallback to a simulated response on any API error
-        return "Desculpe, meu cérebro de IA está offline. Não consigo conversar agora.";
+        // Fallback inteligente baseado na mensagem do usuário
+        return generateDemoChatResponse(history, user);
     }
 };
+
+// Função para gerar resposta de chat de demonstração
+function generateDemoChatResponse(history: ChatMessage[], user: User): string {
+    const lastUserMessage = history.filter(msg => msg.role === 'user').pop();
+    if (!lastUserMessage) {
+        return "Olá! 👋 Sou Cacá, seu guia virtual de Caçapava do Sul! Como posso ajudar?";
+    }
+    
+    const userText = lastUserMessage.parts[0].text.toLowerCase();
+    
+    // Saudações
+    if (userText.includes('olá') || userText.includes('oi') || userText.includes('bom dia')) {
+        return `Olá, ${user.name}! 👋 
+
+Que bom te ver aqui! Você já tem ${user.points} pontos no nosso sistema de gamificação. 🎯
+
+Como posso ajudar você a explorar Caçapava do Sul hoje?
+
+⚠️ *Modo demonstração ativo - Configure as APIs para respostas mais precisas*`;
+    }
+    
+    // Perguntas sobre pontos turísticos
+    if (userText.includes('pedra') || userText.includes('segredo')) {
+        return `🗿 A Pedra do Segredo é nosso cartão postal mais famoso!
+
+É uma formação rochosa única onde uma pedra gigante fica em equilíbrio perfeito. A trilha leva cerca de 1 hora e a vista é incrível! 📸
+
+💡 Use o botão "Como Chegar" no app para navegar até lá com GPS.
+
+⚠️ *Modo demonstração - APIs não configuradas*`;
+    }
+    
+    if (userText.includes('guaritas') || userText.includes('camaquã')) {
+        return `🏔️ As Guaritas do Camaquã são espetaculares!
+
+Formações rochosas de 550 milhões de anos que parecem castelos medievais. É considerado um dos geoparques mais importantes do Brasil! 🇧🇷
+
+Perfeito para fotos e contemplação da natureza.
+
+⚠️ *Modo demonstração - Configure as APIs para informações mais detalhadas*`;
+    }
+    
+    // Perguntas sobre azeites
+    if (userText.includes('azeite') || userText.includes('oliva')) {
+        return `🫒 Caçapava é famosa pelos azeites premiados!
+
+Mais de 300 prêmios internacionais! 🏆 
+
+Os principais produtores são:
+- Quinta do Vale
+- Olivas do Sul
+
+Ambos oferecem tours e degustação!
+
+⚠️ *Modo demonstração ativo*`;
+    }
+    
+    // Perguntas sobre sistema de pontos
+    if (userText.includes('ponto') || userText.includes('badge') || userText.includes('conquista')) {
+        return `🎯 Sistema de Gamificação:
+
+Você tem ${user.points} pontos! Continue explorando para ganhar mais:
+
+- Check-in: 10-25 pontos
+- Primeira visita: Bônus 2x
+- Completar rotas: Badges especiais
+
+${user.visited.length === 0 ? 'Faça seu primeiro check-in para começar! 🚀' : `Você já visitou ${user.visited.length} local(is)! 👏`}
+
+⚠️ *Modo demonstração*`;
+    }
+    
+    // Resposta genérica
+    return `Interessante pergunta sobre Caçapava do Sul! 🤔
+
+Sou seu guia virtual e posso ajudar com:
+- 🗺️ Pontos turísticos
+- 🍽️ Restaurantes 
+- 🫒 Azeites premiados
+- 🎯 Sistema de pontos
+- 📍 Navegação
+
+⚠️ **Modo Demonstração**: Configure as APIs do Gemini ou OpenAI para respostas mais precisas!
+
+O que gostaria de saber?`;
+}

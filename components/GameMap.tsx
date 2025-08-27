@@ -110,29 +110,55 @@ const GameMap: React.FC<GameMapProps> = ({
 
   // Iniciar rastreamento de localização
   useEffect(() => {
-    if (isPlaying && navigator.geolocation) {
-      const id = navigator.geolocation.watchPosition(
-        (position) => {
-          const newLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          
-          // Atualizar marker do usuário
-          if (mapRef.current && userMarker) {
-            userMarker.setLatLng([newLocation.lat, newLocation.lng]);
+    if (isPlaying) {
+      // Primeiro, usar a localização simulada se disponível
+      if (userLocation) {
+        setUserMarker(prevMarker => {
+          if (mapRef.current) {
+            if (prevMarker) {
+              prevMarker.setLatLng([userLocation.lat, userLocation.lng]);
+              return prevMarker;
+            } else {
+              const newMarker = L.marker([userLocation.lat, userLocation.lng], {
+                icon: createCustomIcon('user')
+              }).addTo(mapRef.current);
+              return newMarker;
+            }
           }
-        },
-        (error) => {
-          console.error('Erro ao obter localização:', error);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 1000
-        }
-      );
-      setWatchId(id);
+          return prevMarker;
+        });
+      }
+
+      // Tentar obter localização real se disponível
+      if (navigator.geolocation) {
+        const id = navigator.geolocation.watchPosition(
+          (position) => {
+            const newLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            
+            // Atualizar marker do usuário apenas se a localização estiver dentro de Caçapava
+            if (mapRef.current && userMarker && 
+                newLocation.lat >= -31 && newLocation.lat <= -30 && 
+                newLocation.lng >= -54 && newLocation.lng <= -53) {
+              userMarker.setLatLng([newLocation.lat, newLocation.lng]);
+            }
+          },
+          (error) => {
+            console.warn('Erro ao obter localização real:', error);
+            console.log('Continuando com localização simulada...');
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 1000
+          }
+        );
+        setWatchId(id);
+      } else {
+        console.log('Geolocalização não disponível, usando localização simulada');
+      }
     }
 
     return () => {
@@ -140,7 +166,7 @@ const GameMap: React.FC<GameMapProps> = ({
         navigator.geolocation.clearWatch(watchId);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, userLocation]);
 
   // Componente de POI com interações
   const POIMarker: React.FC<{ poi: RoutePoint }> = ({ poi }) => {
@@ -165,8 +191,8 @@ const GameMap: React.FC<GameMapProps> = ({
       }
     };
 
-    const showQR = () => {
-      const qrCode = generateSecureQR(poi.id);
+    const showQR = async () => {
+      const qrCode = await generateSecureQR(poi.id);
       setShowQRCode(qrCode);
     };
 
