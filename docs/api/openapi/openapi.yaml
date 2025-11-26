@@ -1,0 +1,369 @@
+openapi: 3.1.0
+info:
+  title: Visite Caçapava API
+  description: |
+    API REST para a plataforma de turismo gamificada Visite Caçapava.
+
+    ## Autenticação
+    A API utiliza JWT Bearer tokens para autenticação.
+
+    ## Rate Limiting
+    Todas as requisições estão sujeitas a rate limiting.
+    Consulte os headers X-RateLimit-* nas respostas.
+
+    ## Versionamento
+    A versão da API é especificada na URL (ex: /v1/).
+
+  version: 1.0.0
+  contact:
+    name: Oryum Tech
+    email: api@oryumtech.com.br
+  license:
+    name: Proprietary
+    url: https://oryumtech.com.br/license
+
+servers:
+  - url: https://api.visitecacapava.com.br/v1
+    description: Produção
+  - url: https://api-staging.visitecacapava.com.br/v1
+    description: Staging
+
+tags:
+  - name: Auth
+    description: Autenticação e autorização
+  - name: Users
+    description: Gerenciamento de usuários
+  - name: POIs
+    description: Pontos de interesse
+  - name: Routes
+    description: Rotas turísticas
+  - name: Gamification
+    description: Sistema de gamificação
+  - name: Hotels
+    description: Sistema de hotéis
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login de usuário
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: turista@email.com
+                password:
+                  type: string
+                  format: password
+                  example: senha123
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pois:
+    get:
+      tags: [POIs]
+      summary: Lista todos os POIs
+      operationId: getPois
+      parameters:
+        - name: active
+          in: query
+          schema:
+            type: boolean
+            default: true
+        - name: near
+          in: query
+          description: Coordenadas para busca por proximidade (lat,lng)
+          schema:
+            type: string
+            example: "-30.5144,-53.4883"
+        - name: radius
+          in: query
+          description: Raio de busca em metros
+          schema:
+            type: integer
+            default: 5000
+      responses:
+        '200':
+          description: Lista de POIs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/POI'
+
+  /pois/{poiId}:
+    get:
+      tags: [POIs]
+      summary: Obtém um POI específico
+      operationId: getPoiById
+      parameters:
+        - name: poiId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: POI encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POI'
+        '404':
+          description: POI não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /checkin:
+    post:
+      tags: [Gamification]
+      summary: Realiza check-in em POI
+      operationId: checkIn
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [poiId, location]
+              properties:
+                poiId:
+                  type: string
+                  format: uuid
+                location:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                      example: -30.5144
+                    lng:
+                      type: number
+                      example: -53.4883
+                qrCode:
+                  type: string
+                  description: QR code escaneado (opcional)
+      responses:
+        '200':
+          description: Check-in realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckInResponse'
+        '400':
+          description: Check-in inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Obtém perfil do usuário autenticado
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Perfil do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /leaderboard:
+    get:
+      tags: [Gamification]
+      summary: Obtém ranking de turistas
+      operationId: getLeaderboard
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 100
+      responses:
+        '200':
+          description: Lista de ranking
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeaderboardEntry'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [tourist, hotel, restaurant, secretaria]
+        avatarUrl:
+          type: string
+        points:
+          type: integer
+        badges:
+          type: array
+          items:
+            type: string
+        visited:
+          type: array
+          items:
+            $ref: '#/components/schemas/Visit'
+
+    POI:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        longDescription:
+          type: string
+        imageUrl:
+          type: string
+        website:
+          type: string
+        points:
+          type: integer
+        lat:
+          type: number
+        lng:
+          type: number
+
+    Visit:
+      type: object
+      properties:
+        pointId:
+          type: string
+        date:
+          type: string
+          format: date-time
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    CheckInResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        pointsEarned:
+          type: integer
+        newBadges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Badge'
+
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            avatarUrl:
+              type: string
+        points:
+          type: integer
+        badges:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: string
